@@ -1,33 +1,24 @@
 import Link from 'next/link';
 import { Shield, BookOpen, Users, Smartphone, Globe, CreditCard } from 'lucide-react';
 import styles from './landing.module.scss';
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
   return (
     <main className="landing-page">
-      {/* Hero Section */}
-      <section className={styles.hero}>
-        <div className="container">
-          <nav className="flex justify-between items-center py-6">
-            <div className="logo">
-              <h1 style={{ fontSize: '1.5rem' }}>Visi<span style={{ color: 'var(--accent-color)' }}>Sekolah</span></h1>
-            </div>
-            <div className="nav-links flex gap-6">
-              <Link href="#features">Fitur</Link>
-              <Link href="#about">Tentang</Link>
-              <Link href="/login" className={styles.btnPrimary}>Masuk</Link>
-            </div>
-          </nav>
+      <Navbar />
 
-          <div className="hero-content text-center py-20">
-            <h1 className={styles.heroTitle}>Solusi White Label Aplikasi Sekolah Terpadu</h1>
-            <p className={styles.heroSubtitle}>
-              Bangun ekosistem digital sekolah Anda dengan branding sendiri. Satu platform untuk semua kebutuhan administrasi, pembelajaran, dan komunikasi.
-            </p>
-            <div className="flex justify-center gap-4 mt-10">
-              <Link href="/register" className={styles.btnLarge}>Mulai Sekarang</Link>
-              <Link href="#demo" className={styles.btnOutline}>Lihat Demo</Link>
-            </div>
+      {/* Full-Screen Hero Section */}
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>Solusi White Label Aplikasi Sekolah Terpadu</h1>
+          <p className={styles.heroSubtitle}>
+            Transformasikan manajemen pendidikan Anda dengan platform yang sepenuhnya dapat disesuaikan. 
+            Satu ekosistem digital untuk kemajuan sekolah masa depan.
+          </p>
+          <div className={styles.buttonGroup}>
+            <Link href="/register" className={styles.btnLarge}>Start Now</Link>
+            <Link href="#demo" className={styles.btnOutline}>View Demo</Link>
           </div>
         </div>
       </section>
@@ -35,37 +26,43 @@ export default function Home() {
       {/* Features Grid */}
       <section id="features" className={`py-20 ${styles.bgSurface}`}>
         <div className="container">
-          <h2 className="text-center mb-12">Fitur Unggulan</h2>
+          <div className="text-center mb-16">
+            <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Fitur Unggulan</h2>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
+              Platform terlengkap untuk mendukung digitalisasi ekosistem pendidikan sekolah Anda.
+            </p>
+          </div>
+          
           <div className={styles.featuresGrid}>
             <FeatureCard 
               icon={<Globe size={32} />} 
               title="White Label & Custom Branding" 
-              description="Gunakan logo, nama aplikasi, dan warna identitas sekolah Anda sendiri." 
+              description="Gunakan logo, nama aplikasi, dan warna identitas sekolah Anda sendiri untuk memperkuat brand." 
             />
             <FeatureCard 
               icon={<Shield size={32} />} 
               title="Keamanan Data Terjamin" 
-              description="Sistem multi-tenant yang aman dengan enkripsi data siswa dan guru." 
+              description="Sistem multi-tenant yang aman dengan enkripsi tingkat tinggi untuk data siswa dan guru." 
             />
             <FeatureCard 
               icon={<Smartphone size={32} />} 
               title="Aplikasi Mobile & Web" 
-              description="Akses dari mana saja. Tersedia versi web responsif dan aplikasi mobile." 
+              description="Akses tanpa batas dari mana saja. Tersedia versi web responsif dan aplikasi mobile native." 
             />
             <FeatureCard 
               icon={<BookOpen size={32} />} 
               title="E-Learning Terintegrasi" 
-              description="Manajemen tugas, materi, kuis, dan rapor digital dalam satu tempat." 
+              description="Manajemen tugas, materi, kuis otomatis, dan rapor digital dalam satu alur kerja." 
             />
             <FeatureCard 
               icon={<Users size={32} />} 
               title="Komunikasi Efektif" 
-              description="Forum kelas, pengumuman broadcast, dan pesan langsung ke orang tua." 
+              description="Forum kelas interaktif, pengumuman broadcast, dan pesan langsung ke orang tua." 
             />
             <FeatureCard 
               icon={<CreditCard size={32} />} 
               title="Pembayaran Digital (SPP)" 
-              description="Integrasi pembayaran otomatis melalui Virtual Account dan E-Wallet." 
+              description="Integrasi pembayaran otomatis melalui Virtual Account, E-Wallet, dan QRIS." 
             />
           </div>
         </div>
@@ -79,7 +76,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
     <div className={styles.featureCard}>
       <div className={styles.iconWrapper}>{icon}</div>
       <h3>{title}</h3>
-      <p style={{ marginTop: '0.5rem' }}>{description}</p>
+      <p style={{ marginTop: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>{description}</p>
     </div>
   );
 }

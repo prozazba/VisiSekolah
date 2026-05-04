@@ -1,60 +1,108 @@
 @use '../styles/variables' as *;
 
 .hero {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  min-height: 80vh;
-}
-
-.heroTitle {
-  font-size: 3.5rem;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  overflow: hidden;
+  text-align: center;
+  padding: 0 1rem;
   
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/school_background_hero_1777885471065.png'); // Placeholder or final path
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.4);
+    z-index: -1;
   }
 }
 
-.heroSubtitle {
-  font-size: 1.25rem;
-  max-width: 800px;
-  margin: 0 auto;
+.heroContent {
+  max-width: 900px;
+  animation: fadeInUp 1s ease-out;
 }
 
-.btnPrimary {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: var(--radius-md);
-  font-weight: 600;
+.heroTitle {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #ffffff, #cbd5e1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroSubtitle {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btnLarge {
-  background-color: var(--accent-color);
+  background: var(--primary-color);
   color: white;
   padding: 1rem 2.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: 9999px;
   font-weight: 700;
-  font-size: 1.1rem;
-  transition: transform 0.2s;
-  display: inline-block;
+  font-size: 1.125rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
   
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.5);
+    background: lighten(#0070f3, 5%);
   }
 }
 
 .btnOutline {
-  border: 2px solid var(--primary-color);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
   padding: 1rem 2.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: 9999px;
   font-weight: 700;
-  display: inline-block;
+  font-size: 1.125rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+  }
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sections below hero */
 .bgSurface {
   background-color: var(--surface-color);
 }
@@ -63,6 +111,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
+  margin-top: 4rem;
 }
 
 .featureCard {
@@ -79,6 +128,6 @@
 }
 
 .iconWrapper {
-  color: var(--accent-color);
+  color: var(--primary-color);
   margin-bottom: 1.5rem;
 }
