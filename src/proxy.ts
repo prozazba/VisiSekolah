@@ -15,36 +15,55 @@ export const config = {
 
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
-  const hostname = req.headers.get('host') || 'visisekolah.id';
-
-  // Define allowed domains (including localhost and vercel domains)
-  const allowedDomains = ['visisekolah.id', 'localhost:3099', 'visi-sekolah.vercel.app'];
   
-  // Extract subdomain based on the current hostname
+  // Get hostname from x-forwarded-host (reliable on Vercel) or host header
+  const hostname = req.headers.get('x-forwarded-host') || req.headers.get('host') || '';
+
+  // 1. Skip proxy for static files and internal Next.js paths
+  if (
+    url.pathname.startsWith('/_next') ||
+    url.pathname.startsWith('/api') ||
+    url.pathname.includes('.') // Simple check for file extensions
+  ) {
+    return NextResponse.next();
+  }
+
+  // 2. Identify the main landing page domains
+  const isMainDomain = 
+    hostname === 'visisekolah.id' || 
+    hostname === 'visi-sekolah.vercel.app' || 
+    hostname === 'localhost:3099';
+
+  if (isMainDomain) {
+    // Super Admin check on main domain (e.g., visisekolah.id/admin)
+    // or handle via dedicated subdomain if preferred.
+    return NextResponse.next();
+  }
+
+  // 3. Handle Subdomains
   let subdomain = '';
   if (hostname.endsWith('.visisekolah.id')) {
     subdomain = hostname.replace('.visisekolah.id', '');
   } else if (hostname.endsWith('.localhost:3099')) {
     subdomain = hostname.replace('.localhost:3099', '');
   } else if (hostname.endsWith('.vercel.app')) {
-    // Handle Vercel subdomains (e.g., school.visi-sekolah.vercel.app)
-    // If it's the main app URL, subdomain stays empty
-    if (hostname !== 'visi-sekolah.vercel.app') {
-      subdomain = hostname.replace('.visi-sekolah.vercel.app', '');
+    // Support school.visi-sekolah.vercel.app
+    const base = 'visi-sekolah.vercel.app';
+    if (hostname.endsWith(`.${base}`)) {
+      subdomain = hostname.replace(`.${base}`, '');
     }
   }
 
-  // Case 1: Main landing page (visisekolah.id)
-  if (!subdomain || allowedDomains.includes(hostname)) {
-    return NextResponse.next();
-  }
-
-  // Case 2: Super Admin (admin.visisekolah.id)
+  // Case 2: Super Admin Subdomain (admin.visisekolah.id)
   if (subdomain === 'admin') {
     return NextResponse.rewrite(new URL(`/admin${url.pathname}${url.search}`, req.url));
   }
 
   // Case 3: School Tenants ([school-slug].visisekolah.id)
-  // Rewrite to /_sites/[subdomain]/...
-  return NextResponse.rewrite(new URL(`/_sites/${subdomain}${url.pathname}${url.search}`, req.url));
+  if (subdomain) {
+    return NextResponse.rewrite(new URL(`/_sites/${subdomain}${url.pathname}${url.search}`, req.url));
+  }
+
+  // Fallback to main app
+  return NextResponse.next();
 }
