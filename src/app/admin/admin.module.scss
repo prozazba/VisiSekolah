@@ -1,0 +1,49 @@
+@use '../../styles/variables' as *;
+
+.adminDashboard {
+  min-height: 100vh;
+  background-color: var(--surface-color);
+}
+
+.header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1.5rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.schoolList {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  background-color: #f8fafc;
+  text-align: left;
+}
+
+.th {
+  padding: 1rem;
+}
+
+.td {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+}
