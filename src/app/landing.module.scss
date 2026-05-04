@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../styles/variables' as *;
 
 .hero {
@@ -11,123 +12,211 @@
   overflow: hidden;
   text-align: center;
   padding: 0 1rem;
-  
-  &::before {
+  background-image: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)), url('/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color: #0f172a;
+
+  &::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('/school_background_hero_1777885471065.png'); // Placeholder or final path
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.4);
-    z-index: -1;
+    bottom: -150px;
+    left: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 112, 243, 0.2) 0%, transparent 70%);
+    filter: blur(50px);
+    z-index: 1;
   }
 }
 
 .heroContent {
-  max-width: 900px;
-  animation: fadeInUp 1s ease-out;
+  position: relative;
+  z-index: 10;
+  max-width: 1000px;
+  animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 3rem;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .heroTitle {
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(to right, #ffffff, #cbd5e1);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
 }
 
 .heroSubtitle {
-  font-size: clamp(1.1rem, 3vw, 1.5rem);
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 3rem;
+  line-height: 1.5;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .buttonGroup {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .btnLarge {
-  background: var(--primary-color);
+  background: linear-gradient(135deg, #0070f3 0%, #00a3ff 100%);
   color: white;
-  padding: 1rem 2.5rem;
+  padding: 1.25rem 3rem;
   border-radius: 9999px;
   font-weight: 700;
-  font-size: 1.125rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+  font-size: 1.2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 20px -5px rgba(0, 112, 243, 0.5);
   
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.5);
-    background: lighten(#0070f3, 5%);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 25px 30px -10px rgba(0, 112, 243, 0.6);
+    background: color.adjust(#0070f3, $lightness: 5%);
   }
 }
 
 .btnOutline {
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   color: white;
-  padding: 1rem 2.5rem;
+  padding: 1.25rem 3rem;
   border-radius: 9999px;
   font-weight: 700;
-  font-size: 1.125rem;
-  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  transition: all 0.4s ease;
   
   &:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: white;
+    transform: translateY(-3px);
   }
+}
+
+/* Trusted By Section */
+.trustedBy {
+  padding: 4rem 0;
+  background: white;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logoRow {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  opacity: 0.6;
+  filter: grayscale(1);
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* Statistics Section */
+.statsSection {
+  padding: 8rem 0;
+  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4rem;
+}
+
+.statItem {
+  text-align: center;
+  
+  h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+}
+
+/* Features */
+.featuresSection {
+  padding: 8rem 0;
+  background: #0f172a;
+  color: white;
+}
+
+.sectionHeader {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 5rem;
+  
+  h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    color: #94a3b8;
+  }
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+}
+
+.featureCard {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color);
+  }
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  background: rgba(0, 112, 243, 0.15);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Sections below hero */
-.bgSurface {
-  background-color: var(--surface-color);
-}
-
-.featuresGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 4rem;
-}
-
-.featureCard {
-  background: white;
-  padding: 2.5rem;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-  }
-}
-
-.iconWrapper {
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
 }
