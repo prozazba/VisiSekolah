@@ -1,3 +1,4 @@
+"use client";
 // src/app/_sites/[site]/page.tsx
 export default function SchoolPage({ params }: { params: { site: string } }) {
   return (

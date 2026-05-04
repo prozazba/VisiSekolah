@@ -1,4 +1,5 @@
 // src/app/_sites/[site]/layout.tsx
+"use client";
 import React from 'react';
 import { notFound } from 'next/navigation';
 

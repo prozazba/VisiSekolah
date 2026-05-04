@@ -1,3 +1,4 @@
+"use client";
 import Link from 'next/link';
 import { Shield, BookOpen, Users, Smartphone, Globe, CreditCard } from 'lucide-react';
 
