@@ -17,15 +17,21 @@ export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const hostname = req.headers.get('host') || 'visisekolah.id';
 
-  // Define allowed domains (including localhost for development)
-  const allowedDomains = ['visisekolah.id', 'localhost:3000'];
+  // Define allowed domains (including localhost and vercel domains)
+  const allowedDomains = ['visisekolah.id', 'localhost:3099', 'visi-sekolah.vercel.app'];
   
-  // Extract subdomain
+  // Extract subdomain based on the current hostname
   let subdomain = '';
-  if (hostname.includes('.visisekolah.id')) {
+  if (hostname.endsWith('.visisekolah.id')) {
     subdomain = hostname.replace('.visisekolah.id', '');
-  } else if (hostname.includes('.localhost:3000')) {
-    subdomain = hostname.replace('.localhost:3000', '');
+  } else if (hostname.endsWith('.localhost:3099')) {
+    subdomain = hostname.replace('.localhost:3099', '');
+  } else if (hostname.endsWith('.vercel.app')) {
+    // Handle Vercel subdomains (e.g., school.visi-sekolah.vercel.app)
+    // If it's the main app URL, subdomain stays empty
+    if (hostname !== 'visi-sekolah.vercel.app') {
+      subdomain = hostname.replace('.visi-sekolah.vercel.app', '');
+    }
   }
 
   // Case 1: Main landing page (visisekolah.id)
