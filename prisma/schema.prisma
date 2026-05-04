@@ -1,0 +1,319 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// -----------------------------------------
+// Core Tenancy
+// -----------------------------------------
+
+model School {
+  id            String   @id @default(cuid())
+  slug          String   @unique // Subdomain: smp1.visisekolah.id
+  customDomain  String?  @unique
+  name          String
+  address       String?
+  phone         String?
+  email         String?
+  status        SchoolStatus @default(ACTIVE)
+
+  // Branding (White Label)
+  logoUrl       String?
+  faviconUrl    String?
+  splashScreenUrl String?
+  primaryColor  String   @default("#0f172a")
+  secondaryColor String  @default("#334155")
+  accentColor   String   @default("#3b82f6")
+  fontFamily    String   @default("Inter")
+  
+  // Relations
+  users         User[]
+  classes       Class[]
+  subjects      Subject[]
+  academicTerms AcademicTerm[]
+  announcements Announcement[]
+  payments      Payment[]
+  settings      SchoolSettings?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum SchoolStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+model SchoolSettings {
+  id               String @id @default(cuid())
+  schoolId         String @unique
+  school           School @relation(fields: [schoolId], references: [id])
+  allowRegistration Boolean @default(false)
+  timezone         String @default("Asia/Jakarta")
+  attendanceType   String @default("QR_CODE") // QR_CODE, GEOFENCING, MANUAL
+}
+
+// -----------------------------------------
+// User Management
+// -----------------------------------------
+
+enum Role {
+  SUPER_ADMIN
+  SCHOOL_ADMIN
+  GURU
+  SISWA
+  ORANG_TUA
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  phone         String?   @unique
+  password      String
+  name          String
+  role          Role
+  schoolId      String?   // Null for Super Admin
+  school        School?   @relation(fields: [schoolId], references: [id])
+  
+  // Profiles
+  guruProfile   GuruProfile?
+  siswaProfile  SiswaProfile?
+  parentProfile ParentProfile?
+  
+  // Interactions
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model GuruProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  nip         String?  @unique
+  subjects    Subject[]
+  classes     Class[]  @relation("ClassTeacher")
+  attendance  GuruAttendance[]
+}
+
+model SiswaProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  nisn        String?  @unique
+  classId     String?
+  class       Class?   @relation(fields: [classId], references: [id])
+  parentId    String?
+  parent      ParentProfile? @relation(fields: [parentId], references: [id])
+  
+  attendance  Attendance[]
+  grades      Grade[]
+  submissions TaskSubmission[]
+}
+
+model ParentProfile {
+  id       String         @id @default(cuid())
+  userId   String         @unique
+  user     User           @relation(fields: [userId], references: [id])
+  students SiswaProfile[]
+}
+
+// -----------------------------------------
+// Academic
+// -----------------------------------------
+
+model AcademicTerm {
+  id        String   @id @default(cuid())
+  name      String   // e.g. "Ganjil 2023/2024"
+  startDate DateTime
+  endDate   DateTime
+  isCurrent Boolean  @default(false)
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+}
+
+model Class {
+  id        String   @id @default(cuid())
+  name      String
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+  teacherId String?
+  teacher   GuruProfile? @relation("ClassTeacher", fields: [teacherId], references: [id])
+  students  SiswaProfile[]
+  schedule  Schedule[]
+  tasks     Task[]
+  forums    Forum[]
+}
+
+model Subject {
+  id        String   @id @default(cuid())
+  name      String
+  code      String?
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+  teachers  GuruProfile[]
+  schedules Schedule[]
+  tasks     Task[]
+}
+
+model Schedule {
+  id        String   @id @default(cuid())
+  day       Int      // 0-6 (Sunday-Saturday)
+  startTime String   // "08:00"
+  endTime   String   // "09:30"
+  classId   String
+  class     Class    @relation(fields: [classId], references: [id])
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+}
+
+// -----------------------------------------
+// Learning Management
+// -----------------------------------------
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  fileUrl     String?
+  classId     String
+  class       Class    @relation(fields: [classId], references: [id])
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  submissions TaskSubmission[]
+  createdAt   DateTime @default(now())
+}
+
+model TaskSubmission {
+  id          String   @id @default(cuid())
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id])
+  studentId   String
+  student     SiswaProfile @relation(fields: [studentId], references: [id])
+  fileUrl     String?
+  comment     String?
+  grade       Float?
+  feedback    String?
+  submittedAt DateTime @default(now())
+}
+
+model Grade {
+  id        String   @id @default(cuid())
+  studentId String
+  student   SiswaProfile @relation(fields: [studentId], references: [id])
+  type      String   // UTS, UAS, Tugas, Kuis
+  score     Float
+  subjectId String
+  term      String
+  createdAt DateTime @default(now())
+}
+
+// -----------------------------------------
+// Attendance
+// -----------------------------------------
+
+model Attendance {
+  id          String   @id @default(cuid())
+  studentId   String
+  student     SiswaProfile @relation(fields: [studentId], references: [id])
+  status      AttendanceStatus
+  date        DateTime @default(now())
+  latitude    Float?
+  longitude   Float?
+  photoUrl    String?
+  note        String?
+}
+
+model GuruAttendance {
+  id          String   @id @default(cuid())
+  guruId      String
+  guru        GuruProfile @relation(fields: [guruId], references: [id])
+  status      AttendanceStatus
+  date        DateTime @default(now())
+  checkIn     DateTime?
+  checkOut    DateTime?
+}
+
+enum AttendanceStatus {
+  HADIR
+  SAKIT
+  IZIN
+  ALFA
+}
+
+// -----------------------------------------
+// Communication
+// -----------------------------------------
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+  target    Role[]   // Who can see this
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  content     String
+  senderId    String
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId  String
+  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Forum {
+  id        String   @id @default(cuid())
+  title     String
+  classId   String
+  class     Class    @relation(fields: [classId], references: [id])
+  posts     ForumPost[]
+  createdAt DateTime @default(now())
+}
+
+model ForumPost {
+  id        String   @id @default(cuid())
+  content   String
+  forumId   String
+  forum     Forum    @relation(fields: [forumId], references: [id])
+  authorId  String
+  createdAt DateTime @default(now())
+}
+
+// -----------------------------------------
+// Finance
+// -----------------------------------------
+
+model Payment {
+  id            String   @id @default(cuid())
+  amount        Float
+  description   String
+  status        PaymentStatus @default(PENDING)
+  externalId    String?  @unique // Midtrans Order ID
+  checkoutUrl   String?
+  schoolId      String
+  school        School   @relation(fields: [schoolId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  EXPIRED
+  FAILED
+}
