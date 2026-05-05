@@ -57,8 +57,9 @@ export async function login(state: FormState, formData: FormData) {
     if (error.digest?.includes('NEXT_REDIRECT')) {
       throw error; // Re-throw redirect errors as they are handled by Next.js
     }
+    const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan sistem.';
     return {
-      message: 'Terjadi kesalahan sistem. Silakan coba lagi nanti.',
+      message: `Login gagal: ${errorMessage}`,
     };
   }
 }

@@ -2,12 +2,12 @@ import { PrismaClient } from './generated/prisma/client';
 import bcrypt from 'bcryptjs';
 import "dotenv/config";
 
-import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
+import { PrismaNeon } from '@prisma/adapter-neon';
+import { Pool } from '@neondatabase/serverless';
 
 const connectionString = process.env.DATABASE_URL;
-const pool = new pg.Pool({ connectionString });
-const adapter = new PrismaPg(pool);
+const pool = new Pool({ connectionString });
+const adapter = new PrismaNeon(pool as any);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

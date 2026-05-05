@@ -1,6 +1,6 @@
 import { PrismaClient } from '../../prisma/generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
+import { PrismaNeon } from '@prisma/adapter-neon';
+import { Pool } from '@neondatabase/serverless';
 
 const prismaClientSingleton = () => {
   const connectionString = process.env.DATABASE_URL;
@@ -8,13 +8,8 @@ const prismaClientSingleton = () => {
     console.error('DATABASE_URL is missing!');
   }
 
-  const pool = new pg.Pool({ 
-    connectionString,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-    max: 1 // Limit pool size for serverless
-  });
-  
-  const adapter = new PrismaPg(pool);
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaNeon(pool as any);
   return new PrismaClient({ adapter });
 };
 
