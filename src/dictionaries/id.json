@@ -1,0 +1,79 @@
+{
+  "navbar": {
+    "features": "Fitur",
+    "pricing": "Harga",
+    "about": "Tentang Kami",
+    "contact": "Hubungi Kami",
+    "login": "Masuk",
+    "register": "Daftar"
+  },
+  "hero": {
+    "title": "Solusi White Label Aplikasi Sekolah Terpadu",
+    "subtitle": "Transformasikan manajemen pendidikan Anda dengan platform yang sepenuhnya dapat disesuaikan. Satu ekosistem digital untuk kemajuan sekolah masa depan.",
+    "cta_start": "Mulai Sekarang",
+    "cta_features": "Lihat Fitur"
+  },
+  "home_features": {
+    "title": "Solusi Digital Terpadu",
+    "subtitle": "Satu platform untuk seluruh ekosistem sekolah Anda.",
+    "white_label": { "title": "White Label & Branding", "desc": "Identitas sekolah Anda di mana saja. Domain kustom, logo, dan aplikasi mobile dengan branding sendiri." },
+    "lms": { "title": "LMS Digital", "desc": "Manajemen pembelajaran modern untuk guru dan siswa." },
+    "payments": { "title": "SPP Otomatis", "desc": "Sistem pembayaran terintegrasi VA & QRIS." },
+    "parent_portal": { "title": "Portal Orang Tua", "desc": "Pantau kehadiran dan nilai anak secara real-time langsung dari smartphone." },
+    "view_all": "Lihat Semua Fitur"
+  },
+  "about_page": {
+    "tag": "Misi Kami",
+    "title": "Mendigitalisasi Pendidikan Indonesia.",
+    "subtitle": "Kami percaya bahwa setiap sekolah berhak memiliki teknologi terbaik untuk mencerdaskan generasi bangsa.",
+    "vision": {
+      "title": "Visi Kami",
+      "desc": "\"Menjadi katalisator utama transformasi digital sekolah di Indonesia melalui platform yang inklusif, terjangkau, dan berfokus pada kemandirian branding sekolah.\""
+    },
+    "values": {
+      "empathy": { "title": "Empati", "desc": "Kami membangun fitur berdasarkan kebutuhan nyata guru dan orang tua di lapangan." },
+      "innovation": { "title": "Inovasi", "desc": "Selalu mengadopsi teknologi terbaru untuk efisiensi administrasi sekolah." },
+      "inspiration": { "title": "Inspirasi", "desc": "Mendorong sekolah untuk bangga dengan identitas digital mereka sendiri." }
+    },
+    "cta_title": "Mari bertumbuh bersama.",
+    "cta_btn": "Gabung Sebagai Mitra"
+  },
+  "contact_page": {
+    "tag": "Hubungi Kami",
+    "title": "Hubungi Tim Ahli Kami.",
+    "subtitle": "Siap untuk memulai transformasi digital sekolah Anda? Kami di sini untuk menjawab setiap pertanyaan Anda.",
+    "form": {
+      "title": "Kirim Pesan",
+      "desc": "Beritahu kami kebutuhan sekolah Anda.",
+      "name": "Nama Lengkap",
+      "school": "Nama Sekolah",
+      "email": "Email Kerja",
+      "message": "Pesan",
+      "placeholder_name": "Contoh: John Doe",
+      "placeholder_school": "Contoh: SMA VisiSekolah",
+      "placeholder_message": "Tuliskan pesan Anda...",
+      "submit": "Kirim Pesan Sekarang"
+    },
+    "sidebar": {
+      "office": "Kantor",
+      "location": "Digital Hub BSD, Tangerang"
+    }
+  },
+  "footer": {
+    "slogan": "Mendigitalisasi Pendidikan Indonesia melalui platform white-label terpadu untuk sekolah masa depan.",
+    "platform": "Platform",
+    "company": "Perusahaan",
+    "contact_us": "Hubungi Kami",
+    "copyright": "Semua Hak Dilindungi.",
+    "links": {
+      "features": "Fitur Utama",
+      "pricing": "Paket Harga",
+      "demo": "Demo Platform",
+      "register": "Pendaftaran",
+      "about": "Tentang Kami",
+      "contact": "Hubungi Kami",
+      "privacy": "Privasi",
+      "terms": "Syarat & Ketentuan"
+    }
+  }
+}

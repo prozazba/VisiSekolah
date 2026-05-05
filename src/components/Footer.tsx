@@ -1,11 +1,15 @@
+'use client';
+
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Globe, MessageCircle, Info, Share2 } from 'lucide-react';
 import styles from '../styles/Footer.module.scss';
 import packageJson from '../../package.json';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const version = packageJson.version;
+  const { dict } = useLanguage();
 
   return (
     <footer className={styles.footer}>
@@ -17,34 +21,34 @@ export default function Footer() {
               Visi<span>Sekolah</span>
             </div>
             <p className={styles.slogan}>
-              Mendigitalisasi Pendidikan Indonesia melalui platform white-label terpadu untuk sekolah masa depan.
+              {dict.footer.slogan}
             </p>
           </div>
 
           {/* Navigation Hub */}
           <div className={styles.navCol}>
-            <h4>Platform</h4>
+            <h4>{dict.footer.platform}</h4>
             <ul>
-              <li><Link href="/features">Fitur Utama</Link></li>
-              <li><Link href="/pricing">Paket Harga</Link></li>
-              <li><Link href="/demo">Demo Platform</Link></li>
-              <li><Link href="/register">Pendaftaran</Link></li>
+              <li><Link href="/features">{dict.footer.links.features}</Link></li>
+              <li><Link href="/pricing">{dict.footer.links.pricing}</Link></li>
+              <li><Link href="/demo">{dict.footer.links.demo}</Link></li>
+              <li><Link href="/register">{dict.footer.links.register}</Link></li>
             </ul>
           </div>
 
           <div className={styles.navCol}>
-            <h4>Perusahaan</h4>
+            <h4>{dict.footer.company}</h4>
             <ul>
-              <li><Link href="/about">Tentang Kami</Link></li>
-              <li><Link href="/contact">Hubungi Kami</Link></li>
-              <li><Link href="/privacy">Privasi</Link></li>
-              <li><Link href="/terms">Syarat & Ketentuan</Link></li>
+              <li><Link href="/about">{dict.footer.links.about}</Link></li>
+              <li><Link href="/contact">{dict.footer.links.contact}</Link></li>
+              <li><Link href="/privacy">{dict.footer.links.privacy}</Link></li>
+              <li><Link href="/terms">{dict.footer.links.terms}</Link></li>
             </ul>
           </div>
 
           {/* Contact Column */}
           <div className={styles.contactCol}>
-            <h4>Hubungi Kami</h4>
+            <h4>{dict.footer.contact_us}</h4>
             <ul>
               <li>
                 <Phone size={18} className={styles.icon} />
@@ -65,7 +69,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className={styles.bottomBar}>
           <div className={styles.copyright}>
-            <span>© {currentYear} VisiSekolah. Semua Hak Dilindungi.</span>
+            <span>© {currentYear} VisiSekolah. {dict.footer.copyright}</span>
             <span className={styles.versionTag}>v{version}</span>
           </div>
           <div className={styles.socialLinks}>

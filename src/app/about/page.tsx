@@ -1,36 +1,41 @@
+'use client';
+
 import Navbar from '@/components/Navbar';
 import styles from '../../styles/landing.module.scss';
-import { Heart, Target, Lightbulb, ChevronRight } from 'lucide-react';
+import { Heart, Target, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function AboutPage() {
+  const { dict } = useLanguage();
+
   return (
     <main className="bg-slate-50 min-h-screen">
       <Navbar />
       
       {/* Refined Header */}
       <section className={styles.pageSection}>
-        <div className="container">
-          <div className="max-w-3xl mb-16">
-            <span className={styles.pageTag}>Our Mission</span>
-            <h1 className={styles.pageTitle}>Mendigitalisasi Pendidikan Indonesia.</h1>
+        <div className={styles.container}>
+          <div className={`${styles.pageHeader} ${styles.left}`}>
+            <span className={styles.pageTag}>{dict.about_page.tag}</span>
+            <h1 className={styles.pageTitle}>{dict.about_page.title}</h1>
             <p className={styles.pageSubtitle}>
-              Kami percaya bahwa setiap sekolah berhak memiliki teknologi terbaik untuk mencerdaskan generasi bangsa.
+              {dict.about_page.subtitle}
             </p>
           </div>
 
           <div className={styles.bentoGrid}>
             {/* Vision - Primary Tile */}
             <div className={`${styles.bentoItem} ${styles['span-12']}`}>
-              <div className="flex flex-col md:flex-row gap-12 items-center">
-                <div className="flex-1">
+              <div className={`${styles.flexGroup} items-center`} style={{ gap: '4rem' }}>
+                <div style={{ flex: 1 }}>
                   <div className={styles.iconCircle}><Target size={28} /></div>
-                  <h3 className={styles.bentoTitle}>Visi Kami</h3>
+                  <h3 className={styles.bentoTitle}>{dict.about_page.vision.title}</h3>
                   <p className="text-2xl text-slate-600 leading-relaxed italic font-medium">
-                    "Menjadi katalisator utama transformasi digital sekolah di Indonesia melalui platform yang inklusif, terjangkau, dan berfokus pada kemandirian branding sekolah."
+                    {dict.about_page.vision.desc}
                   </p>
                 </div>
-                <div className="flex-1 w-full aspect-video bg-blue-50 rounded-3xl flex items-center justify-center">
+                <div style={{ flex: 1, height: '300px' }} className="bg-blue-50 rounded-3xl flex items-center justify-center">
                    <Target size={120} className="text-blue-200" />
                 </div>
               </div>
@@ -40,24 +45,24 @@ export default function AboutPage() {
             <div className={`${styles.bentoItem} ${styles['span-4']}`}>
               <div>
                 <div className={`${styles.iconCircle} ${styles.red}`}><Heart size={28} /></div>
-                <h3 className={styles.bentoTitle}>Empati</h3>
-                <p className={styles.bentoDesc}>Kami membangun fitur berdasarkan kebutuhan nyata guru dan orang tua di lapangan.</p>
+                <h3 className={styles.bentoTitle}>{dict.about_page.values.empathy.title}</h3>
+                <p className={styles.bentoDesc}>{dict.about_page.values.empathy.desc}</p>
               </div>
             </div>
 
             <div className={`${styles.bentoItem} ${styles['span-4']}`}>
               <div>
                 <div className={`${styles.iconCircle} ${styles.purple}`}><Target size={28} /></div>
-                <h3 className={styles.bentoTitle}>Inovasi</h3>
-                <p className={styles.bentoDesc}>Selalu mengadopsi teknologi terbaru untuk efisiensi administrasi sekolah.</p>
+                <h3 className={styles.bentoTitle}>{dict.about_page.values.innovation.title}</h3>
+                <p className={styles.bentoDesc}>{dict.about_page.values.innovation.desc}</p>
               </div>
             </div>
 
             <div className={`${styles.bentoItem} ${styles['span-4']}`}>
               <div>
                 <div className={`${styles.iconCircle} ${styles.amber}`}><Lightbulb size={28} /></div>
-                <h3 className={styles.bentoTitle}>Inspirasi</h3>
-                <p className={styles.bentoDesc}>Mendorong sekolah untuk bangga dengan identitas digital mereka sendiri.</p>
+                <h3 className={styles.bentoTitle}>{dict.about_page.values.inspiration.title}</h3>
+                <p className={styles.bentoDesc}>{dict.about_page.values.inspiration.desc}</p>
               </div>
             </div>
           </div>
@@ -65,12 +70,14 @@ export default function AboutPage() {
       </section>
 
       {/* Team CTA */}
-      <section className="py-24 bg-white text-center">
-        <div className="container">
-          <h2 className="text-4xl font-black mb-8 text-slate-900">Mari bertumbuh bersama.</h2>
-          <Link href="/contact" className={styles.btnBentoPrimary} style={{ maxWidth: '300px', margin: '0 auto' }}>
-             Gabung Sebagai Mitra
-          </Link>
+      <section className={`${styles.sectionPadding} bg-white text-center`}>
+        <div className={styles.container}>
+          <h2 className={styles.pageTitle} style={{ fontSize: '2.5rem' }}>{dict.about_page.cta_title}</h2>
+          <div className={`${styles.flexGroup} ${styles.center} mt-8`}>
+            <Link href="/contact" className={styles.btnBentoPrimary} style={{ maxWidth: '300px' }}>
+               {dict.about_page.cta_btn}
+            </Link>
+          </div>
         </div>
       </section>
     </main>

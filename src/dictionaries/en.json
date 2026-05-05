@@ -1,0 +1,79 @@
+{
+  "navbar": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "login": "Login",
+    "register": "Register"
+  },
+  "hero": {
+    "title": "Integrated White Label School Solution",
+    "subtitle": "Transform your educational management with a fully customizable platform. One digital ecosystem for the progress of future schools.",
+    "cta_start": "Get Started",
+    "cta_features": "View Features"
+  },
+  "home_features": {
+    "title": "Integrated Digital Solution",
+    "subtitle": "One platform for your entire school ecosystem.",
+    "white_label": { "title": "White Label & Branding", "desc": "Your school's identity, everywhere. Custom domain, logo, and mobile apps with your own branding." },
+    "lms": { "title": "Digital LMS", "desc": "Modern learning management for teachers and students." },
+    "payments": { "title": "Automated Tuition", "desc": "Integrated payment system via VA & QRIS." },
+    "parent_portal": { "title": "Parent Portal", "desc": "Monitor attendance and grades in real-time directly from a smartphone." },
+    "view_all": "View All Features"
+  },
+  "about_page": {
+    "tag": "Our Mission",
+    "title": "Digitalizing Indonesian Education.",
+    "subtitle": "We believe every school deserves the best technology to educate the next generation.",
+    "vision": {
+      "title": "Our Vision",
+      "desc": "\"To be the primary catalyst for school digital transformation in Indonesia through an inclusive, affordable platform focused on school branding independence.\""
+    },
+    "values": {
+      "empathy": { "title": "Empathy", "desc": "We build features based on the real needs of teachers and parents in the field." },
+      "innovation": { "title": "Innovation", "desc": "Always adopting the latest technology for efficient school administration." },
+      "inspiration": { "title": "Inspiration", "desc": "Encouraging schools to be proud of their own digital identity." }
+    },
+    "cta_title": "Let's grow together.",
+    "cta_btn": "Join as a Partner"
+  },
+  "contact_page": {
+    "tag": "Connect with us",
+    "title": "Contact Our Experts.",
+    "subtitle": "Ready to start your school's digital transformation? We are here to answer every question.",
+    "form": {
+      "title": "Send a Message",
+      "desc": "Tell us about your school's needs.",
+      "name": "Full Name",
+      "school": "School Name",
+      "email": "Work Email",
+      "message": "Message",
+      "placeholder_name": "Example: John Doe",
+      "placeholder_school": "Example: VisiSekolah Academy",
+      "placeholder_message": "Write your message here...",
+      "submit": "Send Message Now"
+    },
+    "sidebar": {
+      "office": "Office",
+      "location": "Digital Hub BSD, Tangerang"
+    }
+  },
+  "footer": {
+    "slogan": "Digitalizing Indonesian Education through an integrated white-label platform for the schools of tomorrow.",
+    "platform": "Platform",
+    "company": "Company",
+    "contact_us": "Contact Us",
+    "copyright": "All Rights Reserved.",
+    "links": {
+      "features": "Core Features",
+      "pricing": "Pricing Plans",
+      "demo": "Platform Demo",
+      "register": "Registration",
+      "about": "About Us",
+      "contact": "Contact Us",
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions"
+    }
+  }
+}

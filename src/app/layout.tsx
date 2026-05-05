@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   description: "Platform manajemen sekolah multi-tenant dengan fitur white-label untuk transformasi digital pendidikan Indonesia.",
 };
 
+import { LanguageProvider } from "@/context/LanguageContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,8 +24,10 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={`${inter.variable}`}>
-        {children}
-        <Footer />
+        <LanguageProvider>
+          {children}
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );
