@@ -23,47 +23,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section id="features" className={`py-20 ${styles.bgSurface}`}>
+      {/* Bento Features Section */}
+      <section id="features" className="py-32 bg-slate-50">
         <div className="container">
-          <div className="text-center mb-16">
-            <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Fitur Unggulan</h2>
-            <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
-              Platform terlengkap untuk mendukung digitalisasi ekosistem pendidikan sekolah Anda.
-            </p>
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">Solusi Digital Terpadu</h2>
+            <p className="text-xl text-slate-500">Satu platform untuk seluruh ekosistem sekolah Anda.</p>
           </div>
           
-          <div className={styles.featuresGrid}>
-            <FeatureCard 
-              icon={<Globe size={32} />} 
-              title="White Label & Custom Branding" 
-              description="Gunakan logo, nama aplikasi, dan warna identitas sekolah Anda sendiri untuk memperkuat brand." 
-            />
-            <FeatureCard 
-              icon={<Shield size={32} />} 
-              title="Keamanan Data Terjamin" 
-              description="Sistem multi-tenant yang aman dengan enkripsi tingkat tinggi untuk data siswa dan guru." 
-            />
-            <FeatureCard 
-              icon={<Smartphone size={32} />} 
-              title="Aplikasi Mobile & Web" 
-              description="Akses tanpa batas dari mana saja. Tersedia versi web responsif dan aplikasi mobile native." 
-            />
-            <FeatureCard 
-              icon={<BookOpen size={32} />} 
-              title="E-Learning Terintegrasi" 
-              description="Manajemen tugas, materi, kuis otomatis, dan rapor digital dalam satu alur kerja." 
-            />
-            <FeatureCard 
-              icon={<Users size={32} />} 
-              title="Komunikasi Efektif" 
-              description="Forum kelas interaktif, pengumuman broadcast, dan pesan langsung ke orang tua." 
-            />
-            <FeatureCard 
-              icon={<CreditCard size={32} />} 
-              title="Pembayaran Digital (SPP)" 
-              description="Integrasi pembayaran otomatis melalui Virtual Account, E-Wallet, dan QRIS." 
-            />
+          <div className={styles.bentoGrid}>
+            <div className={`${styles.bentoItem} ${styles['span-8']}`}>
+              <div className={styles.iconCircle}><Globe size={28} /></div>
+              <h3 className={styles.bentoTitle}>White Label & Branding</h3>
+              <p className={styles.bentoDesc}>Identitas sekolah Anda di mana saja. Domain kustom, logo, dan aplikasi mobile dengan branding sendiri.</p>
+            </div>
+            <div className={`${styles.bentoItem} ${styles['span-4']}`}>
+              <div className={`${styles.iconCircle} ${styles.purple}`}><BookOpen size={28} /></div>
+              <h3 className={styles.bentoTitle}>LMS Digital</h3>
+              <p className={styles.bentoDesc}>Manajemen pembelajaran modern untuk guru dan siswa.</p>
+            </div>
+            <div className={`${styles.bentoItem} ${styles['span-4']}`}>
+              <div className={`${styles.iconCircle} ${styles.emerald}`}><CreditCard size={28} /></div>
+              <h3 className={styles.bentoTitle}>SPP Otomatis</h3>
+              <p className={styles.bentoDesc}>Sistem pembayaran terintegrasi VA & QRIS.</p>
+            </div>
+            <div className={`${styles.bentoItem} ${styles['span-8']}`}>
+              <div className={`${styles.iconCircle} ${styles.sky}`}><Users size={28} /></div>
+              <h3 className={styles.bentoTitle}>Portal Orang Tua</h3>
+              <p className={styles.bentoDesc}>Pantau kehadiran dan nilai anak secara real-time langsung dari smartphone.</p>
+            </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <Link href="/features" className="text-blue-600 font-bold hover:underline flex items-center justify-center gap-2">
+              Lihat Semua Fitur
+            </Link>
           </div>
         </div>
       </section>
@@ -76,7 +70,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
     <div className={styles.featureCard}>
       <div className={styles.iconWrapper}>{icon}</div>
       <h3>{title}</h3>
-      <p style={{ marginTop: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>{description}</p>
+      <p className={styles.featureCardDesc}>{description}</p>
     </div>
   );
 }

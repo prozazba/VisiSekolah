@@ -34,14 +34,15 @@
 .heroContent {
   position: relative;
   z-index: 10;
-  max-width: 1000px;
-  animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 3rem;
-  border-radius: 2rem;
-  background: rgba(255, 255, 255, 0.03);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10rem;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .heroTitle {
@@ -82,7 +83,7 @@
   font-size: 1.2rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 10px 20px -5px rgba(0, 112, 243, 0.5);
-  
+
   &:hover {
     transform: translateY(-5px) scale(1.02);
     box-shadow: 0 25px 30px -10px rgba(0, 112, 243, 0.6);
@@ -100,7 +101,7 @@
   font-weight: 700;
   font-size: 1.2rem;
   transition: all 0.4s ease;
-  
+
   &:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: white;
@@ -108,107 +109,242 @@
   }
 }
 
-/* Trusted By Section */
-.trustedBy {
-  padding: 4rem 0;
+/* Bento Grid Design System */
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  margin: 4rem 0;
+}
+
+.bentoItem {
   background: white;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.logoRow {
+  border-radius: 2.5rem;
+  padding: 2.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  opacity: 0.6;
-  filter: grayscale(1);
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-/* Statistics Section */
-.statsSection {
-  padding: 8rem 0;
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 4rem;
-}
-
-.statItem {
-  text-align: center;
-  
-  h2 {
-    font-size: 3.5rem;
-    font-weight: 800;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-  }
-  
-  p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    font-weight: 600;
-  }
-}
-
-/* Features */
-.featuresSection {
-  padding: 8rem 0;
-  background: #0f172a;
-  color: white;
-}
-
-.sectionHeader {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto 5rem;
-  
-  h2 {
-    font-size: 3rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-  }
-  
-  p {
-    font-size: 1.2rem;
-    color: #94a3b8;
-  }
-}
-
-.featuresGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 3rem;
-}
-
-.featureCard {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 3rem;
-  border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
   
   &:hover {
-    transform: translateY(-10px);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--primary-color);
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  &.highlighted {
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.2);
   }
 }
 
-.iconWrapper {
-  width: 64px;
-  height: 64px;
-  background: rgba(0, 112, 243, 0.15);
-  border-radius: 1rem;
+.span-12 { grid-column: span 12; }
+.span-8 { grid-column: span 8; }
+.span-4 { grid-column: span 4; }
+
+@media (max-width: 900px) {
+  .bentoItem { grid-column: span 12 !important; }
+}
+
+.bentoTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.bentoDesc {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.bentoVisual {
+  margin-top: 2rem;
+  background: #f8fafc;
+  border-radius: 1.5rem;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary-color);
-  margin-bottom: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+
+  &.blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); }
+  &.emerald { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); }
+  &.pink { background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); }
+  &.compact { height: 120px; }
 }
+
+.iconCircle {
+  width: 56px;
+  height: 56px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+
+  &.purple { background: #8b5cf6; box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3); }
+  &.emerald { background: #10b981; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3); }
+  &.sky { background: #06b6d4; box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.3); }
+  &.pink { background: #ec4899; box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.3); }
+  &.amber { background: #f59e0b; box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3); }
+  &.red { background: #ef4444; box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3); }
+  &.slate { background: #cbd5e1; box-shadow: 0 10px 15px -3px rgba(203, 213, 225, 0.3); }
+  &.dark { background: #1e293b; box-shadow: 0 10px 15px -3px rgba(30, 41, 59, 0.3); }
+}
+
+.featureCardDesc {
+  margin-top: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Bento Button Components */
+.btnBento {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: #f1f5f9;
+  color: #0f172a;
+  border-radius: 1.25rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+  }
+}
+
+.btnBentoPrimary {
+  @extend .btnBento;
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+
+  &:hover {
+    background: #2563eb;
+    box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.4);
+  }
+}
+
+.btnBentoDark {
+  @extend .btnBento;
+  background: #0f172a;
+  color: white;
+
+  &:hover {
+    background: #1e293b;
+  }
+}
+
+.pageSection {
+  padding-top: 10rem;
+  padding-bottom: 5rem;
+}
+
+.pageTag {
+  color: var(--primary-color);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.pageTitle {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+
+  @media (min-width: 768px) {
+    font-size: 4.5rem;
+  }
+}
+
+.pageSubtitle {
+  font-size: 1.25rem;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+/* Professional Form System */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+
+  &.fullWidth {
+    grid-column: 1 / -1;
+  }
+}
+
+.formLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  padding-left: 0.5rem;
+  display: block;
+}
+
+.formInput {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 1.25rem;
+  font-size: 1rem;
+  color: #0f172a;
+  transition: all 0.3s ease;
+  outline: none;
+
+  &::placeholder {
+    color: #cbd5e1;
+  }
+
+  &:focus {
+    background: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.formTextarea {
+  @extend .formInput;
+  min-height: 150px;
+  resize: vertical;
+}
+
 
 @keyframes fadeInUp {
   from {

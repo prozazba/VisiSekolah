@@ -24,11 +24,11 @@ export default function Navbar() {
         </Link>
 
         <div className={styles.navLinks}>
-          <Link href="#features" className={styles.navLink}>Features</Link>
-          <Link href="#pricing" className={styles.navLink}>Pricing</Link>
-          <Link href="#about" className={styles.navLink}>About</Link>
-          <Link href="#contact" className={styles.navLink}>Contact</Link>
-          <Link href="/login" className={`${styles.navLink} styles.btnPrimary`}>Masuk</Link>
+          <Link href="/features" className={styles.navLink}>Features</Link>
+          <Link href="/pricing" className={styles.navLink}>Pricing</Link>
+          <Link href="/about" className={styles.navLink}>About</Link>
+          <Link href="/contact" className={styles.navLink}>Contact</Link>
+          <Link href="/login" className={styles.btnPrimary}>Masuk</Link>
         </div>
       </div>
     </nav>
