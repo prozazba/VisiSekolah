@@ -1,5 +1,5 @@
 @use "sass:color";
-@use '../styles/variables' as *;
+@use "./variables" as *;
 
 .hero {
   position: relative;

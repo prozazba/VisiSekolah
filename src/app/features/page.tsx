@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar';
-import styles from '../landing.module.scss';
+import styles from '../../styles/landing.module.scss';
 import { Globe, Shield, BookOpen, CreditCard, Smartphone, Users, BarChart3 } from 'lucide-react';
 
 export default function FeaturesPage() {

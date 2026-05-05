@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar';
-import styles from '../landing.module.scss';
+import styles from '../../styles/landing.module.scss';
 import { Check, Shield, Zap, Award } from 'lucide-react';
 import Link from 'next/link';
 

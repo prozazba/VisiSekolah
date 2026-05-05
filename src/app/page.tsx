@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Shield, BookOpen, Users, Smartphone, Globe, CreditCard, ChevronRight } from 'lucide-react';
-import styles from './landing.module.scss';
+import styles from '../styles/landing.module.scss';
 import Navbar from '@/components/Navbar';
 
 export default function Home() {

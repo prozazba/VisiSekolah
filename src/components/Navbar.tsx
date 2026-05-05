@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import styles from './Navbar.module.scss';
+import styles from '../styles/Navbar.module.scss';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);

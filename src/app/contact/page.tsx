@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar';
-import styles from '../landing.module.scss';
+import styles from '../../styles/landing.module.scss';
 import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
 
 export default function ContactPage() {
