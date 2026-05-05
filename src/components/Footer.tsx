@@ -52,15 +52,15 @@ export default function Footer() {
             <ul>
               <li>
                 <Phone size={18} className={styles.icon} />
-                <span>+62 812 3456 7890</span>
+                <span>{dict.footer.contact_info.phone}</span>
               </li>
               <li>
                 <Mail size={18} className={styles.icon} />
-                <span>info@visisekolah.id</span>
+                <span>{dict.footer.contact_info.email}</span>
               </li>
               <li>
                 <MapPin size={18} className={styles.icon} />
-                <span>Digital Hub BSD, Tangerang, Banten</span>
+                <span>{dict.footer.contact_info.address}</span>
               </li>
             </ul>
           </div>

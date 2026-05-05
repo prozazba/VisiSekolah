@@ -1,21 +1,25 @@
+'use client';
+
 import Navbar from '@/components/Navbar';
 import styles from '../../styles/landing.module.scss';
 import { Check, Shield, Zap, Award } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function PricingPage() {
+  const { dict } = useLanguage();
+  const p = dict.pricing_page;
+
   return (
-    <main className="bg-slate-50 min-h-screen">
+    <main className={styles.pageBg}>
       <Navbar />
-      
+
       <section className={styles.pageSection}>
         <div className={styles.container}>
           <div className={styles.pageHeader}>
-            <span className={styles.pageTag}>Pricing Plans</span>
-            <h1 className={styles.pageTitle}>Simple, Transparent Pricing.</h1>
-            <p className={styles.pageSubtitle}>
-              No hidden fees. Choose the best plan for your school's digital growth.
-            </p>
+            <span className={styles.pageTag}>{p.tag}</span>
+            <h1 className={styles.pageTitle}>{p.title}</h1>
+            <p className={styles.pageSubtitle}>{p.subtitle}</p>
           </div>
 
           <div className={styles.bentoGrid}>
@@ -23,60 +27,60 @@ export default function PricingPage() {
             <div className={`${styles.bentoItem} ${styles['span-4']}`}>
               <div>
                 <div className={`${styles.iconCircle} ${styles.slate}`}><Shield size={24} /></div>
-                <h3 className={styles.bentoTitle}>Starter</h3>
-                <div className={`${styles.flexGroup} items-baseline mb-4`} style={{ gap: '0.25rem' }}>
-                  <span className="text-3xl font-black text-slate-900">Rp 500rb</span>
-                  <span className="text-sm text-slate-400">/bln</span>
+                <h3 className={styles.bentoTitle}>{p.starter.name}</h3>
+                <div className={`${styles.priceLine}`}>
+                  <span className={styles.priceAmount}>Rp 500rb</span>
+                  <span className={styles.pricePer}>{p.per_month}</span>
                 </div>
-                <p className="text-sm text-slate-500 mb-6 font-medium">Perfect for small learning centers.</p>
+                <p className={styles.planDesc}>{p.starter.desc}</p>
                 <ul className={styles.featureList}>
-                  <li><Check size={14} className="text-blue-500" /> Hingga 200 Siswa</li>
-                  <li><Check size={14} className="text-blue-500" /> Absensi QR Code</li>
-                  <li><Check size={14} className="text-blue-500" /> Manajemen Nilai</li>
+                  <li><Check size={14} /> {p.starter.f1}</li>
+                  <li><Check size={14} /> {p.starter.f2}</li>
+                  <li><Check size={14} /> {p.starter.f3}</li>
                 </ul>
               </div>
-              <Link href="/contact" className={styles.btnBento}>Get Started</Link>
+              <Link href="/contact" className={styles.btnBento}>{p.starter.cta}</Link>
             </div>
 
-            {/* Professional Plan - Highlighted */}
+            {/* Professional Plan — Highlighted */}
             <div className={`${styles.bentoItem} ${styles['span-4']} ${styles.highlighted}`}>
               <div>
-                <div className={`${styles.flexGroup} ${styles.between} mb-4`}>
+                <div className={`${styles.flexGroup} ${styles.between}`} style={{ marginBottom: '1rem' }}>
                   <div className={styles.iconCircle} style={{ marginBottom: 0 }}><Zap size={24} /></div>
-                  <span className={styles.bentoBadge}>Most Popular</span>
+                  <span className={styles.bentoBadge}>{p.most_popular}</span>
                 </div>
-                <h3 className={styles.bentoTitle}>Professional</h3>
-                <div className={`${styles.flexGroup} items-baseline mb-4`} style={{ gap: '0.25rem' }}>
-                  <span className="text-3xl font-black text-blue-600">Rp 1.5jt</span>
-                  <span className="text-sm text-slate-400">/bln</span>
+                <h3 className={styles.bentoTitle}>{p.pro.name}</h3>
+                <div className={styles.priceLine}>
+                  <span className={styles.priceAmount} style={{ color: '#2563eb' }}>Rp 1.5jt</span>
+                  <span className={styles.pricePer}>{p.per_month}</span>
                 </div>
-                <p className="text-sm text-slate-500 mb-6 font-medium">Comprehensive solution for large schools.</p>
+                <p className={styles.planDesc}>{p.pro.desc}</p>
                 <ul className={styles.featureList}>
-                  <li><Check size={14} className="text-blue-500" /> Hingga 1000 Siswa</li>
-                  <li><Check size={14} className="text-blue-500" /> Full White Label</li>
-                  <li><Check size={14} className="text-blue-500" /> Mobile Native App</li>
-                  <li><Check size={14} className="text-blue-500" /> LMS & Rapor Digital</li>
+                  <li><Check size={14} /> {p.pro.f1}</li>
+                  <li><Check size={14} /> {p.pro.f2}</li>
+                  <li><Check size={14} /> {p.pro.f3}</li>
+                  <li><Check size={14} /> {p.pro.f4}</li>
                 </ul>
               </div>
-              <Link href="/contact" className={styles.btnBentoPrimary}>Select Plan</Link>
+              <Link href="/contact" className={styles.btnBentoPrimary}>{p.pro.cta}</Link>
             </div>
 
             {/* Enterprise Plan */}
             <div className={`${styles.bentoItem} ${styles['span-4']}`}>
               <div>
                 <div className={`${styles.iconCircle} ${styles.dark}`}><Award size={24} /></div>
-                <h3 className={styles.bentoTitle}>Enterprise</h3>
-                <div className={`${styles.flexGroup} items-baseline mb-4`} style={{ gap: '0.25rem' }}>
-                  <span className="text-3xl font-black text-slate-900">Custom</span>
+                <h3 className={styles.bentoTitle}>{p.enterprise.name}</h3>
+                <div className={styles.priceLine}>
+                  <span className={styles.priceAmount}>Custom</span>
                 </div>
-                <p className="text-sm text-slate-500 mb-6 font-medium">For large school foundations.</p>
+                <p className={styles.planDesc}>{p.enterprise.desc}</p>
                 <ul className={styles.featureList}>
-                  <li><Check size={14} className="text-blue-500" /> Unlimited Siswa</li>
-                  <li><Check size={14} className="text-blue-500" /> Dedicated Support</li>
-                  <li><Check size={14} className="text-blue-500" /> Custom Integration</li>
+                  <li><Check size={14} /> {p.enterprise.f1}</li>
+                  <li><Check size={14} /> {p.enterprise.f2}</li>
+                  <li><Check size={14} /> {p.enterprise.f3}</li>
                 </ul>
               </div>
-              <Link href="/contact" className={styles.btnBentoDark}>Contact Sales</Link>
+              <Link href="/contact" className={styles.btnBentoDark}>{p.enterprise.cta}</Link>
             </div>
           </div>
         </div>

@@ -1,61 +1,91 @@
+'use client';
+
 import Link from 'next/link';
 import styles from '../../styles/landing.module.scss';
-import { LogIn, School, ShieldCheck } from 'lucide-react';
+import { LogIn, School, ShieldCheck, AlertCircle } from 'lucide-react';
+import { useActionState } from 'react';
+import { login } from '@/app/actions/auth';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LoginPage() {
+  const [state, action, isPending] = useActionState(login, undefined);
+  const { dict } = useLanguage();
+  const p = dict.login_page;
+
   return (
-    <main className={styles.hero} style={{ backgroundAttachment: 'scroll' }}>
-      <div className={`${styles.container} ${styles.flexGroup} ${styles.center}`} style={{ minHeight: '100vh' }}>
-        <div className={styles.bentoItem} style={{ maxWidth: '450px', background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(40px)', borderColor: 'rgba(255, 255, 255, 0.1)', color: 'white' }}>
+    <main className={`${styles.hero} ${styles.heroScroll}`}>
+      <div className={`${styles.container} ${styles.flexGroup} ${styles.center} ${styles.fullScreen}`}>
+        <div className={`${styles.bentoItem} ${styles.loginCard}`}>
           <div className={`${styles.flexGroup} ${styles.vertical} ${styles.center}`}>
-            <div className={`${styles.iconCircle} ${styles.blue}`} style={{ width: '80px', height: '80px', marginBottom: '2rem' }}>
+            <div className={`${styles.iconCircle} ${styles.blue} ${styles.loginIcon}`}>
               <School size={40} className="text-white" />
             </div>
             
-            <h1 className={styles.pageTitle} style={{ color: 'white', fontSize: '2rem', marginBottom: '0.5rem' }}>Portal VisiSekolah</h1>
-            <p className="text-blue-200/60 mb-10 text-center font-medium">Masuk untuk mengelola ekosistem digital sekolah Anda.</p>
+            <h1 className={`${styles.pageTitle} ${styles.loginTitle}`}>{p.title}</h1>
+            <p className={styles.pageSubtitleLogin}>{p.subtitle}</p>
             
-            <form className={`${styles.formGrid} w-full`}>
+            {state?.message && (
+              <div className={styles.alertError}>
+                <AlertCircle size={18} />
+                <span>{state.message}</span>
+              </div>
+            )}
+
+            <form action={action} className={`${styles.formGrid} w-full`}>
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className={styles.formLabel} style={{ color: 'rgba(255, 255, 255, 0.4)' }}>Identitas Sekolah / Email</label>
+                <label className={`${styles.formLabel} ${styles.loginLabel}`}>{p.email_label}</label>
                 <input 
-                  type="text" 
-                  className={styles.formInput} 
-                  style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white' }}
-                  placeholder="sekolah.id atau admin@email.com"
+                  id="email"
+                  name="email"
+                  type="email" 
+                  className={`${styles.formInput} ${styles.loginInput}`} 
+                  placeholder="admin@visisekolah.id"
+                  required
                 />
+                {state?.errors?.email && <p className={styles.fieldError}>{state.errors.email}</p>}
               </div>
               
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className={styles.formLabel} style={{ color: 'rgba(255, 255, 255, 0.4)' }}>Kata Sandi</label>
+                <label className={`${styles.formLabel} ${styles.loginLabel}`}>{p.password_label}</label>
                 <input 
+                  id="password"
+                  name="password"
                   type="password" 
-                  className={styles.formInput} 
-                  style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white' }}
+                  className={`${styles.formInput} ${styles.loginInput}`} 
                   placeholder="••••••••"
+                  required
                 />
+                {state?.errors?.password && <p className={styles.fieldError}>{state.errors.password}</p>}
               </div>
 
               <div className={`${styles.flexGroup} ${styles.between} ${styles.fullWidth} py-2`}>
-                <label className="flex items-center gap-2 text-sm text-blue-200/60 cursor-pointer">
-                  <input type="checkbox" className="accent-blue-500" /> Ingat Saya
+                <label className={styles.checkboxLabel}>
+                  <input type="checkbox" /> {p.remember_me}
                 </label>
-                <Link href="#" className="text-sm text-blue-400 font-bold hover:text-blue-300">Lupa Sandi?</Link>
+                <Link href="#" className={styles.linkSmall}>{p.forgot_password}</Link>
               </div>
 
               <div className={styles.fullWidth}>
-                <button type="submit" className={`${styles.btnBentoPrimary} w-full`} style={{ padding: '1.25rem' }}>
-                  <LogIn size={20} /> Masuk Sekarang
+                <button 
+                  type="submit" 
+                  disabled={isPending}
+                  className={`${styles.btnBentoPrimary} ${styles.btnFull} ${styles.loginBtn} ${isPending ? styles.isLoading : ''}`} 
+                >
+                  {isPending ? (
+                    <div className={styles.spinner}></div>
+                  ) : (
+                    <><LogIn size={20} /> {p.submit_btn}</>
+                  )}
                 </button>
               </div>
             </form>
 
-            <div className="mt-12 pt-8 border-t border-white/5 w-full text-center">
-              <p className="text-blue-200/40 text-sm">Belum terdaftar? <Link href="/contact" className="text-blue-400 font-bold hover:text-blue-300">Hubungi Sales</Link></p>
+            <div className={styles.footerActions}>
+              <p className={styles.footerText}>{p.not_registered} <Link href="/contact" className={styles.linkSmall}>{p.contact_sales}</Link></p>
             </div>
 
-            <div className={`${styles.flexGroup} mt-8 text-[10px] font-black text-blue-200/20 uppercase tracking-widest`}>
-              <ShieldCheck size={12} /> Secure Multi-Tenant Environment
+            <div className={styles.secureBadge}>
+              <ShieldCheck size={12} /> {p.secure_badge}
             </div>
           </div>
         </div>

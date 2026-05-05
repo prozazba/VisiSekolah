@@ -74,6 +74,67 @@
       "contact": "Hubungi Kami",
       "privacy": "Privasi",
       "terms": "Syarat & Ketentuan"
+    },
+    "contact_info": {
+      "phone": "+62 812 3456 7890",
+      "email": "info@visisekolah.id",
+      "address": "Digital Hub BSD, Tangerang, Banten"
     }
+  },
+  "features_page": {
+    "tag": "Fitur Produk",
+    "title": "Semua yang Anda butuhkan untuk mengelola sekolah.",
+    "subtitle": "Alat canggih yang dirancang untuk administrator, guru, dan orang tua demi pengalaman pendidikan yang mulus.",
+    "white_label": { "title": "White Label Branding", "desc": "Identitas sekolah Anda di mana saja. Domain kustom, logo, dan aplikasi mobile dengan branding penuh atas nama Anda." },
+    "security": { "title": "Keamanan", "desc": "Perlindungan data kelas enterprise untuk siswa Anda." },
+    "lms": { "title": "LMS & Rapor", "desc": "Kurikulum digital dan penilaian otomatis." },
+    "payments": { "title": "Pembayaran Otomatis", "desc": "Integrasikan Virtual Account dan QRIS untuk pembayaran SPP. Rekonsiliasi real-time dan notifikasi orang tua." },
+    "mobile": { "title": "Aplikasi Mobile", "desc": "Aplikasi Android & iOS tersendiri." },
+    "parent_portal": { "title": "Portal Orang Tua", "desc": "Pelacakan perkembangan siswa secara real-time." },
+    "analytics": { "title": "Analitik", "desc": "Wawasan sekolah berbasis data." }
+  },
+  "pricing_page": {
+    "tag": "Paket Harga",
+    "title": "Harga Sederhana & Transparan.",
+    "subtitle": "Tanpa biaya tersembunyi. Pilih paket terbaik untuk pertumbuhan digital sekolah Anda.",
+    "per_month": "/bln",
+    "most_popular": "Paling Populer",
+    "starter": {
+      "name": "Starter",
+      "desc": "Cocok untuk pusat belajar kecil.",
+      "cta": "Mulai Sekarang",
+      "f1": "Hingga 200 Siswa",
+      "f2": "Absensi QR Code",
+      "f3": "Manajemen Nilai"
+    },
+    "pro": {
+      "name": "Professional",
+      "desc": "Solusi komprehensif untuk sekolah besar.",
+      "cta": "Pilih Paket",
+      "f1": "Hingga 1000 Siswa",
+      "f2": "Full White Label",
+      "f3": "Aplikasi Mobile Native",
+      "f4": "LMS & Rapor Digital"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "desc": "Untuk yayasan sekolah besar.",
+      "cta": "Hubungi Sales",
+      "f1": "Siswa Tidak Terbatas",
+      "f2": "Dedicated Support",
+      "f3": "Custom Integration"
+    }
+  },
+  "login_page": {
+    "title": "Portal VisiSekolah",
+    "subtitle": "Masuk untuk mengelola ekosistem digital sekolah Anda.",
+    "email_label": "Email Administrasi",
+    "password_label": "Kata Sandi",
+    "remember_me": "Ingat Saya",
+    "forgot_password": "Lupa Sandi?",
+    "submit_btn": "Masuk Sekarang",
+    "not_registered": "Belum terdaftar?",
+    "contact_sales": "Hubungi Sales",
+    "secure_badge": "Secure Multi-Tenant Environment"
   }
 }

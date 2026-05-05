@@ -74,6 +74,67 @@
       "contact": "Contact Us",
       "privacy": "Privacy Policy",
       "terms": "Terms & Conditions"
+    },
+    "contact_info": {
+      "phone": "+62 812 3456 7890",
+      "email": "info@visisekolah.id",
+      "address": "Digital Hub BSD, Tangerang, Banten"
     }
+  },
+  "features_page": {
+    "tag": "Product Features",
+    "title": "Everything you need to run your school.",
+    "subtitle": "Powerful tools designed for administrators, teachers, and parents to create a seamless educational experience.",
+    "white_label": { "title": "White Label Branding", "desc": "Your school's identity, everywhere. Custom domain, logo, and mobile apps fully branded under your name." },
+    "security": { "title": "Security", "desc": "Enterprise-grade data protection for your students." },
+    "lms": { "title": "LMS & Report Cards", "desc": "Digital curriculum and automated grading." },
+    "payments": { "title": "Automated Payments", "desc": "Integrate Virtual Accounts and QRIS for tuition payments. Real-time reconciliation and parent notifications." },
+    "mobile": { "title": "Mobile Native", "desc": "Android & iOS dedicated apps." },
+    "parent_portal": { "title": "Parent Portal", "desc": "Real-time student progress tracking." },
+    "analytics": { "title": "Analytics", "desc": "Data-driven school insights." }
+  },
+  "pricing_page": {
+    "tag": "Pricing Plans",
+    "title": "Simple, Transparent Pricing.",
+    "subtitle": "No hidden fees. Choose the best plan for your school's digital growth.",
+    "per_month": "/mo",
+    "most_popular": "Most Popular",
+    "starter": {
+      "name": "Starter",
+      "desc": "Perfect for small learning centers.",
+      "cta": "Get Started",
+      "f1": "Up to 200 Students",
+      "f2": "QR Code Attendance",
+      "f3": "Grade Management"
+    },
+    "pro": {
+      "name": "Professional",
+      "desc": "Comprehensive solution for large schools.",
+      "cta": "Select Plan",
+      "f1": "Up to 1000 Students",
+      "f2": "Full White Label",
+      "f3": "Native Mobile App",
+      "f4": "LMS & Digital Report Cards"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "desc": "For large school foundations.",
+      "cta": "Contact Sales",
+      "f1": "Unlimited Students",
+      "f2": "Dedicated Support",
+      "f3": "Custom Integration"
+    }
+  },
+  "login_page": {
+    "title": "VisiSekolah Portal",
+    "subtitle": "Log in to manage your school's digital ecosystem.",
+    "email_label": "Admin Email",
+    "password_label": "Password",
+    "remember_me": "Remember Me",
+    "forgot_password": "Forgot Password?",
+    "submit_btn": "Log In Now",
+    "not_registered": "Not registered yet?",
+    "contact_sales": "Contact Sales",
+    "secure_badge": "Secure Multi-Tenant Environment"
   }
 }

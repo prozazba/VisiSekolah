@@ -459,3 +459,198 @@
     transform: translateY(0);
   }
 }
+
+// ---- Shared page background ----
+.pageBg {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+// ---- Pricing page helpers ----
+.priceLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.priceAmount {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.pricePer {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.planDesc {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+// ---- Login Page specifics ----
+.pageSubtitleLogin {
+  color: rgba(191, 219, 254, 0.6);
+  margin-bottom: 2.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.alertError {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #f87171;
+  font-size: 0.875rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+.fieldError {
+  color: #f87171;
+  font-size: 0.625rem;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(191, 219, 254, 0.6);
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    accent-color: #3b82f6;
+  }
+}
+
+.linkSmall {
+  font-size: 0.875rem;
+  color: #60a5fa;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #93c5fd;
+  }
+}
+
+.btnFull {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.footerActions {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+  text-align: center;
+}
+
+.footerText {
+  color: rgba(191, 219, 254, 0.4);
+  font-size: 0.875rem;
+}
+
+.secureBadge {
+  margin-top: 2rem;
+  font-size: 0.625rem;
+  font-weight: 900;
+  color: rgba(191, 219, 254, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// ---- Login Page Inline Style Replacements ----
+.heroScroll {
+  background-attachment: scroll;
+}
+
+.fullScreen {
+  min-height: 100vh;
+}
+
+.loginCard {
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.loginIcon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 2rem;
+}
+
+.loginTitle {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.loginLabel {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.loginInput {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(59, 130, 246, 0.5);
+  }
+}
+
+.loginBtn {
+  padding: 1.25rem;
+  transition: opacity 0.2s;
+
+  &.isLoading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}

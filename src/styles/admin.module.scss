@@ -2,26 +2,167 @@
 
 .adminDashboard {
   min-height: 100vh;
-  background-color: var(--surface-color);
+  background-color: #f1f5f9;
 }
 
+// ---- Header ----
 .header {
   background-color: var(--primary-color);
   color: white;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
 }
 
+.headerInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logoBadge {
+  width: 40px;
+  height: 40px;
+  background-color: #2563eb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 900;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+// ---- Nav ----
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+  }
+}
+
+.logoutForm {
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logoutBtn {
+  @extend .navItem;
+  color: #fb7185;
+
+  &:hover {
+    color: #f43f5e;
+    background: rgba(251, 113, 133, 0.1);
+  }
+}
+
+// ---- Main Content ----
+.mainContent {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.pageHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 0 0 0.25rem;
+}
+
+.pageSubtitle {
+  color: #64748b;
+  margin: 0;
+}
+
+.btnPrimary {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+
+  &:hover {
+    background-color: #1d4ed8;
+  }
+}
+
+// ---- Stats ----
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   margin-bottom: 2.5rem;
-  
+
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+.statCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 0;
+}
+
+// ---- Table ----
 .schoolList {
   background: white;
   border-radius: var(--radius-xl);
@@ -41,9 +182,54 @@
 
 .th {
   padding: 1rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
 }
 
 .td {
   padding: 1rem;
   border-top: 1px solid var(--border-color);
+}
+
+.schoolName {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+
+  &.active {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  &.pending {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+}
+
+.actionBtn {
+  color: var(--accent-color);
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(59, 130, 246, 0.08);
+  }
 }
