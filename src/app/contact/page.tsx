@@ -8,7 +8,7 @@ export default function ContactPage() {
       <Navbar />
       
       <section className={styles.pageSection}>
-        <div className="container">
+        <div className={styles.container}>
           <div className="max-w-3xl mb-16">
             <span className={styles.pageTag}>Connect with us</span>
             <h1 className={styles.pageTitle}>Hubungi Tim Ahli Kami.</h1>
@@ -51,8 +51,8 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Contact Info Sidebar */}
-            <div className="grid grid-cols-1 gap-6 md:col-span-4">
+            {/* Contact Info Sidebar - CLEANED FROM UTILITIES */}
+            <div className={styles.bentoSidebar}>
               <div className={styles.bentoItem}>
                 <div>
                   <div className={`${styles.iconCircle} ${styles.emerald} mb-4`}><Phone size={24} /></div>
