@@ -1,22 +1,23 @@
 import { PrismaClient } from './generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 import "dotenv/config";
-
-import { PrismaNeon } from '@prisma/adapter-neon';
-import { Pool } from '@neondatabase/serverless';
 
 const rawUrl = process.env.DATABASE_URL;
 if (!rawUrl) {
   throw new Error('DATABASE_URL is missing in the environment');
 }
 
-// Clean the URL (remove quotes if any, strip unsupported params, and trim whitespace)
+// Clean the URL (remove quotes and unsupported params)
 const connectionString = rawUrl.replace(/['"]/g, '').replace(/([?&])channel_binding=[^&]*(&|$)/, '$1').replace(/[?&]$/, '').trim();
 
-const pool = new Pool({ connectionString });
-const adapter = new PrismaNeon(pool as any);
+const pool = new Pool({ 
+  connectionString,
+  ssl: true 
+});
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
-
 
 async function main() {
   const hashedPassword = await bcrypt.hash('admin123', 10);
@@ -38,10 +39,11 @@ async function main() {
 main()
   .then(async () => {
     await prisma.$disconnect();
+    await pool.end();
   })
   .catch(async (e) => {
-    console.error('Seeding failed with error:');
-    console.dir(e, { depth: null });
+    console.error(e);
     await prisma.$disconnect();
+    await pool.end();
     process.exit(1);
   });
