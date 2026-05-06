@@ -39,7 +39,7 @@ export default function PricingPage() {
                   <li><Check size={14} /> {p.starter.f3}</li>
                 </ul>
               </div>
-              <Link href="/contact" className={styles.btnBento}>{p.starter.cta}</Link>
+              <Link href="/register?plan=starter" className={styles.btnBento}>{p.starter.cta}</Link>
             </div>
 
             {/* Professional Plan — Highlighted */}
@@ -62,7 +62,7 @@ export default function PricingPage() {
                   <li><Check size={14} /> {p.pro.f4}</li>
                 </ul>
               </div>
-              <Link href="/contact" className={styles.btnBentoPrimary}>{p.pro.cta}</Link>
+              <Link href="/register?plan=professional" className={styles.btnBentoPrimary}>{p.pro.cta}</Link>
             </div>
 
             {/* Enterprise Plan */}
@@ -80,7 +80,7 @@ export default function PricingPage() {
                   <li><Check size={14} /> {p.enterprise.f3}</li>
                 </ul>
               </div>
-              <Link href="/contact" className={styles.btnBentoDark}>{p.enterprise.cta}</Link>
+              <Link href="/register?plan=enterprise" className={styles.btnBentoDark}>{p.enterprise.cta}</Link>
             </div>
           </div>
         </div>

@@ -34,6 +34,28 @@ async function main() {
   });
 
   console.log('Super Admin created:', admin.email);
+
+  // Create sample schools
+  const schools = [
+    { name: 'SMP Negeri 1 Jakarta', slug: 'smp1', status: 'ACTIVE' as const },
+    { name: 'SMA Negeri 5 Bandung', slug: 'sma5', status: 'ACTIVE' as const },
+    { name: 'SD Al-Azhar 1', slug: 'sd-alazhar1', status: 'PENDING' as const },
+    { name: 'SMK Telkom Malang', slug: 'smk-telkom', status: 'SUSPENDED' as const },
+  ];
+
+  for (const school of schools) {
+    await prisma.school.upsert({
+      where: { slug: school.slug },
+      update: { status: school.status },
+      create: {
+        name: school.name,
+        slug: school.slug,
+        status: school.status,
+      },
+    });
+  }
+
+  console.log('Sample schools seeded.');
 }
 
 main()

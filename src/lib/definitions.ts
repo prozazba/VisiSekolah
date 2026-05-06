@@ -18,5 +18,6 @@ export type FormState =
 export interface SessionPayload {
   userId: string;
   role: string;
+  schoolId?: string | null;
   expiresAt: Date;
 }

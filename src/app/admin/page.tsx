@@ -3,6 +3,8 @@ import { verifySession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { logout } from '@/app/actions/auth';
 import { LogOut, LayoutDashboard, School as SchoolIcon, CreditCard, Settings } from 'lucide-react';
+import prisma from '@/lib/prisma';
+import AddSchoolButton from '@/components/AddSchoolButton';
 
 export default async function AdminDashboard() {
   const session = await verifySession();
@@ -11,6 +13,25 @@ export default async function AdminDashboard() {
   if (!session || session.role !== 'SUPER_ADMIN') {
     redirect('/login');
   }
+
+  // Fetch real data from NeonDB
+  const schools = await prisma.school.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+
+  // Fetch users who could be school admins (no school assigned yet)
+  const users = await prisma.user.findMany({
+    where: { 
+      schoolId: null,
+      role: { not: 'SUPER_ADMIN' }
+    },
+    select: { id: true, name: true, email: true }
+  });
+
+  const totalSchools = schools.length;
+  const activeSchools = schools.filter(s => s.status === 'ACTIVE').length;
+  const pendingSchools = schools.filter(s => s.status === 'PENDING').length;
+  const suspendedSchools = schools.filter(s => s.status === 'SUSPENDED').length;
 
   return (
     <div className={styles.adminDashboard}>
@@ -42,14 +63,14 @@ export default async function AdminDashboard() {
             <h2 className={styles.pageTitle}>Manajemen Sekolah</h2>
             <p className={styles.pageSubtitle}>Kelola seluruh tenant dan ekosistem VisiSekolah.</p>
           </div>
-          <button className={styles.btnPrimary}>+ Tambah Sekolah Baru</button>
+          <AddSchoolButton users={users} />
         </div>
 
         <div className={styles.statsGrid}>
-          <StatCard title="Total Sekolah" value="128" color="#3b82f6" />
-          <StatCard title="Sekolah Aktif" value="112" color="#10b981" />
-          <StatCard title="Menunggu Approval" value="12" color="#f59e0b" />
-          <StatCard title="Suspended" value="4" color="#ef4444" />
+          <StatCard title="Total Sekolah" value={totalSchools.toString()} color="#3b82f6" />
+          <StatCard title="Sekolah Aktif" value={activeSchools.toString()} color="#10b981" />
+          <StatCard title="Menunggu Approval" value={pendingSchools.toString()} color="#f59e0b" />
+          <StatCard title="Suspended" value={suspendedSchools.toString()} color="#ef4444" />
         </div>
 
         <div className={styles.schoolList}>
@@ -64,9 +85,22 @@ export default async function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              <SchoolRow name="SMP Negeri 1 Jakarta" slug="smp1" status="ACTIVE" date="12 Apr 2024" />
-              <SchoolRow name="SMA Negeri 5 Bandung" slug="sma5" status="ACTIVE" date="15 Apr 2024" />
-              <SchoolRow name="SD Al-Azhar 1" slug="sd-alazhar1" status="PENDING" date="20 Apr 2024" />
+              {schools.map((school) => (
+                <SchoolRow 
+                  key={school.id}
+                  name={school.name} 
+                  slug={school.slug} 
+                  status={school.status} 
+                  date={new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }).format(school.createdAt)} 
+                />
+              ))}
+              {schools.length === 0 && (
+                <tr>
+                  <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', opacity: 0.5 }}>
+                    Belum ada sekolah terdaftar.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -85,9 +119,7 @@ function StatCard({ title, value, color }: { title: string; value: string; color
 }
 
 function SchoolRow({ name, slug, status, date }: { name: string; slug: string; status: string; date: string }) {
-  const badgeClass = status === 'ACTIVE'
-    ? `${styles.badge} ${styles.active}`
-    : `${styles.badge} ${styles.pending}`;
+  const badgeClass = `${styles.badge} ${styles[status.toLowerCase()] || styles.pending}`;
 
   return (
     <tr>

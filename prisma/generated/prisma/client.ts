@@ -141,3 +141,8 @@ export type ForumPost = Prisma.ForumPostModel
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model RegistrationInquiry
+ * 
+ */
+export type RegistrationInquiry = Prisma.RegistrationInquiryModel

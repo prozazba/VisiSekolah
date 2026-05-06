@@ -403,7 +403,8 @@ export const ModelName = {
   Message: 'Message',
   Forum: 'Forum',
   ForumPost: 'ForumPost',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  RegistrationInquiry: 'RegistrationInquiry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "school" | "schoolSettings" | "user" | "guruProfile" | "siswaProfile" | "parentProfile" | "academicTerm" | "class" | "subject" | "schedule" | "task" | "taskSubmission" | "grade" | "attendance" | "guruAttendance" | "announcement" | "message" | "forum" | "forumPost" | "payment"
+    modelProps: "school" | "schoolSettings" | "user" | "guruProfile" | "siswaProfile" | "parentProfile" | "academicTerm" | "class" | "subject" | "schedule" | "task" | "taskSubmission" | "grade" | "attendance" | "guruAttendance" | "announcement" | "message" | "forum" | "forumPost" | "payment" | "registrationInquiry"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1903,6 +1904,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RegistrationInquiry: {
+      payload: Prisma.$RegistrationInquiryPayload<ExtArgs>
+      fields: Prisma.RegistrationInquiryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RegistrationInquiryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RegistrationInquiryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>
+        }
+        findFirst: {
+          args: Prisma.RegistrationInquiryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RegistrationInquiryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>
+        }
+        findMany: {
+          args: Prisma.RegistrationInquiryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>[]
+        }
+        create: {
+          args: Prisma.RegistrationInquiryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>
+        }
+        createMany: {
+          args: Prisma.RegistrationInquiryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RegistrationInquiryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>[]
+        }
+        delete: {
+          args: Prisma.RegistrationInquiryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>
+        }
+        update: {
+          args: Prisma.RegistrationInquiryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>
+        }
+        deleteMany: {
+          args: Prisma.RegistrationInquiryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RegistrationInquiryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RegistrationInquiryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>[]
+        }
+        upsert: {
+          args: Prisma.RegistrationInquiryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationInquiryPayload>
+        }
+        aggregate: {
+          args: Prisma.RegistrationInquiryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRegistrationInquiry>
+        }
+        groupBy: {
+          args: Prisma.RegistrationInquiryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationInquiryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RegistrationInquiryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationInquiryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2190,6 +2265,22 @@ export const PaymentScalarFieldEnum = {
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
+export const RegistrationInquiryScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  schoolName: 'schoolName',
+  contactName: 'contactName',
+  phone: 'phone',
+  plan: 'plan',
+  notes: 'notes',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationInquiryScalarFieldEnum = (typeof RegistrationInquiryScalarFieldEnum)[keyof typeof RegistrationInquiryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2338,6 +2429,20 @@ export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'InquiryStatus'
+ */
+export type EnumInquiryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryStatus[]'
+ */
+export type ListEnumInquiryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2468,6 +2573,7 @@ export type GlobalOmitConfig = {
   forum?: Prisma.ForumOmit
   forumPost?: Prisma.ForumPostOmit
   payment?: Prisma.PaymentOmit
+  registrationInquiry?: Prisma.RegistrationInquiryOmit
 }
 
 /* Types for Logging */

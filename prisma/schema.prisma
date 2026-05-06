@@ -318,3 +318,27 @@ enum PaymentStatus {
   EXPIRED
   FAILED
 }
+
+// -----------------------------------------
+// Sales & Onboarding
+// -----------------------------------------
+
+model RegistrationInquiry {
+  id            String   @id @default(cuid())
+  email         String
+  schoolName    String?
+  contactName   String?
+  phone         String?
+  plan          String?  // Starter, Pro, Enterprise
+  notes         String?
+  status        InquiryStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum InquiryStatus {
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
+}

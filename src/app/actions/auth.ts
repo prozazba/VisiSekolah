@@ -44,7 +44,7 @@ export async function login(state: FormState, formData: FormData) {
     }
 
     // 4. Create session
-    await createSession(user.id, user.role);
+    await createSession(user.id, user.role, user.schoolId);
 
     // 5. Redirect based on role
     if (user.role === 'SUPER_ADMIN') {

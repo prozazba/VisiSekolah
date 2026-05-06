@@ -70,7 +70,8 @@ export const ModelName = {
   Message: 'Message',
   Forum: 'Forum',
   ForumPost: 'ForumPost',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  RegistrationInquiry: 'RegistrationInquiry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -335,6 +336,22 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const RegistrationInquiryScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  schoolName: 'schoolName',
+  contactName: 'contactName',
+  phone: 'phone',
+  plan: 'plan',
+  notes: 'notes',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationInquiryScalarFieldEnum = (typeof RegistrationInquiryScalarFieldEnum)[keyof typeof RegistrationInquiryScalarFieldEnum]
 
 
 export const SortOrder = {

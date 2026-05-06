@@ -654,3 +654,309 @@
     pointer-events: none;
   }
 }
+
+// ---- Registration Form Styles ----
+.formCard {
+  background: white;
+  padding: 3rem;
+  border-radius: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.formHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+  
+  p {
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+}
+
+.registrationForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0.25rem;
+    
+    svg {
+      color: var(--primary-color);
+    }
+  }
+  
+  input, textarea {
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    outline: none;
+    
+    &::placeholder { color: #cbd5e1; }
+    
+    &:focus {
+      background: white;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  select {
+    @extend input;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    appearance: none;
+  }
+}
+
+.formInputLarge {
+  @extend .formInput;
+  padding: 1.25rem 1.5rem !important;
+  font-size: 1.1rem !important;
+  border-radius: 1.25rem !important;
+}
+
+.planSelector {
+  margin-top: 2rem;
+  
+  label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    display: block;
+  }
+}
+
+.planCards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.planCardSmall {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  
+  &:hover {
+    background: white;
+    border-color: #cbd5e1;
+    transform: translateX(5px);
+  }
+  
+  &.active {
+    background: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1);
+    
+    .planIcon {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .checkIndicator {
+      border-color: var(--primary-color);
+      .checkInner { opacity: 1; transform: scale(1); }
+    }
+  }
+}
+
+.popularTag {
+  position: absolute;
+  top: 0;
+  right: 1.5rem;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.6rem;
+  font-weight: 900;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0 0 8px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.planIcon {
+  width: 44px;
+  height: 44px;
+  background: white;
+  color: #64748b;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.planInfo {
+  flex: 1;
+}
+
+.planName {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.1rem;
+}
+
+.planPrice {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #2563eb;
+  
+  small {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    margin-left: 0.1rem;
+    font-weight: 500;
+  }
+}
+
+.planDescSmall {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+.checkIndicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  .checkInner {
+    width: 10px;
+    height: 10px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+}
+
+.submitBtn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.errorBanner {
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  border-left: 4px solid #ef4444;
+}
+
+.successContainer {
+  text-align: center;
+  padding: 4rem 2rem;
+  
+  .successIcon {
+    color: #10b981;
+    margin-bottom: 2rem;
+    animation: bounce 1s infinite;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    color: #0f172a;
+  }
+  
+  p {
+    color: #64748b;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
