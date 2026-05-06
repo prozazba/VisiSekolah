@@ -6,11 +6,16 @@ const prismaClientSingleton = () => {
   const url = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING;
   
   if (!url || typeof url !== 'string' || url.trim() === '') {
-    throw new Error(`DATABASE_URL is missing or empty. Please set it in Vercel environment variables.`);
+    const typeOfUrl = typeof url;
+    throw new Error(`DATABASE_URL is missing or empty. Type: ${typeOfUrl}. Value: "${String(url)}". Please set it in Vercel environment variables.`);
   }
 
   // Clean the URL (remove quotes if any, strip unsupported params, and trim whitespace)
   const connectionString = url.replace(/['"]/g, '').replace(/([?&])channel_binding=[^&]*(&|$)/, '$1').replace(/[?&]$/, '').trim();
+  
+  // Debug log (masked)
+  console.log(`Initializing Pool with connectionString (length: ${connectionString.length}): ${connectionString.substring(0, 15)}...`);
+
 
 
   try {
