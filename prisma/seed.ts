@@ -5,10 +5,18 @@ import "dotenv/config";
 import { PrismaNeon } from '@prisma/adapter-neon';
 import { Pool } from '@neondatabase/serverless';
 
-const connectionString = process.env.DATABASE_URL;
+const rawUrl = process.env.DATABASE_URL;
+if (!rawUrl) {
+  throw new Error('DATABASE_URL is missing in the environment');
+}
+
+// Clean the URL (remove quotes if any, strip unsupported params, and trim whitespace)
+const connectionString = rawUrl.replace(/['"]/g, '').replace(/([?&])channel_binding=[^&]*(&|$)/, '$1').replace(/[?&]$/, '').trim();
+
 const pool = new Pool({ connectionString });
 const adapter = new PrismaNeon(pool as any);
 const prisma = new PrismaClient({ adapter });
+
 
 async function main() {
   const hashedPassword = await bcrypt.hash('admin123', 10);

@@ -3,16 +3,34 @@ import { PrismaNeon } from '@prisma/adapter-neon';
 import { Pool } from '@neondatabase/serverless';
 
 const prismaClientSingleton = () => {
-  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING;
   
-  if (!connectionString) {
-    throw new Error('DATABASE_URL or POSTGRES_URL is missing in the environment. Please check your Vercel/environment settings.');
+  if (!url || typeof url !== 'string' || url.trim() === '') {
+    throw new Error(`DATABASE_URL is missing or empty. Please set it in Vercel environment variables.`);
   }
 
-  const pool = new Pool({ connectionString });
-  const adapter = new PrismaNeon(pool as any);
-  return new PrismaClient({ adapter });
+  // Clean the URL (remove quotes if any, strip unsupported params, and trim whitespace)
+  const connectionString = url.replace(/['"]/g, '').replace(/([?&])channel_binding=[^&]*(&|$)/, '$1').replace(/[?&]$/, '').trim();
+
+
+  try {
+    const pool = new Pool({ connectionString });
+    
+    // Add event listener to catch pool errors early
+    pool.on('error', (err: any) => {
+      console.error('Unexpected error on idle client', err);
+    });
+
+
+    const adapter = new PrismaNeon(pool as any);
+    return new PrismaClient({ adapter });
+  } catch (error: any) {
+    console.error('Failed to initialize Prisma with Neon adapter:', error);
+    throw error;
+  }
 };
+
+
 
 declare global {
   var prisma: undefined | ReturnType<typeof prismaClientSingleton>;
