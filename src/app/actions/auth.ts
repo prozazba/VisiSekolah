@@ -58,9 +58,13 @@ export async function login(state: FormState, formData: FormData) {
       throw error; // Re-throw redirect errors as they are handled by Next.js
     }
     const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan sistem.';
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('Login diagnostic:', { message: errorMessage, stack: errorStack });
+    
     return {
-      message: `Login gagal: ${errorMessage}`,
+      message: `Login gagal (Diagnostic: ${errorMessage})`,
     };
+
   }
 }
 
