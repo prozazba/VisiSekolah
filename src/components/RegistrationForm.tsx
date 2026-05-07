@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from '../styles/landing.module.scss';
 import { submitInquiry } from '@/app/actions/inquiry';
-import { Mail, Send, CheckCircle2, Shield, Zap, Award } from 'lucide-react';
+import { Mail, Send, CheckCircle2, Shield, Zap, Award, Clock, Sparkles, ArrowRight } from 'lucide-react';
 
 const PLANS = [
   { 
@@ -37,6 +37,10 @@ export default function RegistrationForm() {
   const [isPending, setIsPending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submittedEmail, setSubmittedEmail] = useState('');
+  const [submissionId, setSubmissionId] = useState('');
+  const [inquiryId, setInquiryId] = useState('');
+  const [isAutoApproved, setIsAutoApproved] = useState(false);
 
   useEffect(() => {
     const planParam = searchParams.get('plan')?.toUpperCase();
@@ -51,7 +55,8 @@ export default function RegistrationForm() {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    formData.append('plan', selectedPlan); // Explicitly append selected plan
+    formData.append('plan', selectedPlan);
+    const email = formData.get('email') as string;
 
     const result = await submitInquiry(formData);
 
@@ -59,22 +64,107 @@ export default function RegistrationForm() {
       setError(result.error);
       setIsPending(false);
     } else {
+      setSubmittedEmail(email);
+      setSubmissionId(result.submissionId || '');
+      setInquiryId(result.id || '');
+      setIsAutoApproved(result.isAutoApproved || false);
       setIsSuccess(true);
       setIsPending(false);
     }
   };
 
   if (isSuccess) {
+    const planDetails = PLANS.find(p => p.id === selectedPlan);
+
     return (
       <div className={styles.successContainer}>
         <div className={styles.successIcon}>
-          <CheckCircle2 size={48} />
+          {isAutoApproved ? <Sparkles size={64} /> : <CheckCircle2 size={64} />}
         </div>
-        <h2>Satu Langkah Lagi!</h2>
-        <p>Permintaan Anda telah kami terima. Tim kami akan segera memverifikasi email Anda dan mengirimkan prosedur pendaftaran selanjutnya.</p>
-        <button onClick={() => window.location.href = '/'} className={styles.btnBentoPrimary}>
-          Kembali ke Beranda
-        </button>
+        <h2>{isAutoApproved ? 'Pendaftaran Disetujui!' : 'Terima kasih atas permintaan Anda'}</h2>
+        <p>
+          {isAutoApproved
+            ? 'Paket Starter Anda telah disetujui secara otomatis. Kami akan segera menyiapkan akun Anda.'
+            : 'Kami telah menerima permintaan Anda. Silakan selesaikan pembayaran untuk mengaktifkan layanan.'}
+        </p>
+
+        <div className={styles.summaryCard}>
+          <h3 className={styles.summaryTitle}>Ringkasan Pendaftaran</h3>
+
+          {/* Submission ID */}
+          <div className={styles.summaryItem}>
+            <div className={styles.summaryItemLeft}>
+              <span className={styles.summaryLabel}>ID Pendaftaran</span>
+              <span className={styles.summaryValue} style={{ fontFamily: 'monospace', letterSpacing: '0.02em' }}>{submissionId}</span>
+            </div>
+          </div>
+
+          <div className={styles.summaryDivider} />
+          
+          {/* Plan */}
+          <div className={styles.summaryItem}>
+            <div className={styles.summaryItemLeft}>
+              <span className={styles.summaryLabel}>Paket Dipilih</span>
+              <span className={styles.summaryValue}>{planDetails?.name} Plan</span>
+            </div>
+            <span className={styles.summaryPrice}>{planDetails?.price}</span>
+          </div>
+
+          <div className={styles.summaryDivider} />
+
+          {/* Email */}
+          <div className={styles.summaryItem}>
+            <div className={styles.summaryItemLeft}>
+              <span className={styles.summaryLabel}>Email Administrator</span>
+              <span className={styles.summaryValue}>{submittedEmail}</span>
+            </div>
+          </div>
+
+          <div className={styles.summaryDivider} />
+
+          {/* Status */}
+          <div className={styles.summaryItem}>
+            <div className={styles.summaryItemLeft}>
+              <span className={styles.summaryLabel}>Status</span>
+              <span className={styles.summaryValue} style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: isAutoApproved ? '#065f46' : '#92400e',
+                fontWeight: 600,
+              }}>
+                {isAutoApproved ? <><CheckCircle2 size={14} /> Disetujui</> : <><Clock size={14} /> Menunggu Pembayaran</>}
+              </span>
+            </div>
+          </div>
+
+          <div className={styles.summaryDivider} />
+
+          <div className={styles.summaryTotal}>
+            <span className={styles.summaryTotalLabel}>Total Estimasi</span>
+            <span className={styles.summaryTotalPrice}>{planDetails?.price}</span>
+          </div>
+        </div>
+
+        <div className={styles.successActions}>
+          {!isAutoApproved && (
+            <button 
+              onClick={() => window.location.href = `/payment/${inquiryId}`} 
+              className={styles.submitBtn}
+              style={{ width: 'auto', padding: '1rem 3rem', marginBottom: '1rem' }}
+            >
+              Bayar Sekarang <ArrowRight size={18} />
+            </button>
+          )}
+          
+          <button 
+            onClick={() => window.location.href = '/'} 
+            className={styles.btnOutlineDark}
+            style={{ width: 'auto', padding: '1rem 3rem' }}
+          >
+            Kembali ke Beranda
+          </button>
+        </div>
       </div>
     );
   }
@@ -90,11 +180,23 @@ export default function RegistrationForm() {
 
       <form onSubmit={handleSubmit} className={styles.registrationForm}>
         <div className={styles.inputGroup}>
-          <label><Mail size={16} /> Email Institusi / Administrator</label>
+          <label><Shield size={16} /> Nama Sekolah / Institusi</label>
+          <input 
+            name="schoolName" 
+            type="text" 
+            placeholder="Contoh: SMPN 1 Jakarta" 
+            required 
+            disabled={isPending} 
+            className={styles.formInputLarge}
+          />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label><Mail size={16} /> Email Administrator</label>
           <input 
             name="email" 
             type="email" 
-            placeholder="nama@sekolah.sch.id" 
+            placeholder="admin@sekolah.sch.id" 
             required 
             disabled={isPending} 
             className={styles.formInputLarge}

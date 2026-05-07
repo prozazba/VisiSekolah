@@ -2,68 +2,73 @@
 
 import { useState } from 'react';
 import styles from '../styles/admin.module.scss';
-import { createSchool } from '@/app/actions/school';
+import { activateInquiry } from '@/app/actions/school';
+import { resendPaymentLink } from '@/app/actions/inquiry';
+import { Rocket, Mail, Calendar, CheckCircle2, AlertCircle, Clock, X, Send } from 'lucide-react';
+
+interface Inquiry {
+  id: string;
+  email: string;
+  schoolName: string;
+  plan: string | null;
+  status: string;
+  createdAt: string;
+}
 
 interface CreateSchoolModalProps {
   onClose: () => void;
   users: { id: string; name: string; email: string | null }[];
+  inquiries: Inquiry[];
 }
 
-export default function CreateSchoolModal({ onClose, users }: CreateSchoolModalProps) {
-  const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
-  const [adminId, setAdminId] = useState('');
+export default function CreateSchoolModal({ onClose, inquiries }: CreateSchoolModalProps) {
   const [error, setError] = useState<string | null>(null);
-  const [isPending, setIsPending] = useState(false);
-  const [setupInfo, setSetupInfo] = useState<{ email: string | null; tempPassword: string; setupUrl: string } | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState<string | null>(null); // Stores ID of inquiry being processed
+  const [setupInfo, setSetupInfo] = useState<{ email: string | null; tempPassword: string; slug: string } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleActivate = async (inquiryId: string) => {
     setError(null);
+    setSuccessMsg(null);
+    setIsPending(inquiryId);
 
-    if (!adminId) {
-      setError('Pilih administrator sekolah terlebih dahulu');
-      return;
-    }
-
-    setIsPending(true);
-
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('slug', slug);
-    formData.append('adminId', adminId);
-
-    const result = await createSchool(formData);
+    const result = await activateInquiry(inquiryId);
 
     if (result?.error) {
       setError(result.error);
-      setIsPending(false);
+      setIsPending(null);
     } else if (result?.setupInfo) {
       setSetupInfo(result.setupInfo);
-      setIsPending(false);
-    } else {
-      onClose();
+      setIsPending(null);
     }
   };
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setName(val);
-    // Auto-generate slug from name if slug is empty or was auto-generated
-    if (!slug || slug === name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')) {
-       setSlug(val.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''));
+  const handleResend = async (inquiryId: string) => {
+    setError(null);
+    setSuccessMsg(null);
+    setIsPending(`resend-${inquiryId}`);
+
+    const result = await resendPaymentLink(inquiryId);
+
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      setSuccessMsg('Link pembayaran telah dikirim ulang ke administrator.');
     }
+    setIsPending(null);
   };
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+      <div className={`${styles.modalContent} ${styles.largeModal}`} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.closeBtn} onClick={onClose}><X size={20} /></button>
+
         {setupInfo ? (
           <div className={styles.successScreen}>
             <div className={styles.modalHeader}>
               <div className={styles.successBadge}>✓</div>
-              <h2>Pendaftaran Berhasil!</h2>
-              <p>Sekolah telah didaftarkan. Bagikan detail berikut kepada administrator sekolah.</p>
+              <h2>Sekolah Berhasil Diluncurkan!</h2>
+              <p>Akun sekolah telah aktif dan kredensial telah dikirim ke administrator.</p>
             </div>
 
             <div className={styles.setupDetails}>
@@ -75,99 +80,109 @@ export default function CreateSchoolModal({ onClose, users }: CreateSchoolModalP
                 <label>Password Sementara</label>
                 <div className={styles.detailValue}>
                   <code>{setupInfo.tempPassword}</code>
-                  <span className={styles.detailNote}>(Wajib diganti saat login pertama)</span>
                 </div>
               </div>
               <div className={styles.detailItem}>
-                <label>Link Konfirmasi & Setup</label>
+                <label>Subdomain Akses</label>
                 <div className={styles.detailValue}>
-                  <a href={setupInfo.setupUrl} className={styles.setupLink} target="_blank" rel="noopener noreferrer">
-                    {setupInfo.setupUrl}
-                  </a>
+                  <code>{setupInfo.slug}.visisekolah.id</code>
                 </div>
               </div>
             </div>
 
             <div className={styles.modalActions}>
-              <button className={styles.btnPrimary} onClick={onClose}>Selesai</button>
+              <button className={styles.btnPrimary} onClick={onClose}>Tutup Panel</button>
             </div>
           </div>
         ) : (
           <>
             <div className={styles.modalHeader}>
-              <h2>Tambah Sekolah Baru</h2>
-              <p>Daftarkan tenant baru ke dalam ekosistem VisiSekolah.</p>
+              <div className={styles.headerIcon}><Rocket size={28} /></div>
+              <h2>Panel Aktivasi Sekolah</h2>
+              <p>Daftar permintaan pendaftaran yang siap untuk diluncurkan.</p>
             </div>
 
-            {error && <div className={styles.errorMsg}>{error}</div>}
-
-            <form onSubmit={handleSubmit}>
-              <div className={styles.formGroup}>
-                <label htmlFor="name">Nama Sekolah</label>
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Contoh: SMA Negeri 1 Jakarta"
-                  value={name}
-                  onChange={handleNameChange}
-                  required
-                  disabled={isPending}
-                />
+            {error && (
+              <div className={styles.errorMsg}>
+                <AlertCircle size={18} /> {error}
               </div>
+            )}
 
-              <div className={styles.formGroup}>
-                <label htmlFor="admin">Administrator Sekolah</label>
-                <select
-                  id="admin"
-                  value={adminId}
-                  onChange={(e) => setAdminId(e.target.value)}
-                  required
-                  disabled={isPending}
-                  className={styles.select}
-                >
-                  <option value="">Pilih Pengguna...</option>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name} ({user.email})
-                    </option>
-                  ))}
-                </select>
+            {successMsg && (
+              <div className={styles.successMsgActivation}>
+                <CheckCircle2 size={18} /> {successMsg}
               </div>
+            )}
 
-              <div className={styles.formGroup}>
-                <label htmlFor="slug">Slug Subdomain</label>
-                <input
-                  type="text"
-                  id="slug"
-                  placeholder="contoh-sekolah"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                  required
-                  disabled={isPending}
-                />
-                <span className={styles.slugPreview}>
-                  URL Akses: <code>{slug || 'slug'}.visisekolah.id</code>
-                </span>
-              </div>
+            <div className={styles.inquiryListContainer}>
+              {inquiries.length > 0 ? (
+                <table className={styles.activationTable}>
+                  <thead>
+                    <tr>
+                      <th>Detail Sekolah</th>
+                      <th>Paket</th>
+                      <th>Status Pembayaran</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {inquiries.map((inq) => (
+                      <tr key={inq.id}>
+                        <td>
+                          <div className={styles.schoolInfoCell}>
+                            <span className={styles.name}>{inq.schoolName}</span>
+                            <span className={styles.email}><Mail size={12} /> {inq.email}</span>
+                            <span className={styles.date}><Calendar size={12} /> {new Date(inq.createdAt).toLocaleDateString('id-ID')}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className={styles.planBadge}>{inq.plan || 'Starter'}</span>
+                        </td>
+                        <td>
+                          <span className={`${styles.statusBadge} ${styles[inq.status.toLowerCase()]}`}>
+                            {inq.status === 'ACCEPTED' ? <CheckCircle2 size={12} /> : <Clock size={12} />}
+                            {inq.status === 'ACCEPTED' ? 'Lunas' : 'Menunggu'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className={styles.actionCell}>
+                            {inq.status === 'PENDING' ? (
+                              <button 
+                                className={styles.resendBtn}
+                                onClick={() => handleResend(inq.id)}
+                                disabled={!!isPending}
+                                title="Kirim ulang link pembayaran"
+                              >
+                                {isPending === `resend-${inq.id}` ? 'Mengirim...' : <><Send size={14} /> Link Bayar</>}
+                              </button>
+                            ) : inq.status === 'ACCEPTED' && inq.schoolName && inq.schoolName !== 'N/A' ? (
+                              <button 
+                                className={styles.activateBtn}
+                                onClick={() => handleActivate(inq.id)}
+                                disabled={!!isPending}
+                              >
+                                {isPending === inq.id ? 'Memproses...' : 'Luncurkan Now'}
+                              </button>
+                            ) : (
+                              <span className={styles.missingInfo}>Data belum lengkap</span>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className={styles.emptyState}>
+                  <div className={styles.emptyIcon}>✨</div>
+                  <p>Tidak ada permintaan pendaftaran yang menunggu aktivasi.</p>
+                </div>
+              )}
+            </div>
 
-              <div className={styles.modalActions}>
-                <button 
-                  type="button" 
-                  className={styles.btnSecondary} 
-                  onClick={onClose}
-                  disabled={isPending}
-                >
-                  Batal
-                </button>
-                <button 
-                  type="submit" 
-                  className={styles.btnPrimary}
-                  disabled={isPending}
-                >
-                  {isPending ? 'Menyimpan...' : 'Simpan Sekolah'}
-                </button>
-              </div>
-            </form>
+            <div className={styles.modalFooter}>
+              <button className={styles.btnSecondary} onClick={onClose}>Batal</button>
+            </div>
           </>
         )}
       </div>

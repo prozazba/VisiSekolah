@@ -49,6 +49,17 @@ export async function login(state: FormState, formData: FormData) {
     // 5. Redirect based on role
     if (user.role === 'SUPER_ADMIN') {
       redirect('/admin');
+    } else if (user.role === 'SCHOOL_ADMIN' && user.schoolId) {
+      const school = await prisma.school.findUnique({
+        where: { id: user.schoolId },
+        select: { logoUrl: true }
+      });
+
+      // If no branding set up yet, go to setup page
+      if (!school?.logoUrl) {
+        redirect('/dashboard/branding');
+      }
+      redirect('/dashboard');
     } else {
       redirect('/dashboard');
     }

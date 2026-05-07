@@ -2,7 +2,7 @@ import styles from '../../styles/admin.module.scss';
 import { verifySession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { logout } from '@/app/actions/auth';
-import { LogOut, LayoutDashboard, School as SchoolIcon, CreditCard, Settings } from 'lucide-react';
+import { LogOut, LayoutDashboard, School as SchoolIcon, CreditCard, Settings, Inbox } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import AddSchoolButton from '@/components/AddSchoolButton';
 
@@ -28,10 +28,19 @@ export default async function AdminDashboard() {
     select: { id: true, name: true, email: true }
   });
 
+  // Fetch registration inquiries awaiting activation
+  const inquiries = await prisma.registrationInquiry.findMany({
+    where: { 
+      status: { in: ['PENDING', 'ACCEPTED'] } 
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
   const totalSchools = schools.length;
   const activeSchools = schools.filter(s => s.status === 'ACTIVE').length;
   const pendingSchools = schools.filter(s => s.status === 'PENDING').length;
   const suspendedSchools = schools.filter(s => s.status === 'SUSPENDED').length;
+  const pendingInquiries = inquiries.length;
 
   return (
     <div className={styles.adminDashboard}>
@@ -63,7 +72,17 @@ export default async function AdminDashboard() {
             <h2 className={styles.pageTitle}>Manajemen Sekolah</h2>
             <p className={styles.pageSubtitle}>Kelola seluruh tenant dan ekosistem VisiSekolah.</p>
           </div>
-          <AddSchoolButton users={users} />
+          <AddSchoolButton 
+            users={users} 
+            inquiries={inquiries.map(i => ({ 
+              id: i.id, 
+              email: i.email, 
+              schoolName: i.schoolName || 'N/A',
+              plan: i.plan, 
+              status: i.status,
+              createdAt: i.createdAt.toISOString() 
+            }))} 
+          />
         </div>
 
         <div className={styles.statsGrid}>
@@ -71,6 +90,7 @@ export default async function AdminDashboard() {
           <StatCard title="Sekolah Aktif" value={activeSchools.toString()} color="#10b981" />
           <StatCard title="Menunggu Approval" value={pendingSchools.toString()} color="#f59e0b" />
           <StatCard title="Suspended" value={suspendedSchools.toString()} color="#ef4444" />
+          <StatCard title="Permintaan Masuk" value={pendingInquiries.toString()} color="#8b5cf6" />
         </div>
 
         <div className={styles.schoolList}>
