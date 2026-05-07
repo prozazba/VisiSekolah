@@ -5,6 +5,7 @@ import { logout } from '@/app/actions/auth';
 import { LogOut, LayoutDashboard, School as SchoolIcon, CreditCard, Settings, Inbox } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import AddSchoolButton from '@/components/AddSchoolButton';
+import BlastButton from '@/components/BlastButton';
 
 export default async function AdminDashboard() {
   const session = await verifySession();
@@ -72,17 +73,20 @@ export default async function AdminDashboard() {
             <h2 className={styles.pageTitle}>Manajemen Sekolah</h2>
             <p className={styles.pageSubtitle}>Kelola seluruh tenant dan ekosistem VisiSekolah.</p>
           </div>
-          <AddSchoolButton 
-            users={users} 
-            inquiries={inquiries.map(i => ({ 
-              id: i.id, 
-              email: i.email, 
-              schoolName: i.schoolName || 'N/A',
-              plan: i.plan, 
-              status: i.status,
-              createdAt: i.createdAt.toISOString() 
-            }))} 
-          />
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <BlastButton />
+            <AddSchoolButton 
+              users={users} 
+              inquiries={inquiries.map(i => ({ 
+                id: i.id, 
+                email: i.email, 
+                schoolName: i.schoolName || 'N/A',
+                plan: i.plan, 
+                status: i.status,
+                createdAt: i.createdAt.toISOString() 
+              }))} 
+            />
+          </div>
         </div>
 
         <div className={styles.statsGrid}>
@@ -146,7 +150,7 @@ function SchoolRow({ name, slug, status, date }: { name: string; slug: string; s
       <td className={styles.td}>
         <span className={styles.schoolName}>{name}</span>
       </td>
-      <td className={styles.td}><code>{slug}.visi-sekolah.vercel.app</code></td>
+      <td className={styles.td}><code>visi-sekolah.vercel.app/{slug}/</code></td>
       <td className={styles.td}>
         <span className={badgeClass}>{status}</span>
       </td>

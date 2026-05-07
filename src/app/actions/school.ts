@@ -115,7 +115,7 @@ export async function provisionSchool(data: {
 
   // 4. Send Activation Email
   try {
-    const loginUrl = `${process.env.NEXTAUTH_URL || 'https://visi-sekolah.vercel.app'}/login`;
+    const loginUrl = `${process.env.NEXTAUTH_URL || 'https://visi-sekolah.vercel.app'}/${slug}/login`;
     
     await sendMail({
       to: adminEmail,

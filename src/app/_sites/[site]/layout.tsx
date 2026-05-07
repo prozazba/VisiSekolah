@@ -1,77 +1,69 @@
-// src/app/_sites/[site]/layout.tsx
-"use client";
 import React from 'react';
 import { notFound } from 'next/navigation';
-
-// Mock function to simulate DB fetch
-async function getSchoolData(slug: string) {
-  const schools: Record<string, any> = {
-    'smp1': {
-      name: 'SMP Negeri 1 Jakarta',
-      primaryColor: '#1e40af',
-      secondaryColor: '#1e3a8a',
-      accentColor: '#fbbf24',
-    },
-    'sma5': {
-      name: 'SMA Negeri 5 Bandung',
-      primaryColor: '#b91c1c',
-      secondaryColor: '#991b1b',
-      accentColor: '#4ade80',
-    }
-  };
-  return schools[slug] || null;
-}
+import prisma from '@/lib/prisma';
 
 export default async function SchoolLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { site: string };
+  params: Promise<{ site: string }>;
 }) {
-  const { site } = params;
-  const school = await getSchoolData(site);
+  const { site } = await params;
+  
+  // Fetch real school data from Prisma
+  const school = await prisma.school.findUnique({
+    where: { slug: site }
+  });
 
   if (!school) {
     notFound();
   }
 
+  // Use branding from DB or defaults
+  const branding = {
+    primaryColor: '#2563eb',
+    secondaryColor: '#1e40af',
+    accentColor: '#fbbf24',
+    name: school.name,
+  };
+
   return (
     <div 
       className="school-layout"
       style={{
-        '--primary-color': school.primaryColor,
-        '--secondary-color': school.secondaryColor,
-        '--accent-color': school.accentColor,
+        '--primary-color': branding.primaryColor,
+        '--secondary-color': branding.secondaryColor,
+        '--accent-color': branding.accentColor,
       } as React.CSSProperties}
     >
-      <header className="school-header">
-        <div className="container flex justify-between items-center py-4">
-          <div className="school-logo font-bold text-xl">
-            {school.name}
+      <header style={{ 
+        backgroundColor: 'white', 
+        borderBottom: '1px solid #e2e8f0',
+        padding: '1rem 0'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ fontWeight: 'bold', fontSize: '1.25rem', color: branding.primaryColor }}>
+            {branding.name}
           </div>
-          <nav className="flex gap-4">
-            <button className="btn-primary">Login</button>
+          <nav>
+            <button style={{ 
+              backgroundColor: branding.primaryColor,
+              color: 'white',
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              border: 'none',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}>
+              Login Portal
+            </button>
           </nav>
         </div>
       </header>
       <main>
         {children}
       </main>
-      
-      <style jsx>{`
-        .school-header {
-          background-color: white;
-          border-bottom: 1px solid var(--border-color);
-          box-shadow: var(--shadow-sm);
-        }
-        .btn-primary {
-          background-color: var(--primary-color);
-          color: white;
-          padding: 0.5rem 1rem;
-          border-radius: var(--radius-md);
-        }
-      `}</style>
     </div>
   );
 }

@@ -56,7 +56,7 @@ export default function PaymentPage() {
           </div>
 
           <button 
-            onClick={() => window.location.href = `https://${targetSlug}.visi-sekolah.vercel.app/login`} 
+            onClick={() => window.location.href = `https://visi-sekolah.vercel.app/${targetSlug}/login`} 
             className={styles.btnPrimaryLarge}
           >
             Masuk ke Dashboard <ArrowRight size={20} />

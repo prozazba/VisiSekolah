@@ -85,7 +85,7 @@ export default function CreateSchoolModal({ onClose, inquiries }: CreateSchoolMo
               <div className={styles.detailItem}>
                 <label>Subdomain Akses</label>
                 <div className={styles.detailValue}>
-                  <code>{setupInfo.slug}.visi-sekolah.vercel.app</code>
+                  <code>visi-sekolah.vercel.app/{setupInfo.slug}/</code>
                 </div>
               </div>
             </div>
@@ -147,7 +147,7 @@ export default function CreateSchoolModal({ onClose, inquiries }: CreateSchoolMo
                         <td>
                           <div className={styles.actionCell}>
                             {inq.status === 'PENDING' ? (
-                              <button 
+                              <button
                                 className={styles.resendBtn}
                                 onClick={() => handleResend(inq.id)}
                                 disabled={!!isPending}
@@ -156,7 +156,7 @@ export default function CreateSchoolModal({ onClose, inquiries }: CreateSchoolMo
                                 {isPending === `resend-${inq.id}` ? 'Mengirim...' : <><Send size={14} /> Link Bayar</>}
                               </button>
                             ) : inq.status === 'ACCEPTED' && inq.schoolName && inq.schoolName !== 'N/A' ? (
-                              <button 
+                              <button
                                 className={styles.activateBtn}
                                 onClick={() => handleActivate(inq.id)}
                                 disabled={!!isPending}

@@ -584,3 +584,32 @@ export function getActivationEmail(data: ActivationEmailData): string {
 </body>
 </html>`;
 }
+export function getUrlUpdateEmail({ schoolName, loginUrl }: { schoolName: string; loginUrl: string }) {
+  return `
+    <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+      <div style="background: #0f172a; padding: 30px; text-align: center; color: white;">
+        <h1 style="margin: 0; font-size: 24px;">Pembaruan Sistem VisiSekolah</h1>
+      </div>
+      <div style="padding: 30px; line-height: 1.6; color: #334155;">
+        <p>Halo Administrator <strong>${schoolName}</strong>,</p>
+        <p>Kami ingin menginformasikan bahwa sistem VisiSekolah telah beralih ke domain produksi resmi. Untuk mengakses dashboard sekolah Anda, silakan gunakan link terbaru di bawah ini:</p>
+        
+        <div style="margin: 30px 0; text-align: center;">
+          <a href="${loginUrl}" style="background: #2563eb; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Masuk ke Dashboard Baru</a>
+        </div>
+        
+        <p style="background: #f8fafc; padding: 15px; border-radius: 8px; font-size: 14px;">
+          <strong>Link Akses Anda:</strong><br/>
+          <code style="color: #2563eb;">${loginUrl}</code>
+        </p>
+
+        <p>Password dan data akun Anda tetap sama. Jika Anda mengalami kesulitan akses, silakan hubungi tim dukungan kami.</p>
+        
+        <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 30px 0;" />
+        <p style="font-size: 12px; color: #94a3b8; text-align: center;">
+          &copy; 2026 VisiSekolah by Komite. Seluruh hak cipta dilindungi.
+        </p>
+      </div>
+    </div>
+  `;
+}
