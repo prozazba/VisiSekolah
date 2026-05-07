@@ -146,7 +146,7 @@ function SchoolRow({ name, slug, status, date }: { name: string; slug: string; s
       <td className={styles.td}>
         <span className={styles.schoolName}>{name}</span>
       </td>
-      <td className={styles.td}><code>{slug}.visisekolah.id</code></td>
+      <td className={styles.td}><code>{slug}.visi-sekolah.vercel.app</code></td>
       <td className={styles.td}>
         <span className={badgeClass}>{status}</span>
       </td>

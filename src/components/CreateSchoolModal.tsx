@@ -85,7 +85,7 @@ export default function CreateSchoolModal({ onClose, inquiries }: CreateSchoolMo
               <div className={styles.detailItem}>
                 <label>Subdomain Akses</label>
                 <div className={styles.detailValue}>
-                  <code>{setupInfo.slug}.visisekolah.id</code>
+                  <code>{setupInfo.slug}.visi-sekolah.vercel.app</code>
                 </div>
               </div>
             </div>
