@@ -61,7 +61,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Page Content */}
-      <main className={styles.mainContent} style={{ display: 'block' }}>
+      <main className={styles.mainContent}>
         {children}
       </main>
     </div>

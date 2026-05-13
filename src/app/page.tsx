@@ -7,7 +7,10 @@ import Navbar from '@/components/Navbar';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
-  const { dict } = useLanguage();
+  const { dict, branding } = useLanguage();
+
+  // Helper to replace "SMA VisiSekolah" with the actual branding name
+  const brandify = (text: string) => text.replace(/SMA VisiSekolah/g, branding.name);
 
   return (
     <main className="min-h-screen bg-white">
@@ -16,9 +19,9 @@ export default function Home() {
       {/* Full-Screen Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>{dict.hero.title}</h1>
+          <h1 className={styles.heroTitle}>{brandify(dict.hero.title)}</h1>
           <p className={styles.heroSubtitle}>
-            {dict.hero.subtitle}
+            {brandify(dict.hero.subtitle)}
           </p>
           <div className={styles.buttonGroup}>
             <Link href="/contact" className={styles.btnLarge}>{dict.hero.cta_start}</Link>
@@ -31,7 +34,7 @@ export default function Home() {
       <section id="features" className={`${styles.sectionPadding} bg-slate-50`}>
         <div className={styles.container}>
           <div className={styles.pageHeader}>
-            <h2 className={styles.pageTitle}>{dict.home_features.title}</h2>
+            <h2 className={styles.pageTitle}>{brandify(dict.home_features.title)}</h2>
             <p className={styles.pageSubtitle}>{dict.home_features.subtitle}</p>
           </div>
           

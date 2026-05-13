@@ -7,20 +7,43 @@ import en from '../dictionaries/en.json';
 type Dictionary = typeof id;
 type Language = 'id' | 'en';
 
+interface BrandingData {
+  name: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  fontFamily: string;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
+}
+
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   dict: Dictionary;
+  branding: BrandingData;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
+export function LanguageProvider({ 
+  children, 
+  initialBranding 
+}: { 
+  children: React.ReactNode;
+  initialBranding?: BrandingData;
+}) {
   const [language, setLanguage] = useState<Language>('id');
   const [dict, setDict] = useState<Dictionary>(id);
+  const [branding] = useState<BrandingData>(initialBranding || {
+    name: 'SMA VisiSekolah',
+    primaryColor: '#6366f1',
+    secondaryColor: '#a855f7',
+    accentColor: '#10b981',
+    fontFamily: 'Outfit',
+  });
 
   useEffect(() => {
-    // Check local storage or browser preference
     const savedLang = localStorage.getItem('language') as Language;
     if (savedLang && (savedLang === 'id' || savedLang === 'en')) {
       setLanguage(savedLang);
@@ -34,7 +57,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [language]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, dict }}>
+    <LanguageContext.Provider value={{ language, setLanguage, dict, branding }}>
       {children}
     </LanguageContext.Provider>
   );

@@ -1,155 +1,216 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '@/styles/dashboard-v2.module.scss';
-import { Palette, Save, Upload, Type, Layout } from 'lucide-react';
+import { 
+  Palette, 
+  Save, 
+  Upload, 
+  Type, 
+  Layout, 
+  Eye,
+  CheckCircle2,
+  RefreshCw
+} from 'lucide-react';
+import { getBranding, updateBranding } from '@/app/actions/branding';
 
 export default function BrandingPage() {
-  const [loading, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    name: 'VisiSekolah Institution',
+    name: 'SMA VisiSekolah',
     primaryColor: '#6366f1',
     secondaryColor: '#a855f7',
     accentColor: '#10b981',
     fontFamily: 'Outfit',
   });
 
+  useEffect(() => {
+    async function loadBranding() {
+      const data = await getBranding();
+      if (data) {
+        setFormData({
+          name: data.name || 'SMA VisiSekolah',
+          primaryColor: data.primaryColor || '#6366f1',
+          secondaryColor: data.secondaryColor || '#a855f7',
+          accentColor: data.accentColor || '#10b981',
+          fontFamily: data.fontFamily || 'Outfit',
+        });
+      }
+      setIsLoading(false);
+    }
+    loadBranding();
+  }, []);
+
   const handleSave = async () => {
-    setLoading(true);
-    // TODO: Implement server action to save branding
-    setTimeout(() => {
-      setLoading(false);
-      alert('Branding settings saved successfully!');
-    }, 1000);
+    setIsSaving(true);
+    const result = await updateBranding(formData);
+    setIsSaving(false);
+    
+    if (result.success) {
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } else {
+      alert('Error: ' + result.error);
+    }
   };
 
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: '1rem' }}>
+        <RefreshCw size={40} className={styles.spin} color="#6366f1" />
+        <p style={{ fontWeight: 700, color: '#64748b' }}>Loading branding settings...</p>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ maxWidth: '800px' }}>
-      <header className={styles.greeting} style={{ marginBottom: '3rem' }}>
-        <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Palette size={32} color="#6366f1" /> Custom Branding
-        </h1>
-        <p>Personalize the appearance and identity of your school platform.</p>
+    <div style={{ maxWidth: '1000px' }}>
+      <header className={styles.pageHeader}>
+        <div className={styles.greeting}>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Palette size={32} color="#6366f1" /> Institutional Branding
+          </h1>
+          <p>Personalize the appearance and identity of your school's digital portal.</p>
+        </div>
+        
+        {showSuccess && (
+          <div className={`${styles.badge} ${styles.success}`} style={{ padding: '0.75rem 1.25rem', fontSize: '0.875rem' }}>
+            <CheckCircle2 size={18} /> Branding updated successfully!
+          </div>
+        )}
       </header>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        {/* Basic Identity */}
-        <section className={styles.card}>
-          <header>
-            <h3><Layout size={20} style={{ marginRight: '8px' }} /> Platform Identity</h3>
-          </header>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>School / App Name</label>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          {/* Platform Identity */}
+          <section className={styles.card} style={{ padding: '2rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Layout size={20} color="#6366f1" /> Platform Identity
+            </h3>
+            
+            <div className={styles.formGroup}>
+              <label>School / Institution Name</label>
               <input 
+                className={styles.inputControl}
                 type="text" 
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid #eee', outline: 'none' }}
               />
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>School Logo</label>
-                <div style={{ border: '2px dashed #eee', borderRadius: '16px', padding: '2rem', textAlign: 'center', cursor: 'pointer' }}>
-                  <Upload size={24} color="#8c8e91" style={{ marginBottom: '0.5rem' }} />
-                  <p style={{ fontSize: '0.75rem', color: '#8c8e91' }}>Click to upload logo</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
+              <div className={styles.formGroup}>
+                <label>Institutional Logo</label>
+                <div style={{ border: '2px dashed #e2e8f0', borderRadius: '16px', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', background: '#f8fafc' }}>
+                  <Upload size={24} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>Upload PNG/SVG</div>
                 </div>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>Favicon</label>
-                <div style={{ border: '2px dashed #eee', borderRadius: '16px', padding: '2rem', textAlign: 'center', cursor: 'pointer' }}>
-                  <Upload size={24} color="#8c8e91" style={{ marginBottom: '0.5rem' }} />
-                  <p style={{ fontSize: '0.75rem', color: '#8c8e91' }}>Click to upload icon</p>
+              <div className={styles.formGroup}>
+                <label>Browser Favicon</label>
+                <div style={{ border: '2px dashed #e2e8f0', borderRadius: '16px', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', background: '#f8fafc' }}>
+                  <Upload size={24} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>Upload ICO/PNG</div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Visual Theme */}
-        <section className={styles.card}>
-          <header>
-            <h3><Palette size={20} style={{ marginRight: '8px' }} /> Theme & Aesthetics</h3>
-          </header>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>Primary Color</label>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <input 
-                  type="color" 
-                  value={formData.primaryColor}
-                  onChange={(e) => setFormData({...formData, primaryColor: e.target.value})}
-                  style={{ width: '40px', height: '40px', border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}
-                />
-                <span style={{ fontSize: '0.875rem', color: '#8c8e91', fontFamily: 'monospace' }}>{formData.primaryColor}</span>
+          {/* Visual Palette */}
+          <section className={styles.card} style={{ padding: '2rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Palette size={20} color="#6366f1" /> Visual Theme
+            </h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+              <ColorInput 
+                label="Primary" 
+                value={formData.primaryColor} 
+                onChange={(v: string) => setFormData({...formData, primaryColor: v})} 
+              />
+              <ColorInput 
+                label="Secondary" 
+                value={formData.secondaryColor} 
+                onChange={(v: string) => setFormData({...formData, secondaryColor: v})} 
+              />
+              <ColorInput 
+                label="Accent" 
+                value={formData.accentColor} 
+                onChange={(v: string) => setFormData({...formData, accentColor: v})} 
+              />
+            </div>
+
+            <div className={styles.formGroup} style={{ marginTop: '2rem' }}>
+              <label><Type size={16} /> Typography Style</label>
+              <select 
+                className={styles.inputControl}
+                value={formData.fontFamily}
+                onChange={(e) => setFormData({...formData, fontFamily: e.target.value})}
+              >
+                <option value="Outfit">Outfit (Premium Rounded)</option>
+                <option value="Inter">Inter (Modern Sans)</option>
+                <option value="Roboto">Roboto (Classic Clean)</option>
+                <option value="Poppins">Poppins (Friendly Geometric)</option>
+              </select>
+            </div>
+          </section>
+
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button className={styles.btnPrimary} onClick={handleSave} disabled={isSaving} style={{ flex: 1 }}>
+              <Save size={18} /> {isSaving ? 'Saving Changes...' : 'Save Branding'}
+            </button>
+            <button className={styles.btnOutline}>
+              <RefreshCw size={18} /> Reset to Default
+            </button>
+          </div>
+        </div>
+
+        {/* Live Preview */}
+        <aside>
+          <div className={styles.card} style={{ position: 'sticky', top: '2.5rem', background: '#1a1c1e', color: 'white', padding: '1.5rem' }}>
+            <h4 style={{ fontSize: '0.875rem', fontWeight: 800, textTransform: 'uppercase', color: '#64748b', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Eye size={16} /> Live Preview
+            </h4>
+            
+            <div style={{ background: 'white', borderRadius: '16px', padding: '1rem', color: '#1a1c1e', transform: 'scale(0.95)', transformOrigin: 'top center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
+                <div style={{ width: '24px', height: '24px', background: `linear-gradient(135deg, ${formData.primaryColor}, ${formData.secondaryColor})`, borderRadius: '6px' }}></div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>{formData.name}</div>
+              </div>
+              
+              <div style={{ height: '80px', background: '#f8fafc', borderRadius: '12px', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '40px', height: '8px', background: formData.primaryColor, borderRadius: '4px' }}></div>
+              </div>
+
+              <div style={{ height: '32px', background: formData.primaryColor, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.625rem', fontWeight: 700 }}>
+                Button Preview
               </div>
             </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>Secondary Color</label>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <input 
-                  type="color" 
-                  value={formData.secondaryColor}
-                  onChange={(e) => setFormData({...formData, secondaryColor: e.target.value})}
-                  style={{ width: '40px', height: '40px', border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}
-                />
-                <span style={{ fontSize: '0.875rem', color: '#8c8e91', fontFamily: 'monospace' }}>{formData.secondaryColor}</span>
-              </div>
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>Accent Color</label>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <input 
-                  type="color" 
-                  value={formData.accentColor}
-                  onChange={(e) => setFormData({...formData, accentColor: e.target.value})}
-                  style={{ width: '40px', height: '40px', border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}
-                />
-                <span style={{ fontSize: '0.875rem', color: '#8c8e91', fontFamily: 'monospace' }}>{formData.accentColor}</span>
-              </div>
-            </div>
-          </div>
 
-          <div style={{ marginTop: '2rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>
-              <Type size={16} style={{ marginRight: '6px' }} /> Typography
-            </label>
-            <select 
-              value={formData.fontFamily}
-              onChange={(e) => setFormData({...formData, fontFamily: e.target.value})}
-              style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid #eee', outline: 'none', cursor: 'pointer' }}
-            >
-              <option value="Outfit">Outfit (Premium Rounded)</option>
-              <option value="Inter">Inter (Modern Swiss)</option>
-              <option value="Roboto">Roboto (Clean Sans)</option>
-              <option value="Poppins">Poppins (Friendly Geometric)</option>
-            </select>
+            <p style={{ fontSize: '0.75rem', color: '#4b5563', marginTop: '1.5rem', lineHeight: 1.5 }}>
+              Preview shows how your institutional identity will be applied across the portal components.
+            </p>
           </div>
-        </section>
+        </aside>
+      </div>
+    </div>
+  );
+}
 
-        <button 
-          onClick={handleSave}
-          disabled={loading}
-          style={{ 
-            background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-            color: 'white',
-            border: 'none',
-            padding: '1rem 2rem',
-            borderRadius: '16px',
-            fontWeight: 800,
-            fontSize: '1rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            transition: 'opacity 0.2s'
-          }}
-        >
-          {loading ? 'Saving...' : <><Save size={20} /> Save Branding Settings</>}
-        </button>
+function ColorInput({ label, value, onChange }: any) {
+  return (
+    <div className={styles.formGroup}>
+      <label>{label} Color</label>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px', border: '1px solid #e2e8f0', borderRadius: '14px', background: 'white' }}>
+        <input 
+          type="color" 
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ width: '36px', height: '36px', border: 'none', background: 'none', padding: 0, cursor: 'pointer', borderRadius: '10px', overflow: 'hidden' }}
+        />
+        <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#1a1c1e', fontFamily: 'monospace' }}>{value.toUpperCase()}</span>
       </div>
     </div>
   );

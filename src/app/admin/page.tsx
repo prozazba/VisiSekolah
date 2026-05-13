@@ -35,7 +35,7 @@ export default async function AdminDashboard() {
   const subjectCount = await prisma.subject.count();
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2.5rem' }}>
+    <div className={styles.twoColumnLayout}>
       <div>
         <header className={styles.greeting}>
           <h1>Greatings, {roleTitle}!</h1>

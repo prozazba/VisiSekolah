@@ -11,6 +11,7 @@ interface BrandingFormProps {
     primaryColor: string;
     secondaryColor: string;
     accentColor: string;
+    fontFamily: string;
   };
 }
 
@@ -24,10 +25,13 @@ export default function BrandingForm({ initialData }: BrandingFormProps) {
     setIsPending(true);
     setMessage(null);
 
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => data.append(key, value));
-
-    const result = await updateBranding(data);
+    const result = await updateBranding({
+      name: formData.name,
+      primaryColor: formData.primaryColor,
+      secondaryColor: formData.secondaryColor,
+      accentColor: formData.accentColor,
+      fontFamily: formData.fontFamily,
+    });
 
     if (result?.success) {
       setMessage({ type: 'success', text: 'Branding berhasil diperbarui!' });
@@ -91,6 +95,20 @@ export default function BrandingForm({ initialData }: BrandingFormProps) {
                 <code>{formData.accentColor}</code>
               </div>
             </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Tipografi (Font)</label>
+            <select 
+              value={formData.fontFamily}
+              onChange={(e) => setFormData({ ...formData, fontFamily: e.target.value })}
+              style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
+            >
+              <option value="Outfit">Outfit</option>
+              <option value="Inter">Inter</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Poppins">Poppins</option>
+            </select>
           </div>
         </div>
 

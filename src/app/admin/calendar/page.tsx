@@ -3,14 +3,16 @@
 import { useState } from 'react';
 import styles from '@/styles/dashboard-v2.module.scss';
 import { 
-  Calendar, 
+  Calendar as CalendarIcon, 
   Plus, 
   ChevronLeft, 
   ChevronRight, 
   Clock, 
   MapPin,
   MoreVertical,
-  Flag
+  Flag,
+  Filter,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function AcademicCalendarPage() {
@@ -18,39 +20,44 @@ export default function AcademicCalendarPage() {
 
   return (
     <div>
-      <header className={styles.greeting} style={{ marginBottom: '2.5rem' }}>
-        <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Calendar size={32} color="#6366f1" /> Academic Calendar
-        </h1>
-        <p>Schedule holidays, exams, school events, and academic deadlines.</p>
+      <header className={styles.pageHeader}>
+        <div className={styles.greeting}>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <CalendarIcon size={32} color="#6366f1" /> Academic Calendar
+          </h1>
+          <p>Schedule holidays, exams, school events, and academic deadlines.</p>
+        </div>
+        <button className={styles.btnPrimary}>
+          <Plus size={18} /> Schedule New Event
+        </button>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '2.5rem' }}>
         <div>
-          {/* Calendar Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', background: 'white', padding: '1.5rem', borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>{currentMonth}</h2>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+          {/* Calendar Control Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', background: 'white', padding: '1.25rem 2rem', borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', border: '1px solid #f1f5f9' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>{currentMonth}</h2>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '4px', borderRadius: '12px' }}>
-                <button style={{ padding: '8px', borderRadius: '8px', border: 'none', background: 'white', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', cursor: 'pointer' }}><ChevronLeft size={20} /></button>
-                <button style={{ padding: '8px', borderRadius: '8px', border: 'none', background: 'white', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', cursor: 'pointer' }}><ChevronRight size={20} /></button>
+                <button style={{ padding: '8px', borderRadius: '10px', border: 'none', background: 'white', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', cursor: 'pointer' }}><ChevronLeft size={20} /></button>
+                <button style={{ padding: '8px', borderRadius: '10px', border: 'none', background: 'white', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', cursor: 'pointer' }}><ChevronRight size={20} /></button>
               </div>
-              <button style={{ padding: '0 1.5rem', borderRadius: '16px', background: '#111', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700 }}>
-                <Plus size={18} /> New Event
+              <button className={styles.btnOutline} style={{ padding: '0 1rem', height: '44px' }}>
+                <Filter size={18} /> Filter
               </button>
             </div>
           </div>
 
-          {/* Large Calendar Grid Placeholder */}
-          <section className={styles.card} style={{ padding: '2rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1rem', textAlign: 'center', fontWeight: 700, color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
+          {/* Academic Calendar Grid */}
+          <section className={styles.card} style={{ padding: '2.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1rem', textAlign: 'center', fontWeight: 800, color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '2rem' }}>
               <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1rem' }}>
               {[...Array(35)].map((_, i) => {
-                const day = i - 4; // Start from proper day
-                const isCurrent = day === 8;
-                const hasEvent = day === 15 || day === 22;
+                const day = i - 4; // Mock logic for May 2026
+                const isCurrent = day === 13;
+                const events = day === 15 ? [{ color: '#6366f1' }] : day === 22 ? [{ color: '#10b981' }] : day === 28 ? [{ color: '#f59e0b' }] : [];
                 
                 return (
                   <div key={i} style={{ 
@@ -58,17 +65,24 @@ export default function AcademicCalendarPage() {
                     padding: '0.75rem', 
                     borderRadius: '20px', 
                     background: isCurrent ? '#f1f0ff' : 'white',
-                    border: '1px solid #f1f5f9',
+                    border: isCurrent ? '1px solid #6366f1' : '1px solid #f1f5f9',
                     position: 'relative',
                     cursor: day > 0 && day <= 31 ? 'pointer' : 'default',
-                    opacity: day > 0 && day <= 31 ? 1 : 0.2
+                    opacity: day > 0 && day <= 31 ? 1 : 0.2,
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}>
                     {day > 0 && day <= 31 && (
                       <>
-                        <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: isCurrent ? '#6366f1' : 'inherit' }}>{day}</span>
-                        {hasEvent && (
-                          <div style={{ position: 'absolute', bottom: '12px', left: '12px', right: '12px', height: '4px', background: '#a855f7', borderRadius: '4px' }}></div>
-                        )}
+                        <span style={{ fontSize: '1rem', fontWeight: 800, color: isCurrent ? '#6366f1' : '#1a1c1e' }}>{day}</span>
+                        <div style={{ display: 'flex', gap: '4px', marginTop: '6px' }}>
+                          {events.map((ev, idx) => (
+                            <div key={idx} style={{ width: '6px', height: '6px', borderRadius: '50%', background: ev.color }}></div>
+                          ))}
+                        </div>
                       </>
                     )}
                   </div>
@@ -78,11 +92,29 @@ export default function AcademicCalendarPage() {
           </section>
         </div>
 
-        {/* Upcoming Events Column */}
-        <div>
+        {/* Detail View Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           <div className={styles.card} style={{ padding: '2rem' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '2rem' }}>Upcoming Events</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Clock size={20} color="#6366f1" /> Today's Agenda
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div style={{ borderLeft: '4px solid #6366f1', paddingLeft: '1.25rem' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#6366f1', textTransform: 'uppercase', marginBottom: '4px' }}>09:00 AM</div>
+                <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1a1c1e' }}>Curriculum Committee Meeting</div>
+              </div>
+              <div style={{ borderLeft: '4px solid #10b981', paddingLeft: '1.25rem' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', marginBottom: '4px' }}>02:30 PM</div>
+                <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1a1c1e' }}>Student Council Briefing</div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.card} style={{ padding: '2rem' }}>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Flag size={20} color="#f59e0b" /> Critical Deadlines
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <EventDetailItem 
                 date="May 15" 
                 title="Spring Semester Finals" 
@@ -94,16 +126,15 @@ export default function AcademicCalendarPage() {
                 date="May 22" 
                 title="Annual Sports Day" 
                 time="09:00 AM - 04:00 PM" 
-                loc="School Playground" 
+                loc="School Grounds" 
                 color="#10b981"
               />
               <EventDetailItem 
                 date="Jun 01" 
-                title="Summer Break Starts" 
-                time="All Day" 
-                loc="System Wide" 
+                title="Summer Vacation" 
+                time="All Day Event" 
+                loc="N/A" 
                 color="#f59e0b"
-                isFlag
               />
             </div>
           </div>
@@ -113,25 +144,22 @@ export default function AcademicCalendarPage() {
   );
 }
 
-function EventDetailItem({ date, title, time, loc, color, isFlag }: any) {
+function EventDetailItem({ date, title, time, loc, color }: any) {
   return (
-    <div style={{ position: 'relative', paddingLeft: '1.5rem', borderLeft: `3px solid ${color}` }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: color, marginBottom: '4px' }}>{date}</div>
+    <div style={{ position: 'relative', paddingLeft: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
+        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: color }}>{date}</div>
         <MoreVertical size={16} color="#94a3b8" />
       </div>
-      <div style={{ fontWeight: 800, fontSize: '0.9375rem', marginBottom: '8px' }}>{title}</div>
+      <div style={{ fontWeight: 800, fontSize: '0.875rem', color: '#1a1c1e', marginBottom: '8px' }}>{title}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: '#8c8e91' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
           <Clock size={14} /> {time}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: '#8c8e91' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
           <MapPin size={14} /> {loc}
         </div>
       </div>
-      {isFlag && (
-        <Flag size={14} color={color} style={{ position: 'absolute', top: 0, right: 0 }} />
-      )}
     </div>
   );
 }

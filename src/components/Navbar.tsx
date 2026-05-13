@@ -8,7 +8,7 @@ import { Globe } from 'lucide-react';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const { language, setLanguage, dict } = useLanguage();
+  const { language, setLanguage, dict, branding } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,7 +22,7 @@ export default function Navbar() {
     <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
       <div className={`${styles.container} container`}>
         <Link href="/" className={styles.logo}>
-          Visi<span className={styles.accent}>Sekolah</span>
+          {branding.name}
         </Link>
         
         <div className={styles.navLinks}>

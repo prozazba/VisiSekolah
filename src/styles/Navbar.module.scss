@@ -72,6 +72,6 @@
 
   &:hover {
     transform: scale(1.05);
-    background: color.adjust(#0070f3, $lightness: 5%);
+    opacity: 0.9;
   }
 }

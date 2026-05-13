@@ -1,19 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import styles from '@/styles/admin.module.scss';
+import styles from '@/styles/dashboard-v2.module.scss';
 import { 
   Save, 
   RefreshCcw, 
   Languages, 
   Plus, 
   Trash2, 
-  ChevronRight, 
   Layout, 
-  MessageSquare, 
   MapPin, 
   HelpCircle,
-  AlertCircle
+  AlertCircle,
+  CheckCircle2,
+  ChevronRight,
+  Sparkles
 } from 'lucide-react';
 import { getDictionary, saveDictionary, autoTranslateDictionary } from '@/app/actions/cms';
 
@@ -25,6 +26,7 @@ export default function CMSPage() {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState<'content' | 'contact' | 'faq'>('content');
 
   useEffect(() => {
@@ -43,7 +45,8 @@ export default function CMSPage() {
     setIsSaving(true);
     const result = await saveDictionary(lang, dict);
     if (result.success) {
-      alert('Konten berhasil disimpan!');
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     } else {
       alert('Gagal menyimpan: ' + result.error);
     }
@@ -58,6 +61,8 @@ export default function CMSPage() {
     const result = await autoTranslateDictionary(lang, dict);
     if (result.success) {
       alert(`Berhasil menerjemahkan ke bahasa ${result.targetLang === 'id' ? 'Indonesia' : 'Inggris'}!`);
+      // Re-fetch to see changes
+      fetchDict();
     } else {
       alert('Gagal menerjemahkan: ' + result.error);
     }
@@ -66,7 +71,7 @@ export default function CMSPage() {
 
   const updateField = (path: string[], value: string) => {
     if (!dict) return;
-    const newDict = { ...dict };
+    const newDict = JSON.parse(JSON.stringify(dict)); // Deep clone
     let current = newDict;
     for (let i = 0; i < path.length - 1; i++) {
       current = current[path[i]];
@@ -77,112 +82,130 @@ export default function CMSPage() {
 
   const updateFAQ = (index: number, field: 'q' | 'a', value: string) => {
     if (!dict) return;
-    const newDict = { ...dict };
+    const newDict = JSON.parse(JSON.stringify(dict));
     newDict.faq[index][field] = value;
     setDict(newDict);
   };
 
   const addFAQ = () => {
     if (!dict) return;
-    const newDict = { ...dict };
+    const newDict = JSON.parse(JSON.stringify(dict));
     if (!newDict.faq) newDict.faq = [];
-    newDict.faq.push({ q: '', a: '' });
+    newDict.faq.unshift({ q: '', a: '' }); // Add to top
     setDict(newDict);
   };
 
   const removeFAQ = (index: number) => {
     if (!dict) return;
-    const newDict = { ...dict };
+    const newDict = JSON.parse(JSON.stringify(dict));
     newDict.faq.splice(index, 1);
     setDict(newDict);
   };
 
   if (loading) {
     return (
-      <div className={styles.loadingWrapper}>
-        <RefreshCcw className={styles.spin} />
-        <p>Memuat kamus...</p>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: '1rem' }}>
+        <RefreshCcw size={40} className={styles.spin} color="#6366f1" />
+        <p style={{ fontWeight: 700, color: '#64748b' }}>Synchronizing Content...</p>
       </div>
     );
   }
 
   return (
-    <div className={styles.cmsContainer}>
-      <div className={styles.pageHead}>
-        <div>
-          <h2 className={styles.pageTitle}>CMS Content Management</h2>
-          <p className={styles.pageSubtitle}>Kelola konten statik, FAQ, dan informasi kontak.</p>
+    <div>
+      <header className={styles.pageHeader}>
+        <div className={styles.greeting}>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Layout size={32} color="#6366f1" /> Content Management
+          </h1>
+          <p>Easily update your website text, contact info, and FAQs.</p>
         </div>
-        <div className={styles.actionGroup}>
-          <div className={styles.langToggle}>
+        
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          {showSuccess && (
+            <div className={`${styles.badge} ${styles.success}`} style={{ padding: '0.75rem 1.25rem' }}>
+              <CheckCircle2 size={18} /> Published!
+            </div>
+          )}
+          <button 
+            className={styles.btnPrimary} 
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? <RefreshCcw size={18} className={styles.spin} /> : <Save size={18} />}
+            {isSaving ? 'Saving...' : 'Publish Changes'}
+          </button>
+        </div>
+      </header>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+        <div className={styles.tabs}>
+          <button 
+            className={`${styles.tabItem} ${activeTab === 'content' ? styles.active : ''}`}
+            onClick={() => setActiveTab('content')}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Layout size={18} /> Public Pages
+            </div>
+          </button>
+          <button 
+            className={`${styles.tabItem} ${activeTab === 'contact' ? styles.active : ''}`}
+            onClick={() => setActiveTab('contact')}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <MapPin size={18} /> Contact & Location
+            </div>
+          </button>
+          <button 
+            className={`${styles.tabItem} ${activeTab === 'faq' ? styles.active : ''}`}
+            onClick={() => setActiveTab('faq')}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <HelpCircle size={18} /> FAQ Registry
+            </div>
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', background: 'white', border: '1px solid #e2e8f0', borderRadius: '14px', padding: '4px' }}>
             <button 
-              className={lang === 'id' ? styles.active : ''} 
               onClick={() => setLang('id')}
+              style={{ padding: '6px 12px', borderRadius: '10px', border: 'none', background: lang === 'id' ? '#f1f0ff' : 'transparent', color: lang === 'id' ? '#6366f1' : '#94a3b8', fontWeight: 700, cursor: 'pointer' }}
             >ID</button>
             <button 
-              className={lang === 'en' ? styles.active : ''} 
               onClick={() => setLang('en')}
+              style={{ padding: '6px 12px', borderRadius: '10px', border: 'none', background: lang === 'en' ? '#f1f0ff' : 'transparent', color: lang === 'en' ? '#6366f1' : '#94a3b8', fontWeight: 700, cursor: 'pointer' }}
             >EN</button>
           </div>
           <button 
             className={styles.btnOutline} 
             onClick={handleAutoTranslate}
             disabled={isTranslating}
+            style={{ padding: '0.75rem 1.25rem' }}
           >
-            {isTranslating ? <RefreshCcw size={16} className={styles.spin} /> : <Languages size={16} />}
-            AI Translate All
-          </button>
-          <button 
-            className={styles.btnPrimary} 
-            onClick={handleSave}
-            disabled={isSaving}
-          >
-            {isSaving ? <RefreshCcw size={16} className={styles.spin} /> : <Save size={16} />}
-            Simpan Perubahan
+            {isTranslating ? <RefreshCcw size={16} className={styles.spin} /> : <Sparkles size={16} color="#6366f1" />}
+            {isTranslating ? 'AI Translating...' : 'AI Sync All'}
           </button>
         </div>
       </div>
 
-      <div className={styles.cmsTabs}>
-        <button 
-          className={activeTab === 'content' ? styles.active : ''} 
-          onClick={() => setActiveTab('content')}
-        >
-          <Layout size={18} /> Halaman Publik
-        </button>
-        <button 
-          className={activeTab === 'contact' ? styles.active : ''} 
-          onClick={() => setActiveTab('contact')}
-        >
-          <MapPin size={18} /> Kontak & Lokasi
-        </button>
-        <button 
-          className={activeTab === 'faq' ? styles.active : ''} 
-          onClick={() => setActiveTab('faq')}
-        >
-          <HelpCircle size={18} /> Daftar FAQ
-        </button>
-      </div>
-
-      <div className={styles.cmsEditor}>
+      <div style={{ maxWidth: '900px' }}>
         {activeTab === 'content' && (
-          <div className={styles.sectionGrid}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <EditorSection 
-              title="Hero Section (Beranda)" 
+              title="Landing Hero Section" 
               fields={[
-                { label: 'Title', path: ['hero', 'title'], value: dict.hero.title },
-                { label: 'Subtitle', path: ['hero', 'subtitle'], value: dict.hero.subtitle, type: 'textarea' },
-                { label: 'CTA Text', path: ['hero', 'cta_start'], value: dict.hero.cta_start },
+                { label: 'Hero Title', path: ['hero', 'title'], value: dict.hero.title },
+                { label: 'Hero Subtitle', path: ['hero', 'subtitle'], value: dict.hero.subtitle, type: 'textarea' },
+                { label: 'Main CTA Button', path: ['hero', 'cta_start'], value: dict.hero.cta_start },
               ]}
               onUpdate={updateField}
             />
             <EditorSection 
-              title="Fitur Unggulan" 
+              title="Featured Pillars" 
               fields={[
-                { label: 'Section Title', path: ['home_features', 'title'], value: dict.home_features.title },
-                { label: 'Section Subtitle', path: ['home_features', 'subtitle'], value: dict.home_features.subtitle },
-                { label: 'Feature 1 (Title)', path: ['home_features', 'white_label', 'title'], value: dict.home_features.white_label.title },
-                { label: 'Feature 1 (Desc)', path: ['home_features', 'white_label', 'desc'], value: dict.home_features.white_label.desc, type: 'textarea' },
+                { label: 'Section Header', path: ['home_features', 'title'], value: dict.home_features.title },
+                { label: 'Section Sub-header', path: ['home_features', 'subtitle'], value: dict.home_features.subtitle },
               ]}
               onUpdate={updateField}
             />
@@ -190,21 +213,13 @@ export default function CMSPage() {
         )}
 
         {activeTab === 'contact' && (
-          <div className={styles.sectionGrid}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <EditorSection 
-              title="Informasi Kontak Utama" 
+              title="Global Contact Info" 
               fields={[
-                { label: 'Email', path: ['footer', 'contact_info', 'email'], value: dict.footer.contact_info.email },
-                { label: 'Telepon', path: ['footer', 'contact_info', 'phone'], value: dict.footer.contact_info.phone },
-                { label: 'Alamat Singkat (Footer)', path: ['footer', 'contact_info', 'address'], value: dict.footer.contact_info.address },
-              ]}
-              onUpdate={updateField}
-            />
-            <EditorSection 
-              title="Detail Lokasi (Halaman Kontak)" 
-              fields={[
-                { label: 'Label Lokasi', path: ['contact_page', 'sidebar', 'office'], value: dict.contact_page.sidebar.office },
-                { label: 'Alamat Lengkap', path: ['contact_page', 'sidebar', 'location'], value: dict.contact_page.sidebar.location, type: 'textarea' },
+                { label: 'Support Email', path: ['footer', 'contact_info', 'email'], value: dict.footer.contact_info.email },
+                { label: 'Contact Phone', path: ['footer', 'contact_info', 'phone'], value: dict.footer.contact_info.phone },
+                { label: 'Brief Address (Footer)', path: ['footer', 'contact_info', 'address'], value: dict.footer.contact_info.address },
               ]}
               onUpdate={updateField}
             />
@@ -212,42 +227,50 @@ export default function CMSPage() {
         )}
 
         {activeTab === 'faq' && (
-          <div className={styles.faqEditor}>
-            <div className={styles.faqList}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <button className={styles.btnOutline} onClick={addFAQ} style={{ alignSelf: 'flex-start', borderStyle: 'dashed' }}>
+              <Plus size={18} /> Add New FAQ Entry
+            </button>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {dict.faq?.map((item: any, index: number) => (
-                <div key={index} className={styles.faqItem}>
-                  <div className={styles.faqHeader}>
-                    <span>Pertanyaan #{index + 1}</span>
-                    <button onClick={() => removeFAQ(index)} className={styles.btnDelete}>
-                      <Trash2 size={16} />
+                <div key={index} className={styles.card} style={{ padding: '2rem', border: '1px solid #f1f5f9' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <span className={styles.badge} style={{ background: '#f1f5f9', color: '#64748b' }}>ENTRY #{dict.faq.length - index}</span>
+                    <button onClick={() => removeFAQ(index)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>
+                      <Trash2 size={18} />
                     </button>
                   </div>
-                  <input 
-                    type="text" 
-                    value={item.q} 
-                    onChange={(e) => updateFAQ(index, 'q', e.target.value)}
-                    placeholder="Tulis pertanyaan..."
-                    className={styles.formInput}
-                  />
-                  <textarea 
-                    value={item.a} 
-                    onChange={(e) => updateFAQ(index, 'a', e.target.value)}
-                    placeholder="Tulis jawaban..."
-                    className={styles.formTextarea}
-                  />
+                  <div className={styles.formGroup}>
+                    <label>Question</label>
+                    <input 
+                      className={styles.inputControl}
+                      type="text" 
+                      value={item.q} 
+                      onChange={(e) => updateFAQ(index, 'q', e.target.value)}
+                    />
+                  </div>
+                  <div className={styles.formGroup} style={{ marginBottom: 0 }}>
+                    <label>Answer Content</label>
+                    <textarea 
+                      className={styles.inputControl}
+                      rows={4}
+                      value={item.a} 
+                      onChange={(e) => updateFAQ(index, 'a', e.target.value)}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
-            <button className={styles.btnAdd} onClick={addFAQ}>
-              <Plus size={18} /> Tambah FAQ Baru
-            </button>
           </div>
         )}
       </div>
 
-      <div className={styles.cmsNotice}>
-        <AlertCircle size={18} />
-        <p>Perubahan yang disimpan akan langsung memperbarui file kamus dan tampilan website secara real-time.</p>
+      <div style={{ marginTop: '3rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid #e2e8f0' }}>
+        <AlertCircle size={20} color="#6366f1" />
+        <p style={{ fontSize: '0.875rem', color: '#64748b', fontWeight: 600 }}>
+          Tip: Use the AI Sync All feature to automatically translate your updates to other languages.
+        </p>
       </div>
     </div>
   );
@@ -255,24 +278,25 @@ export default function CMSPage() {
 
 function EditorSection({ title, fields, onUpdate }: { title: string, fields: any[], onUpdate: any }) {
   return (
-    <section className={styles.editorCard}>
-      <h4>{title}</h4>
-      <div className={styles.fields}>
+    <section className={styles.card} style={{ padding: '2.5rem' }}>
+      <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '2rem' }}>{title}</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {fields.map((field, idx) => (
           <div key={idx} className={styles.formGroup}>
             <label>{field.label}</label>
             {field.type === 'textarea' ? (
               <textarea 
+                className={styles.inputControl}
+                rows={4}
                 value={field.value} 
                 onChange={(e) => onUpdate(field.path, e.target.value)}
-                className={styles.formTextarea}
               />
             ) : (
               <input 
+                className={styles.inputControl}
                 type="text" 
                 value={field.value} 
                 onChange={(e) => onUpdate(field.path, e.target.value)}
-                className={styles.formInput}
               />
             )}
           </div>
