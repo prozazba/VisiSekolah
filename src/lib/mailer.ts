@@ -76,7 +76,7 @@ async function getTransporter(): Promise<nodemailer.Transporter> {
  */
 export async function sendMail(options: MailOptions): Promise<{ messageId: string; previewUrl?: string | false }> {
   const transport = await getTransporter();
-  const from = process.env.SMTP_FROM || 'VisiSekolah <noreply@visisekolah.id>';
+  const from = process.env.SMTP_FROM || 'VisiSekolah <noreply@visisekolah.vercel.app>';
 
   const info = await transport.sendMail({
     from,

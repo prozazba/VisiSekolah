@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VisiSekolah | Solusi Digital Pendidikan Terpadu",
-  description: "Platform manajemen sekolah multi-tenant dengan fitur white-label untuk transformasi digital pendidikan Indonesia.",
+  title: "SMA VisiSekolah | Unggul dalam Prestasi dan Karakter",
+  description: "Portal resmi SMA VisiSekolah. Platform pendidikan terintegrasi untuk siswa, guru, dan orang tua.",
 };
 
 import { LanguageProvider } from "@/context/LanguageContext";

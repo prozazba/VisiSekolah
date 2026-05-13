@@ -1,6 +1,5 @@
 export type SchoolConfig = {
   id: string;
-  slug: string;
   name: string;
   logoUrl?: string;
   primaryColor: string;

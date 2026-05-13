@@ -1,62 +1,48 @@
-# VisiSekolah - White Label School Platform
+# SMA VisiSekolah - Official Portal
 
-VisiSekolah adalah sistem manajemen sekolah multi-tenant yang memungkinkan setiap sekolah memiliki aplikasi dengan branding mereka sendiri.
+Portal digital resmi **SMA VisiSekolah** yang dirancang untuk memudahkan proses Penerimaan Peserta Didik Baru (PPDB) dan manajemen akademik internal sekolah secara modern dan terintegrasi.
 
-## Tech Stack
-- **Frontend**: Next.js 15 (App Router)
-- **Styling**: Sass/SCSS (No Tailwind)
-- **Database**: PostgreSQL (Neon DB)
+## ✨ Fitur Utama
+- **PPDB Online 2026/2027**: Sistem informasi pendaftaran siswa baru yang mudah diakses.
+- **CMS Konten Sekolah**: Pengelolaan informasi statik, pengumuman, dan FAQ langsung dari dashboard admin.
+- **AI-Powered Translation**: Dukungan konten Bahasa Indonesia & Inggris yang disinkronkan secara otomatis menggunakan AI.
+- **Portal Akademik**: Manajemen data siswa, guru, kelas, dan jadwal pelajaran dalam satu dashboard terpadu.
+- **Professional Dashboard**: Antarmuka khusus untuk Kepala Sekolah (Principal) dan Staff Administrasi.
+
+## 🛠️ Tech Stack
+- **Framework**: Next.js 16 (App Router)
+- **Database**: Neon (PostgreSQL)
 - **ORM**: Prisma
+- **Styling**: Vanilla CSS with SCSS
+- **AI**: Google Gemini Pro (Translation Engine)
+- **Email**: Resend & SMTP
 
-## Fitur Utama
-1. **Multi-Tenancy**: Otomatis mendeteksi sekolah berdasarkan subdomain (misal: `smp1.visisekolah.id`).
-2. **White Labeling**: Sekolah dapat mengatur warna, logo, dan nama aplikasi mereka sendiri.
-3. **Dashboards**:
-   - Super Admin (Owner Platform)
-   - School Admin
-   - Guru
-   - Siswa & Orang Tua
-4. **Modul Akademik**: Absensi, Tugas, Nilai, Jadwal, Forum.
-5. **Pembayaran**: Integrasi Midtrans untuk tagihan SPP.
+## 🚀 Cara Instalasi (Lokal)
 
-## Cara Instalasi
-
-1. Clone repository:
+1. **Clone & Install**:
    ```bash
    git clone https://github.com/prozazba/VisiSekolah.git
-   ```
-
-2. Install dependencies:
-   ```bash
+   cd VisiSekolah
    npm install
    ```
 
-3. Setup Environment Variables:
-   Salalin `.env.example` ke `.env` dan isi variabel yang dibutuhkan:
-   - `DATABASE_URL`: Koneksi ke Neon DB.
-   - `NEXTAUTH_SECRET`: Secret untuk autentikasi.
+2. **Environment Variables**:
+   Salin `.env.example` menjadi `.env` dan lengkapi variabel berikut:
+   - `DATABASE_URL`: URL koneksi database PostgreSQL.
+   - `SESSION_SECRET`: Kode rahasia untuk sesi autentikasi.
+   - `GEMINI_API_KEY`: Key untuk fitur auto-translate AI.
 
-4. Setup Database:
+3. **Database Setup**:
    ```bash
    npx prisma generate
    npx prisma db push
+   npx prisma db seed
    ```
 
-5. Run Development Server:
+4. **Run Server**:
    ```bash
    npm run dev
    ```
 
-## Struktur Multi-Tenant
-Sistem ini menggunakan middleware untuk melakukan routing dinamis berdasarkan hostname:
-- `admin.visisekolah.id` -> `src/app/admin`
-- `[school].visisekolah.id` -> `src/app/_sites/[site]`
-- `visisekolah.id` -> `src/app/page.tsx` (Landing Page)
-
-## Testing Local dengan Subdomain
-Untuk testing lokal, Anda dapat mengedit file `hosts` Anda:
-```text
-127.0.0.1 smp1.localhost
-127.0.0.1 admin.localhost
-```
-Lalu akses `smp1.localhost:3000` di browser.
+## 📄 Lisensi
+SMA VisiSekolah & Komite. Seluruh hak cipta dilindungi.

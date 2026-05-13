@@ -435,7 +435,6 @@ export function getPaymentReceiptEmail(data: PaymentReceiptData): string {
 interface ActivationEmailData {
   email: string;
   schoolName: string;
-  slug: string;
   tempPassword: string;
   loginUrl: string;
 }
@@ -525,8 +524,8 @@ export function getActivationEmail(data: ActivationEmailData): string {
                       </tr>
                       <tr>
                         <td>
-                          <span style="font-size:11px;color:#64748b;font-weight:600;">SUBDOMAIN</span><br>
-                          <span style="font-size:16px;color:#38bdf8;font-weight:600;">${data.slug}.visisekolah.id</span>
+                          <span style="font-size:11px;color:#64748b;font-weight:600;">LINK DASHBOARD</span><br>
+                          <span style="font-size:14px;color:#38bdf8;font-weight:600;">sma-visisekolah.sch.id/login</span>
                         </td>
                       </tr>
                     </table>

@@ -1,12 +1,11 @@
-// prisma/schema.prisma
+// prisma/schema.prisma - Updated for Single Tenant
 
 datasource db {
   provider = "postgresql"
 }
 
 generator client {
-  provider = "prisma-client"
-  output   = "./generated/prisma"
+  provider = "prisma-client-js"
 }
 
 // -----------------------------------------
@@ -15,23 +14,26 @@ generator client {
 
 model School {
   id            String   @id @default(cuid())
-  slug          String   @unique // Subdomain: smp1.visisekolah.id
-  customDomain  String?  @unique
   name          String
   address       String?
   phone         String?
   email         String?
-  status        SchoolStatus @default(ACTIVE)
 
-  // Branding (White Label)
+  // Branding & Theme
   logoUrl       String?
   faviconUrl    String?
-  splashScreenUrl String?
   primaryColor  String   @default("#0f172a")
   secondaryColor String  @default("#334155")
   accentColor   String   @default("#3b82f6")
   fontFamily    String   @default("Inter")
   
+  // CMS Content
+  posts         Post[]
+  pages         Page[]
+  categories    Category[]
+  tags          Tag[]
+  backups       Backup[]
+
   // Relations
   users         User[]
   classes       Class[]
@@ -45,20 +47,14 @@ model School {
   updatedAt     DateTime @updatedAt
 }
 
-enum SchoolStatus {
-  PENDING
-  ACTIVE
-  SUSPENDED
-  DELETED
-}
-
 model SchoolSettings {
   id               String @id @default(cuid())
   schoolId         String @unique
   school           School @relation(fields: [schoolId], references: [id])
   allowRegistration Boolean @default(false)
   timezone         String @default("Asia/Jakarta")
-  attendanceType   String @default("QR_CODE") // QR_CODE, GEOFENCING, MANUAL
+  attendanceType   String @default("QR_CODE")
+  defaultLocale    String @default("id")
 }
 
 // -----------------------------------------
@@ -88,6 +84,9 @@ model User {
   siswaProfile  SiswaProfile?
   parentProfile ParentProfile?
   
+  // CMS
+  posts         Post[]
+
   // Interactions
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
@@ -95,6 +94,131 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
+
+// ... existing GuruProfile, SiswaProfile, ParentProfile models ...
+
+// -----------------------------------------
+// CMS Platform
+// -----------------------------------------
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String
+  content     String   @db.Text
+  excerpt     String?  @db.Text
+  status      PostStatus @default(DRAFT)
+  
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  
+  tags        Tag[]
+  
+  featuredImageUrl String?
+  translations Translation[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([schoolId, slug])
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String
+  content     String   @db.Text
+  status      PostStatus @default(DRAFT)
+  
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  
+  translations Translation[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([schoolId, slug])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String
+  
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  
+  posts       Post[]
+  
+  @@unique([schoolId, slug])
+}
+
+model Tag {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String
+  
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  
+  posts       Post[]
+
+  @@unique([schoolId, slug])
+}
+
+model Translation {
+  id          String   @id @default(cuid())
+  locale      String   // 'id', 'en', etc.
+  field       String   // 'title', 'content', 'excerpt'
+  content     String   @db.Text
+  
+  postId      String?
+  post        Post?    @relation(fields: [postId], references: [id])
+  
+  pageId      String?
+  page        Page?    @relation(fields: [pageId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------------------
+// Data Management
+// -----------------------------------------
+
+model Backup {
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  
+  fileUrl     String
+  fileName    String
+  fileSize    Int
+  type        BackupType @default(MANUAL)
+  
+  createdAt   DateTime @default(now())
+}
+
+enum BackupType {
+  MANUAL
+  SCHEDULED
+  SYSTEM
+}
+
+// ... existing models (AcademicTerm, Class, Subject, etc.) ...
 
 model GuruProfile {
   id          String   @id @default(cuid())
@@ -317,28 +441,4 @@ enum PaymentStatus {
   PAID
   EXPIRED
   FAILED
-}
-
-// -----------------------------------------
-// Sales & Onboarding
-// -----------------------------------------
-
-model RegistrationInquiry {
-  id            String   @id @default(cuid())
-  email         String
-  schoolName    String?
-  contactName   String?
-  phone         String?
-  plan          String?  // Starter, Pro, Enterprise
-  notes         String?
-  status        InquiryStatus @default(PENDING)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-}
-
-enum InquiryStatus {
-  PENDING
-  REVIEWED
-  ACCEPTED
-  REJECTED
 }

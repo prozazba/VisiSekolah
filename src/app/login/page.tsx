@@ -39,7 +39,7 @@ export default function LoginPage() {
                   name="email"
                   type="email" 
                   className={`${styles.formInput} ${styles.loginInput}`} 
-                  placeholder="admin@visisekolah.id"
+                  placeholder="admin@visisekolah.vercel.app"
                   required
                 />
                 {state?.errors?.email && <p className={styles.fieldError}>{state.errors.email}</p>}
@@ -81,7 +81,7 @@ export default function LoginPage() {
             </form>
 
             <div className={styles.footerActions}>
-              <p className={styles.footerText}>{p.not_registered} <Link href="/contact" className={styles.linkSmall}>{p.contact_sales}</Link></p>
+              <p className={styles.footerText}>Need help? <Link href="/contact" className={styles.linkSmall}>Contact Support</Link></p>
             </div>
 
             <div className={styles.secureBadge}>

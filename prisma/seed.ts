@@ -1,61 +1,99 @@
-import { PrismaClient } from './generated/prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 import "dotenv/config";
 
-const rawUrl = process.env.DATABASE_URL;
-if (!rawUrl) {
+const url = process.env.DATABASE_URL;
+if (!url) {
   throw new Error('DATABASE_URL is missing in the environment');
 }
 
 // Clean the URL (remove quotes and unsupported params)
-const connectionString = rawUrl.replace(/['"]/g, '').replace(/([?&])channel_binding=[^&]*(&|$)/, '$1').replace(/[?&]$/, '').trim();
+const connectionString = url.replace(/['"]/g, '').replace(/([?&])channel_binding=[^&]*(&|$)/, '$1').replace(/[?&]$/, '').trim();
 
-const pool = new Pool({ 
-  connectionString,
-  ssl: true 
-});
+const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const hashedPassword = await bcrypt.hash('password123', 10);
   
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@visisekolah.id' },
+  // 1. Create Default School (Institutional Settings)
+  const school = await prisma.school.upsert({
+    where: { id: 'default-school' },
     update: {},
+    // @ts-ignore - slug is removed from schema
     create: {
-      email: 'admin@visisekolah.id',
-      name: 'Super Admin',
-      password: hashedPassword,
-      role: 'SUPER_ADMIN',
+      id: 'default-school',
+      name: 'SMA VisiSekolah',
+      address: 'Jl. Pendidikan No. 123, Digital Hub BSD, Tangerang',
+      phone: '021-12345678',
+      email: 'info@sma-visisekolah.sch.id',
     },
   });
 
-  console.log('Super Admin created:', admin.email);
+  console.log('Default School Created:', school.name);
 
-  // Create sample schools
-  const schools = [
-    { name: 'SMP Negeri 1 Jakarta', slug: 'smp1', status: 'ACTIVE' as const },
-    { name: 'SMA Negeri 5 Bandung', slug: 'sma5', status: 'ACTIVE' as const },
-    { name: 'SD Al-Azhar 1', slug: 'sd-alazhar1', status: 'PENDING' as const },
-    { name: 'SMK Telkom Malang', slug: 'smk-telkom', status: 'SUSPENDED' as const },
-  ];
+  // 2. Create Institutional Users (Roles)
+  
+  // Principal (Super Admin)
+  const principal = await prisma.user.upsert({
+    where: { email: 'principal@visisekolah.id' },
+    update: {},
+    create: {
+      email: 'principal@visisekolah.id',
+      name: 'Drs. H. Ahmad Fauzi (Principal)',
+      password: hashedPassword,
+      role: 'SUPER_ADMIN',
+      schoolId: school.id,
+    },
+  });
 
-  for (const school of schools) {
-    await prisma.school.upsert({
-      where: { slug: school.slug },
-      update: { status: school.status },
-      create: {
-        name: school.name,
-        slug: school.slug,
-        status: school.status,
-      },
-    });
-  }
+  // Finance (School Admin)
+  const finance = await prisma.user.upsert({
+    where: { email: 'finance@visisekolah.id' },
+    update: {},
+    create: {
+      email: 'finance@visisekolah.id',
+      name: 'Siti Aminah, S.E. (Finance Manager)',
+      password: hashedPassword,
+      role: 'SCHOOL_ADMIN',
+      schoolId: school.id,
+    },
+  });
 
-  console.log('Sample schools seeded.');
+  // Teacher (Guru Role)
+  const teacher = await prisma.user.upsert({
+    where: { email: 'teacher@visisekolah.id' },
+    update: {},
+    create: {
+      email: 'teacher@visisekolah.id',
+      name: 'Budi Santoso, S.Pd. (Senior Teacher)',
+      password: hashedPassword,
+      role: 'GURU',
+      schoolId: school.id,
+    },
+  });
+
+  // Student (Siswa Role)
+  const student = await prisma.user.upsert({
+    where: { email: 'student@visisekolah.id' },
+    update: {},
+    create: {
+      email: 'student@visisekolah.id',
+      name: 'Rizky Pratama (Student)',
+      password: hashedPassword,
+      role: 'SISWA',
+      schoolId: school.id,
+    },
+  });
+
+  console.log('Institutional accounts seeded:');
+  console.log('- Principal:', principal.email);
+  console.log('- Finance:', finance.email);
+  console.log('- Teacher:', teacher.email);
+  console.log('- Student:', student.email);
 }
 
 main()

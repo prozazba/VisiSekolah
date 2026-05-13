@@ -1,180 +1,56 @@
-# VisiSekolah - White Label School Application Platform
+# SMA VisiSekolah - Digital Portal & Management System
 
-VisiSekolah adalah platform *white label* multi-tenant yang dirancang untuk sekolah-sekolah di Indonesia (SD, SMP, SMA). Platform ini memungkinkan setiap sekolah memiliki identitas digital sendiri dengan fitur manajemen pendidikan yang lengkap.
+VisiSekolah telah bertransformasi dari platform SaaS multi-tenant menjadi portal digital eksklusif untuk **SMA VisiSekolah**. Fokus utama saat ini adalah mendukung **PPDB (Penerimaan Peserta Didik Baru)** dan manajemen internal sekolah.
 
-## 1. System Architecture
+## 1. Arsitektur Sistem (Single-School Architecture)
 
-### Multi-Tenancy Strategy: Subdomain/Domain Routing
-Kami akan menggunakan pendekatan **Shared Database, Isolated Schema (Logical Separation)**.
-- **Routing**: Menggunakan Next.js Middleware untuk mendeteksi `hostname`.
-  - `admin.visisekolah.id` -> Super Admin Dashboard.
-  - `[school-slug].visisekolah.id` atau `customdomain.com` -> School App (Siswa, Guru, Orang Tua, Admin Sekolah).
-- **Data Isolation**: Setiap tabel utama akan memiliki kolom `tenantId` (ID Sekolah). Row-Level Security (RLS) di PostgreSQL atau filter global di Prisma middleware akan digunakan untuk memastikan isolasi data.
-- **Branding Architecture**: Konfigurasi branding (warna, logo, font) disimpan di database dan diinjeksi ke frontend melalui CSS Custom Properties (Variables) di root layout.
-
-### Infrastructure Map
-- **Frontend/Backend**: Next.js 15 (App Router) di Vercel.
-- **Database**: PostgreSQL (Neon DB) untuk skalabilitas serverless.
-- **File Storage**: Vercel Blob atau AWS S3 (untuk logo, materi, tugas).
-- **Authentication**: Auth.js (NextAuth) atau Clerk dengan dukungan multi-tenant.
-- **Payments**: Integrasi Midtrans (lebih populer di Indonesia).
+### Strategi Deployment
+- **Domain**: `sma-visisekolah.sch.id` (Production)
+- **Infrastructure**: Next.js 16 (App Router) di Vercel.
+- **Database**: PostgreSQL (Neon DB) dengan satu skema utama (Default School ID).
+- **Isolasi**: Tidak lagi menggunakan routing berbasis hostname/slug. Semua route bersifat flat dan melayani satu institusi.
 
 ## 2. Tech Stack
 
-| Layer | Technology | Reason |
+| Layer | Technology | Status |
 | :--- | :--- | :--- |
-| **Core Framework** | Next.js 15 (App Router) | SEO friendly, React Server Components, Fast Refresh. |
-| **Styling** | Sass/SCSS | Fleksibilitas tinggi untuk white-label (theming) tanpa batasan utility classes. |
-| **Database** | Neon DB (PostgreSQL) | Serverless, branching feature, auto-scaling. |
-| **ORM** | Prisma | Type-safety, mudah dimigrasi, query builder yang intuitif. |
-| **Authentication** | NextAuth.js | Custom provider support, session management yang fleksibel. |
-| **State Management**| TanStack Query (Zustand jika perlu) | Cache management yang kuat untuk dashboard kompleks. |
-| **Forms** | React Hook Form + Zod | Validasi data yang ketat dan efisien. |
-| **Payment Gateway** | Midtrans | Support pembayaran lokal Indonesia (E-wallet, Virtual Account, QRIS). |
+| **Framework** | Next.js 16 (App Router) | Active |
+| **Styling** | Sass/SCSS | Active (Professional & Modern) |
+| **Database** | Neon DB (PostgreSQL) | Active |
+| **ORM** | Prisma | Active |
+| **AI** | Google Gemini | Active (Auto-Translate & Content) |
+| **Email** | Resend / Nodemailer | Active |
 
-## 3. Database Schema (Prisma)
+## 3. Fitur Utama (Produksi)
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+### A. Portal Publik & PPDB
+- **Landing Page**: Branding SMA VisiSekolah dengan fokus pada keunggulan akademik dan pendaftaran siswa baru.
+- **PPDB Flow**: CTA "Daftar PPDB Online" yang mengarahkan ke form kontak/registrasi.
+- **Multi-Bahasa**: Dukungan penuh Bahasa Indonesia dan Inggris dengan sinkronisasi AI.
+- **FAQ & Informasi**: Daftar tanya-jawab seputar pendaftaran dan profil sekolah.
 
-generator client {
-  provider = "prisma-client-js"
-}
+### B. Admin CMS & Dashboard
+- **Content Management**: Dashboard untuk mengedit teks statik (Hero, Features, About) tanpa menyentuh kode.
+- **AI Translation Sync**: Fitur satu klik untuk menerjemahkan seluruh konten website menggunakan Gemini AI.
+- **Akademik**: Manajemen data Guru, Siswa, Kelas, dan Pengumuman.
+- **Branding**: Kustomisasi warna tema dan identitas visual sekolah.
 
-// Tenancy
-model School {
-  id            String   @id @default(cuid())
-  slug          String   @unique // Subdomain: smp1.visisekolah.id
-  customDomain  String?  @unique
-  name          String
-  address       String?
-  phone         String?
-  email         String?
-  status        String   @default("ACTIVE") // ACTIVE, SUSPENDED, PENDING
+## 4. Persiapan Produksi (Checklist)
 
-  // Branding
-  logoUrl       String?
-  faviconUrl    String?
-  primaryColor  String   @default("#0070f3")
-  secondaryColor String  @default("#1c1c1c")
-  accentColor   String   @default("#ff4081")
-  fontFamily    String   @default("Inter")
-  
-  // Relations
-  users         User[]
-  classes       Class[]
-  settings      SchoolSettings?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-}
+### Baut & Mur (Technical)
+- [x] Penghapusan infrastruktur multi-tenant (Middleware, Slug routing).
+- [x] Pembersihan build errors (School slug references).
+- [x] Sinkronisasi Schema Prisma dengan kebutuhan single-school.
+- [x] Setup `.env.example` untuk referensi deployment.
+- [x] Build check (Next.js production build).
 
-// User Management
-enum Role {
-  SUPER_ADMIN
-  SCHOOL_ADMIN
-  GURU
-  SISWA
-  ORANG_TUA
-}
+### Konten & Branding
+- [x] Redaksi PPDB Tahun Ajaran 2026/2027.
+- [x] Lokasi Sekretariat PPDB & Kontak Resmi.
+- [x] Seeding database dengan profil default SMA VisiSekolah.
 
-model User {
-  id            String    @id @default(cuid())
-  email         String?   @unique
-  phone         String?   @unique
-  password      String
-  name          String
-  role          Role
-  schoolId      String?   // Null for Super Admin
-  school        School?   @relation(fields: [schoolId], references: [id])
-  
-  // Specific Data
-  guruProfile   GuruProfile?
-  siswaProfile  SiswaProfile?
-  parentProfile ParentProfile?
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-}
+## 5. Timeline Operasional
 
-// Modules
-model Class {
-  id        String   @id @default(cuid())
-  name      String
-  schoolId  String
-  school    School   @relation(fields: [schoolId], references: [id])
-  students  SiswaProfile[]
-  // ... more relations
-}
-
-// ... Additional models for Attendance, Grades, etc.
-```
-
-## 4. Roadmap & Fitur Lengkap
-
-### Phase 1: MVP (Core Tenancy & Admin)
-- [ ] Core: Multi-tenant middleware & routing.
-- [ ] Super Admin: Sekolah management (CRUD, Status).
-- [ ] School Admin: Branding customization (Color picker, Logo upload).
-- [ ] User Auth: Login/Logout berdasarkan role & school context.
-- [ ] Core Modules: Data Guru, Siswa, Kelas.
-- [ ] Basic Attendance (Absensi manual).
-
-### Phase 2: Learning & Communication
-- [ ] E-Learning: Materi & Tugas (Upload/Download).
-- [ ] Digital Gradebook (Nilai harian & Rapor).
-- [ ] Advanced Attendance: QR Code & Geofencing.
-- [ ] Communication: Pengumuman (Push Notification) & Forum Kelas.
-- [ ] School Calendar.
-
-### Phase 3: Premium & Integrations
-- [ ] Payment Gateway: SPP & Tagihan (Midtrans).
-- [ ] E-Library & Digital Library.
-- [ ] Quiz & Assessment Online.
-- [ ] Mobile App (Progressive Web App - PWA).
-- [ ] Global Analytics for Super Admin.
-
-## 5. Flow User
-
-1. **Super Admin**: Login ke `admin.visisekolah.id` -> Pantau sekolah baru -> Approve pendaftaran -> Kelola langganan.
-2. **School Admin**: Login ke domain sekolah -> Set up branding -> Input data guru & siswa -> Set up jadwal.
-3. **Guru**: Login -> Lihat jadwal -> Absensi siswa -> Input nilai -> Upload materi.
-4. **Siswa**: Login -> Lihat tugas -> Kumpulkan PR -> Lihat nilai & rapor -> Bayar SPP.
-5. **Orang Tua**: Login -> Monitor absensi anak -> Lihat progres nilai -> Bayar tagihan sekolah.
-
-## 6. Implementation Detail: White Label Branding
-
-Branding diimplementasikan menggunakan CSS Variables yang di-*inject* secara dinamis:
-
-```scss
-// styles/_variables.scss
-:root {
-  --primary-color: #{$default-primary};
-  --secondary-color: #{$default-secondary};
-  // ...
-}
-
-// Di Layout Server Component:
-const school = await getSchoolConfig(hostname);
-return (
-  <html style={{ 
-    '--primary-color': school.primaryColor,
-    '--secondary-color': school.secondaryColor 
-  }}>
-    ...
-  </html>
-)
-```
-
-## 7. Development Timeline (MVP)
-
-| Minggu | Fokus |
-| :--- | :--- |
-| **Minggu 1** | Setup environment, Database architecture, Auth, & Multi-tenant Routing. |
-| **Minggu 2** | Super Admin Dashboard & School Admin Branding. |
-| **Minggu 3** | User Management (Guru, Siswa) & Basic Class Management. |
-| **Minggu 4** | Core Attendance & Final Polish for MVP. |
-
-**Total Estimasi MVP: 1 Bulan (4 Minggu).**
+- **Mei 2026**: Peluncuran Portal PPDB & Sistem Administrasi Dasar.
+- **Juni 2026**: Aktivasi Modul Akademik (Jadwal & Absensi).
+- **Juli 2026**: Onboarding Siswa Baru ke Portal Siswa.

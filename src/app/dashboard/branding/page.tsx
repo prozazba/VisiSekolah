@@ -136,7 +136,7 @@ export default function BrandingSetupPage() {
             </div>
             <div className={styles.previewHero}>
               <h4 style={{ color: secondaryColor }}>Selamat Datang di Portal</h4>
-              <h5>SMA Negeri 1 Jakarta</h5>
+              <h5>SMA VisiSekolah</h5>
               <button style={{ background: accentColor }}>Masuk Sekarang</button>
             </div>
             <div className={styles.previewContent}>

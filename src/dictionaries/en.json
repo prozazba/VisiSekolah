@@ -1,140 +1,117 @@
 {
   "navbar": {
-    "features": "Features",
-    "pricing": "Pricing",
-    "about": "About Us",
+    "features": "Advantages",
+    "about": "School Profile",
     "contact": "Contact Us",
-    "login": "Login",
-    "register": "Register"
+    "login": "Student/Teacher Portal",
+    "register": "Enrollment"
   },
   "hero": {
-    "title": "Integrated White Label School Solution",
-    "subtitle": "Transform your educational management with a fully customizable platform. One digital ecosystem for the progress of future schools.",
-    "cta_start": "Get Started",
-    "cta_features": "View Features"
+    "title": "Welcome to VisiSekolah High School",
+    "subtitle": "Shaping the Future Generation with Technology and Noble Values. Admissions for the 2026/2027 Academic Year are now open.",
+    "cta_start": "Apply for Admission",
+    "cta_features": "View Advantages"
   },
   "home_features": {
-    "title": "Integrated Digital Solution",
-    "subtitle": "One platform for your entire school ecosystem.",
-    "white_label": { "title": "White Label & Branding", "desc": "Your school's identity, everywhere. Custom domain, logo, and mobile apps with your own branding." },
-    "lms": { "title": "Digital LMS", "desc": "Modern learning management for teachers and students." },
-    "payments": { "title": "Automated Tuition", "desc": "Integrated payment system via VA & QRIS." },
-    "parent_portal": { "title": "Parent Portal", "desc": "Monitor attendance and grades in real-time directly from a smartphone." },
-    "view_all": "View All Features"
+    "title": "Why Choose VisiSekolah High School?",
+    "subtitle": "The competitive advantages we offer for your children's future.",
+    "white_label": { "title": "Top Accreditation", "desc": "Accredited 'A' with national education standards that exceed expectations." },
+    "lms": { "title": "Adaptive Curriculum", "desc": "Learning that focuses on developing student potential and character." },
+    "payments": { "title": "Advanced Labs", "desc": "Complete practice facilities ranging from science and languages to art studios." },
+    "parent_portal": { "title": "Digital Ecosystem", "desc": "All administration and student progress reports are digitally integrated." },
+    "view_all": "Learn More About Us"
   },
   "about_page": {
-    "tag": "Our Mission",
-    "title": "Digitalizing Indonesian Education.",
-    "subtitle": "We believe every school deserves the best technology to educate the next generation.",
+    "tag": "About Us",
+    "title": "Shaping the Future Through Education.",
+    "subtitle": "VisiSekolah High School is committed to providing high-quality education that combines intellectual, emotional, and spiritual intelligence.",
     "vision": {
-      "title": "Our Vision",
-      "desc": "\"To be the primary catalyst for school digital transformation in Indonesia through an inclusive, affordable platform focused on school branding independence.\""
+      "title": "Vision & Mission",
+      "desc": "\"To be a model educational institution that produces graduates with noble character, intelligence, creativity, and independence who can compete globally.\""
     },
     "values": {
-      "empathy": { "title": "Empathy", "desc": "We build features based on the real needs of teachers and parents in the field." },
-      "innovation": { "title": "Innovation", "desc": "Always adopting the latest technology for efficient school administration." },
-      "inspiration": { "title": "Inspiration", "desc": "Encouraging schools to be proud of their own digital identity." }
+      "empathy": { "title": "Integrity", "desc": "Upholding honesty and ethics in every aspect of school life." },
+      "innovation": { "title": "Innovation", "desc": "Encouraging creativity and the use of technology in the learning process." },
+      "inspiration": { "title": "Excellence", "desc": "Committed to achieving the highest standards in education and character." }
     },
-    "cta_title": "Let's grow together.",
-    "cta_btn": "Join as a Partner"
+    "cta_title": "A bright future starts here.",
+    "cta_btn": "View Admission Procedures"
   },
   "contact_page": {
-    "tag": "Connect with us",
-    "title": "Contact Our Experts.",
-    "subtitle": "Ready to start your school's digital transformation? We are here to answer every question.",
+    "tag": "Contact Us",
+    "title": "We Are Ready to Serve You.",
+    "subtitle": "Have questions about enrollment or other school information? Our team is ready to help you.",
     "form": {
       "title": "Send a Message",
-      "desc": "Tell us about your school's needs.",
+      "desc": "Submit your questions or feedback.",
       "name": "Full Name",
-      "school": "School Name",
-      "email": "Work Email",
+      "school": "Subject",
+      "email": "Email Address",
       "message": "Message",
       "placeholder_name": "Example: John Doe",
-      "placeholder_school": "Example: VisiSekolah Academy",
+      "placeholder_school": "Example: Enrollment Inquiry",
       "placeholder_message": "Write your message here...",
       "submit": "Send Message Now"
     },
     "sidebar": {
-      "office": "Office",
-      "location": "Digital Hub BSD, Tangerang"
+      "office": "Admissions Office",
+      "location": "Main Building 1st Floor, 123 Education St., BSD, Tangerance"
     }
   },
   "footer": {
-    "slogan": "Digitalizing Indonesian Education through an integrated white-label platform for the schools of tomorrow.",
-    "platform": "Platform",
-    "company": "Company",
-    "contact_us": "Contact Us",
-    "copyright": "All Rights Reserved.",
+    "slogan": "Shaping future leaders through technology and character-based education.",
+    "platform": "School",
+    "company": "Information",
+    "contact_us": "Contact",
+    "copyright": "VisiSekolah High School. All Rights Reserved.",
     "links": {
-      "features": "Core Features",
-      "pricing": "Pricing Plans",
-      "demo": "Platform Demo",
-      "register": "Registration",
-      "about": "About Us",
+      "features": "Advantages",
+      "demo": "Facilities",
+      "register": "Enrollment",
+      "about": "School Profile",
       "contact": "Contact Us",
       "privacy": "Privacy Policy",
       "terms": "Terms & Conditions"
     },
     "contact_info": {
-      "phone": "+62 812 3456 7890",
-      "email": "info@visisekolah.id",
+      "phone": "+62 21 1234 5678",
+      "email": "info@sma-visisekolah.sch.id",
       "address": "Digital Hub BSD, Tangerang, Banten"
     }
   },
   "features_page": {
-    "tag": "Product Features",
-    "title": "Everything you need to run your school.",
-    "subtitle": "Powerful tools designed for administrators, teachers, and parents to create a seamless educational experience.",
-    "white_label": { "title": "White Label Branding", "desc": "Your school's identity, everywhere. Custom domain, logo, and mobile apps fully branded under your name." },
-    "security": { "title": "Security", "desc": "Enterprise-grade data protection for your students." },
-    "lms": { "title": "LMS & Report Cards", "desc": "Digital curriculum and automated grading." },
-    "payments": { "title": "Automated Payments", "desc": "Integrate Virtual Accounts and QRIS for tuition payments. Real-time reconciliation and parent notifications." },
-    "mobile": { "title": "Mobile Native", "desc": "Android & iOS dedicated apps." },
-    "parent_portal": { "title": "Parent Portal", "desc": "Real-time student progress tracking." },
-    "analytics": { "title": "Analytics", "desc": "Data-driven school insights." }
-  },
-  "pricing_page": {
-    "tag": "Pricing Plans",
-    "title": "Simple, Transparent Pricing.",
-    "subtitle": "No hidden fees. Choose the best plan for your school's digital growth.",
-    "per_month": "/mo",
-    "most_popular": "Most Popular",
-    "starter": {
-      "name": "Starter",
-      "desc": "Perfect for small learning centers.",
-      "cta": "Get Started",
-      "f1": "Up to 200 Students",
-      "f2": "QR Code Attendance",
-      "f3": "Grade Management"
-    },
-    "pro": {
-      "name": "Professional",
-      "desc": "Comprehensive solution for large schools.",
-      "cta": "Select Plan",
-      "f1": "Up to 1000 Students",
-      "f2": "Full White Label",
-      "f3": "Native Mobile App",
-      "f4": "LMS & Digital Report Cards"
-    },
-    "enterprise": {
-      "name": "Enterprise",
-      "desc": "For large school foundations.",
-      "cta": "Contact Sales",
-      "f1": "Unlimited Students",
-      "f2": "Dedicated Support",
-      "f3": "Custom Integration"
-    }
+    "tag": "Programs & Facilities",
+    "title": "The Best Learning Ecosystem for the Future.",
+    "subtitle": "We provide international standard curricula supported by modern facilities to optimize student potential.",
+    "white_label": { "title": "Bilingual Program", "desc": "Application of English in science and mathematics subjects for global competitiveness." },
+    "security": { "title": "Safe School", "desc": "Integrated security system and a child-friendly school environment." },
+    "lms": { "title": "Merdeka Curriculum", "desc": "Implementation of the latest curriculum providing learning flexibility for students." },
+    "payments": { "title": "Creative Studio", "desc": "Music, podcast, and visual arts studio facilities to channel student talent." },
+    "mobile": { "title": "Extracurriculars", "desc": "More than 20 extracurricular options ranging from robotics to competitive sports." },
+    "parent_portal": { "title": "Healthy Canteen", "desc": "Canteen with nutritional monitoring and hygienic non-cash payment systems." },
+    "analytics": { "title": "College Prep", "desc": "Guidance program for entering top national and international universities from grade 10." }
   },
   "login_page": {
-    "title": "VisiSekolah Portal",
-    "subtitle": "Log in to manage your school's digital ecosystem.",
-    "email_label": "Admin Email",
+    "title": "VisiSekolah HS Portal",
+    "subtitle": "Log in to your account to access school digital services.",
+    "email_label": "User Email",
     "password_label": "Password",
     "remember_me": "Remember Me",
     "forgot_password": "Forgot Password?",
     "submit_btn": "Log In Now",
-    "not_registered": "Not registered yet?",
-    "contact_sales": "Contact Sales",
-    "secure_badge": "Secure Multi-Tenant Environment"
-  }
+    "not_registered": "Don't have an account?",
+    "contact_sales": "Contact School Admin",
+    "secure_badge": "Integrated School Information System"
+  },
+  "roles": {
+    "SUPER_ADMIN": "Principal",
+    "SCHOOL_ADMIN": "Administrative Staff",
+    "GURU": "Subject Teacher",
+    "SISWA": "Student / Guardian"
+  },
+  "faq": [
+    { "q": "How to enroll at VisiSekolah High School?", "a": "Registration can be done online via the 'Apply for Admission' button on the main page or by coming directly to the Admissions Office." },
+    { "q": "What are the requirements for new student registration?", "a": "Main requirements include Junior High School diploma, Family Card, Birth Certificate, and recent passport photo." }
+  ]
 }
+

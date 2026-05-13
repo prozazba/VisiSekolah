@@ -41,7 +41,7 @@ export default function ContactPage() {
                   </div>
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                     <label className={styles.formLabel}>{dict.contact_page.form.email}</label>
-                    <input type="email" className={styles.formInput} placeholder="admin@sekolah.sch.id" />
+                    <input type="email" className={styles.formInput} placeholder="info@sma-visisekolah.sch.id" />
                   </div>
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                     <label className={styles.formLabel}>{dict.contact_page.form.message}</label>
@@ -61,8 +61,8 @@ export default function ContactPage() {
               <div className={styles.bentoItem}>
                 <div>
                   <div className={`${styles.iconCircle} ${styles.emerald} mb-4`}><Phone size={24} /></div>
-                  <h4 className="font-bold text-slate-400 text-[10px] uppercase tracking-widest mb-1">WhatsApp</h4>
-                  <p className="text-xl font-black text-slate-800">+62 812 3456 7890</p>
+                  <h4 className="font-bold text-slate-400 text-[10px] uppercase tracking-widest mb-1">Telepon</h4>
+                  <p className="text-xl font-black text-slate-800">{dict.footer.contact_info.phone}</p>
                 </div>
               </div>
 
@@ -70,7 +70,7 @@ export default function ContactPage() {
                 <div>
                   <div className={`${styles.iconCircle} ${styles.purple} mb-4`}><Mail size={24} /></div>
                   <h4 className="font-bold text-slate-400 text-[10px] uppercase tracking-widest mb-1">Email</h4>
-                  <p className="text-xl font-black text-slate-800">info@visisekolah.id</p>
+                  <p className="text-xl font-black text-slate-800">{dict.footer.contact_info.email}</p>
                 </div>
               </div>
 

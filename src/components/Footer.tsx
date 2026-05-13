@@ -6,10 +6,20 @@ import styles from '../styles/Footer.module.scss';
 import packageJson from '../../package.json';
 import { useLanguage } from '@/context/LanguageContext';
 
+import { usePathname } from 'next/navigation';
+
 export default function Footer() {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
   const version = packageJson.version;
   const { dict } = useLanguage();
+
+  // Hide footer on admin and dashboard pages
+  const isDashboard = pathname?.startsWith('/admin') || 
+                      pathname?.startsWith('/dashboard') || 
+                      pathname?.startsWith('/school-admin');
+
+  if (isDashboard) return null;
 
   return (
     <footer className={styles.footer}>
@@ -30,7 +40,6 @@ export default function Footer() {
             <h4>{dict.footer.platform}</h4>
             <ul>
               <li><Link href="/features">{dict.footer.links.features}</Link></li>
-              <li><Link href="/pricing">{dict.footer.links.pricing}</Link></li>
               <li><Link href="/demo">{dict.footer.links.demo}</Link></li>
               <li><Link href="/register">{dict.footer.links.register}</Link></li>
             </ul>

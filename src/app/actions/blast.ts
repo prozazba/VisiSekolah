@@ -4,6 +4,8 @@ import prisma from '@/lib/prisma';
 import { sendMail } from '@/lib/mailer';
 import { getUrlUpdateEmail } from '@/lib/email-templates';
 
+import { siteConfig } from '@/config/site';
+
 export async function runUrlUpdateBlast() {
   try {
     // 1. Get all schools with their admins
@@ -28,7 +30,7 @@ export async function runUrlUpdateBlast() {
         continue;
       }
 
-      const loginUrl = `https://visi-sekolah.vercel.app/${school.slug}/login`;
+      const loginUrl = `${siteConfig.url}/login`;
 
       try {
         await sendMail({

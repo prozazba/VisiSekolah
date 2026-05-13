@@ -27,7 +27,6 @@ export default function Navbar() {
         
         <div className={styles.navLinks}>
           <Link href="/features" className={styles.navLink}>{dict.navbar.features}</Link>
-          <Link href="/pricing" className={styles.navLink}>{dict.navbar.pricing}</Link>
           <Link href="/about" className={styles.navLink}>{dict.navbar.about}</Link>
           <Link href="/contact" className={styles.navLink}>{dict.navbar.contact}</Link>
           
@@ -42,8 +41,7 @@ export default function Navbar() {
             <Globe size={14} /> {language === 'id' ? 'ID' : 'EN'}
           </button>
 
-          <Link href="/login" className={styles.navLink}>{dict.navbar.login}</Link>
-          <Link href="/register" className={styles.btnPrimary}>{dict.navbar.register}</Link>
+          <Link href="/login" className={styles.btnPrimary}>{dict.navbar.login}</Link>
         </div>
       </div>
     </nav>

@@ -21,7 +21,7 @@ export default function Home() {
             {dict.hero.subtitle}
           </p>
           <div className={styles.buttonGroup}>
-            <Link href="/register" className={styles.btnLarge}>{dict.hero.cta_start}</Link>
+            <Link href="/contact" className={styles.btnLarge}>{dict.hero.cta_start}</Link>
             <Link href="/features" className={styles.btnOutline}>{dict.hero.cta_features}</Link>
           </div>
         </div>

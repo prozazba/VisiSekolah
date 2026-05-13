@@ -1,0 +1,214 @@
+.dashboardWrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  color: #1a1c1e;
+}
+
+.sidebar {
+  width: 100px;
+  background-color: #111111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0;
+  border-radius: 0 40px 40px 0;
+  z-index: 10;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4rem;
+  color: white;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.navIcon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: none;
+  border: none;
+
+  &:hover, &.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
+}
+
+.greeting {
+  margin-bottom: 2.5rem;
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  p {
+    color: #8c8e91;
+    font-size: 0.9375rem;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.statCard {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 28px;
+  box-shadow: 0 10px 30px -5px rgba(0,0,0,0.04);
+  
+  .iconBox {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .label {
+    font-size: 0.8125rem;
+    color: #8c8e91;
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+}
+
+.card {
+  background: white;
+  border-radius: 32px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px -5px rgba(0,0,0,0.04);
+  margin-bottom: 2rem;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    
+    h3 { font-size: 1.25rem; font-weight: 800; margin: 0; }
+  }
+}
+
+.schoolTable {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th {
+    text-align: left;
+    padding: 1rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    padding: 1.25rem 1rem;
+    border-top: 1px solid #f1f5f9;
+    font-size: 0.9375rem;
+  }
+}
+
+.schoolName {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  
+  &.active { background: #ecfdf5; color: #059669; }
+  &.pending { background: #fff7ed; color: #d97706; }
+  &.suspended { background: #fef2f2; color: #dc2626; }
+}
+
+.rightSidebar {
+  background: white;
+  border-radius: 40px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px -5px rgba(0,0,0,0.04);
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 3.5rem;
+  
+  .avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    background: #e2e8f0;
+  }
+
+  .info {
+    .name { font-weight: 800; font-size: 1.125rem; }
+    .email { font-size: 0.8125rem; color: #8c8e91; }
+  }
+}
+
+.platformHealth {
+  margin-top: 3rem;
+  h4 { font-weight: 800; margin-bottom: 1.5rem; }
+}
+
+.healthItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: #f8fafc;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+
+  .statusDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+  }
+
+  .label { font-size: 0.875rem; font-weight: 700; }
+  .value { font-size: 0.75rem; color: #8c8e91; margin-left: auto; }
+}

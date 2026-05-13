@@ -1,140 +1,164 @@
 {
   "navbar": {
-    "features": "Fitur",
-    "pricing": "Harga",
-    "about": "Tentang Kami",
+    "features": "Keunggulan",
+    "about": "Profil Sekolah",
     "contact": "Hubungi Kami",
-    "login": "Masuk",
-    "register": "Daftar"
+    "login": "Portal Siswa/Guru",
+    "register": "Pendaftaran"
   },
   "hero": {
-    "title": "Solusi White Label Aplikasi Sekolah Terpadu",
-    "subtitle": "Transformasikan manajemen pendidikan Anda dengan platform yang sepenuhnya dapat disesuaikan. Satu ekosistem digital untuk kemajuan sekolah masa depan.",
-    "cta_start": "Mulai Sekarang",
-    "cta_features": "Lihat Fitur"
+    "title": "Selamat Datang di SMA VisiSekolah",
+    "subtitle": "Mencetak Generasi Unggul dengan Integrasi Teknologi dan Nilai-Nilai Luhur. Pendaftaran Peserta Didik Baru (PPDB) Tahun Ajaran 2026/2027 telah dibuka.",
+    "cta_start": "Daftar PPDB Online",
+    "cta_features": "Lihat Keunggulan"
   },
   "home_features": {
-    "title": "Solusi Digital Terpadu",
-    "subtitle": "Satu platform untuk seluruh ekosistem sekolah Anda.",
-    "white_label": { "title": "White Label & Branding", "desc": "Identitas sekolah Anda di mana saja. Domain kustom, logo, dan aplikasi mobile dengan branding sendiri." },
-    "lms": { "title": "LMS Digital", "desc": "Manajemen pembelajaran modern untuk guru dan siswa." },
-    "payments": { "title": "SPP Otomatis", "desc": "Sistem pembayaran terintegrasi VA & QRIS." },
-    "parent_portal": { "title": "Portal Orang Tua", "desc": "Pantau kehadiran dan nilai anak secara real-time langsung dari smartphone." },
-    "view_all": "Lihat Semua Fitur"
+    "title": "Mengapa Memilih SMA VisiSekolah?",
+    "subtitle": "Kami menawarkan iklim dan suasana belajar yang aktif dan kompetitif secara positif",
+    "white_label": {
+      "title": "Akreditasi Unggul",
+      "desc": "Terakreditasi A dengan standar pendidikan nasional yang melampaui ekspektasi."
+    },
+    "lms": {
+      "title": "Kurikulum Adaptif",
+      "desc": "Pembelajaran yang fokus pada pengembangan potensi diri dan karakter siswa."
+    },
+    "payments": {
+      "title": "Laboratorium Canggih",
+      "desc": "Fasilitas praktik yang lengkap mulai dari sains, bahasa, hingga studio seni."
+    },
+    "parent_portal": {
+      "title": "Ekosistem Digital",
+      "desc": "Seluruh administrasi dan laporan perkembangan siswa terintegrasi secara digital."
+    },
+    "view_all": "Selengkapnya Tentang Kami"
   },
   "about_page": {
-    "tag": "Misi Kami",
-    "title": "Mendigitalisasi Pendidikan Indonesia.",
-    "subtitle": "Kami percaya bahwa setiap sekolah berhak memiliki teknologi terbaik untuk mencerdaskan generasi bangsa.",
+    "tag": "Tentang Kami",
+    "title": "Membentuk Masa Depan Melalui Pendidikan.",
+    "subtitle": "SMA VisiSekolah berkomitmen untuk memberikan pendidikan berkualitas tinggi yang menggabungkan kecerdasan intelektual, emosional, dan spiritual.",
     "vision": {
-      "title": "Visi Kami",
-      "desc": "\"Menjadi katalisator utama transformasi digital sekolah di Indonesia melalui platform yang inklusif, terjangkau, dan berfokus pada kemandirian branding sekolah.\""
+      "title": "Visi & Misi",
+      "desc": "\"Menjadi institusi pendidikan model yang menghasilkan lulusan berakhlak mulia, cerdas, kreatif, dan mandiri yang mampu bersaing di tingkat global.\""
     },
     "values": {
-      "empathy": { "title": "Empati", "desc": "Kami membangun fitur berdasarkan kebutuhan nyata guru dan orang tua di lapangan." },
-      "innovation": { "title": "Inovasi", "desc": "Selalu mengadopsi teknologi terbaru untuk efisiensi administrasi sekolah." },
-      "inspiration": { "title": "Inspirasi", "desc": "Mendorong sekolah untuk bangga dengan identitas digital mereka sendiri." }
+      "empathy": {
+        "title": "Integritas",
+        "desc": "Menjunjung tinggi kejujuran dan etika dalam setiap aspek kehidupan sekolah."
+      },
+      "innovation": {
+        "title": "Inovasi",
+        "desc": "Mendorong kreativitas dan penggunaan teknologi dalam proses pembelajaran."
+      },
+      "inspiration": {
+        "title": "Keunggulan",
+        "desc": "Berkomitmen untuk mencapai standar tertinggi dalam pendidikan dan karakter."
+      }
     },
-    "cta_title": "Mari bertumbuh bersama.",
-    "cta_btn": "Gabung Sebagai Mitra"
+    "cta_title": "Masa depan cerah dimulai dari sini.",
+    "cta_btn": "Lihat Prosedur PPDB"
   },
   "contact_page": {
     "tag": "Hubungi Kami",
-    "title": "Hubungi Tim Ahli Kami.",
-    "subtitle": "Siap untuk memulai transformasi digital sekolah Anda? Kami di sini untuk menjawab setiap pertanyaan Anda.",
+    "title": "Kami Siap Melayani Anda.",
+    "subtitle": "Ada pertanyaan mengenai pendaftaran atau informasi sekolah lainnya? Tim kami siap membantu Anda.",
     "form": {
       "title": "Kirim Pesan",
-      "desc": "Beritahu kami kebutuhan sekolah Anda.",
+      "desc": "Sampaikan pertanyaan atau masukan Anda.",
       "name": "Nama Lengkap",
-      "school": "Nama Sekolah",
-      "email": "Email Kerja",
+      "school": "Perihal",
+      "email": "Alamat Email",
       "message": "Pesan",
-      "placeholder_name": "Contoh: John Doe",
-      "placeholder_school": "Contoh: SMA VisiSekolah",
-      "placeholder_message": "Tuliskan pesan Anda...",
+      "placeholder_name": "Contoh: Budi Santoso",
+      "placeholder_school": "Contoh: Pertanyaan Pendaftaran",
+      "placeholder_message": "Tuliskan pesan Anda di sini...",
       "submit": "Kirim Pesan Sekarang"
     },
     "sidebar": {
-      "office": "Kantor",
-      "location": "Digital Hub BSD, Tangerang"
+      "office": "Sekretariat PPDB",
+      "location": "Gedung Utama Lt. 1, Jl. Pendidikan No. 123, BSD, Tangerang"
     }
   },
   "footer": {
-    "slogan": "Mendigitalisasi Pendidikan Indonesia melalui platform white-label terpadu untuk sekolah masa depan.",
-    "platform": "Platform",
-    "company": "Perusahaan",
-    "contact_us": "Hubungi Kami",
-    "copyright": "Semua Hak Dilindungi.",
+    "slogan": "Mencetak pemimpin masa depan melalui pendidikan berbasis teknologi dan karakter.",
+    "platform": "Sekolah",
+    "company": "Informasi",
+    "contact_us": "Kontak",
+    "copyright": "SMA VisiSekolah. Semua Hak Dilindungi.",
     "links": {
-      "features": "Fitur Utama",
-      "pricing": "Paket Harga",
-      "demo": "Demo Platform",
+      "features": "Keunggulan",
+      "demo": "Fasilitas",
       "register": "Pendaftaran",
-      "about": "Tentang Kami",
+      "about": "Profil Sekolah",
       "contact": "Hubungi Kami",
-      "privacy": "Privasi",
+      "privacy": "Kebijakan Privasi",
       "terms": "Syarat & Ketentuan"
     },
     "contact_info": {
-      "phone": "+62 812 3456 7890",
-      "email": "info@visisekolah.id",
+      "phone": "+62 21 1234 5678",
+      "email": "info@sma-visisekolah.sch.id",
       "address": "Digital Hub BSD, Tangerang, Banten"
     }
   },
   "features_page": {
-    "tag": "Fitur Produk",
-    "title": "Semua yang Anda butuhkan untuk mengelola sekolah.",
-    "subtitle": "Alat canggih yang dirancang untuk administrator, guru, dan orang tua demi pengalaman pendidikan yang mulus.",
-    "white_label": { "title": "White Label Branding", "desc": "Identitas sekolah Anda di mana saja. Domain kustom, logo, dan aplikasi mobile dengan branding penuh atas nama Anda." },
-    "security": { "title": "Keamanan", "desc": "Perlindungan data kelas enterprise untuk siswa Anda." },
-    "lms": { "title": "LMS & Rapor", "desc": "Kurikulum digital dan penilaian otomatis." },
-    "payments": { "title": "Pembayaran Otomatis", "desc": "Integrasikan Virtual Account dan QRIS untuk pembayaran SPP. Rekonsiliasi real-time dan notifikasi orang tua." },
-    "mobile": { "title": "Aplikasi Mobile", "desc": "Aplikasi Android & iOS tersendiri." },
-    "parent_portal": { "title": "Portal Orang Tua", "desc": "Pelacakan perkembangan siswa secara real-time." },
-    "analytics": { "title": "Analitik", "desc": "Wawasan sekolah berbasis data." }
-  },
-  "pricing_page": {
-    "tag": "Paket Harga",
-    "title": "Harga Sederhana & Transparan.",
-    "subtitle": "Tanpa biaya tersembunyi. Pilih paket terbaik untuk pertumbuhan digital sekolah Anda.",
-    "per_month": "/bln",
-    "most_popular": "Paling Populer",
-    "starter": {
-      "name": "Starter",
-      "desc": "Cocok untuk pusat belajar kecil.",
-      "cta": "Mulai Sekarang",
-      "f1": "Hingga 200 Siswa",
-      "f2": "Absensi QR Code",
-      "f3": "Manajemen Nilai"
+    "tag": "Program & Fasilitas",
+    "title": "Ekosistem Belajar Terbaik untuk Masa Depan.",
+    "subtitle": "Kami menyediakan kurikulum berstandar internasional didukung fasilitas modern untuk mengoptimalkan potensi siswa.",
+    "white_label": {
+      "title": "Program Bilingual",
+      "desc": "Penerapan bahasa Inggris dalam mata pelajaran sains dan matematika untuk daya saing global."
     },
-    "pro": {
-      "name": "Professional",
-      "desc": "Solusi komprehensif untuk sekolah besar.",
-      "cta": "Pilih Paket",
-      "f1": "Hingga 1000 Siswa",
-      "f2": "Full White Label",
-      "f3": "Aplikasi Mobile Native",
-      "f4": "LMS & Rapor Digital"
+    "security": {
+      "title": "Sekolah Aman",
+      "desc": "Sistem keamanan terintegrasi dan lingkungan sekolah yang ramah anak."
     },
-    "enterprise": {
-      "name": "Enterprise",
-      "desc": "Untuk yayasan sekolah besar.",
-      "cta": "Hubungi Sales",
-      "f1": "Siswa Tidak Terbatas",
-      "f2": "Dedicated Support",
-      "f3": "Custom Integration"
+    "lms": {
+      "title": "Kurikulum Merdeka",
+      "desc": "Implementasi kurikulum terbaru yang memberikan fleksibilitas belajar bagi siswa."
+    },
+    "payments": {
+      "title": "Studio Kreatif",
+      "desc": "Fasilitas studio musik, podcast, dan seni visual untuk menyalurkan bakat siswa."
+    },
+    "mobile": {
+      "title": "Ekstrakurikuler",
+      "desc": "Lebih dari 20 pilihan ekstrakurikuler mulai dari robotik hingga olahraga prestasi."
+    },
+    "parent_portal": {
+      "title": "Kantin Sehat",
+      "desc": "Kantin dengan pengawasan gizi dan sistem pembayaran non-tunai yang higienis."
+    },
+    "analytics": {
+      "title": "Persiapan Kampus",
+      "desc": "Program bimbingan masuk perguruan tinggi negeri dan luar negeri sejak kelas 10."
     }
   },
   "login_page": {
-    "title": "Portal VisiSekolah",
-    "subtitle": "Masuk untuk mengelola ekosistem digital sekolah Anda.",
-    "email_label": "Email Administrasi",
+    "title": "Portal SMA VisiSekolah",
+    "subtitle": "Masuk ke akun Anda untuk mengakses layanan digital sekolah.",
+    "email_label": "Email Pengguna",
     "password_label": "Kata Sandi",
     "remember_me": "Ingat Saya",
     "forgot_password": "Lupa Sandi?",
     "submit_btn": "Masuk Sekarang",
-    "not_registered": "Belum terdaftar?",
-    "contact_sales": "Hubungi Sales",
-    "secure_badge": "Secure Multi-Tenant Environment"
-  }
+    "not_registered": "Belum punya akun?",
+    "contact_sales": "Hubungi Admin Sekolah",
+    "secure_badge": "Sistem Informasi Sekolah Terintegrasi"
+  },
+  "roles": {
+    "SUPER_ADMIN": "Kepala Sekolah",
+    "SCHOOL_ADMIN": "Staf Administrasi",
+    "GURU": "Guru Mata Pelajaran",
+    "SISWA": "Siswa / Wali Murid"
+  },
+  "faq": [
+    {
+      "q": "Bagaimana cara mendaftar ke SMA VisiSekolah?",
+      "a": "Pendaftaran dapat dilakukan secara online melalui tombol 'Daftar PPDB' di halaman utama atau langsung datang ke Sekretariat PPDB."
+    },
+    {
+      "q": "Apa saja syarat pendaftaran siswa baru?",
+      "a": "Syarat utama meliputi Ijazah SMP/sederajat, Kartu Keluarga, Akta Kelahiran, dan pas foto terbaru."
+    }
+  ]
 }

@@ -1,24 +1,24 @@
 export const siteConfig = {
-  name: "VisiSekolah",
-  description: "Platform White Label Aplikasi Sekolah Terpadu",
-  url: "https://visisekolah.id",
-  ogImage: "https://visisekolah.id/og.jpg",
+  name: "SMA VisiSekolah",
+  description: "Portal Resmi SMA VisiSekolah - Unggul dalam Prestasi dan Karakter",
+  url: "https://sma-visisekolah.sch.id",
+  ogImage: "https://sma-visisekolah.sch.id/og.jpg",
   links: {
-    twitter: "https://twitter.com/visisekolah",
+    twitter: "https://twitter.com/smavisisekolah",
     github: "https://github.com/prozazba/VisiSekolah",
   },
   mainNav: [
     {
-      title: "Fitur",
-      href: "#features",
+      title: "Keunggulan",
+      href: "/features",
     },
     {
-      title: "Harga",
-      href: "#pricing",
+      title: "Profil",
+      href: "/about",
     },
     {
-      title: "Tentang",
-      href: "#about",
+      title: "Kontak",
+      href: "/contact",
     },
   ],
 };
