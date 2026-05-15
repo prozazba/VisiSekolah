@@ -5,11 +5,12 @@
  */
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
 export interface TranslationResult {
   translatedText: string;
-  detectedLanguage?: string;
+  success: boolean;
+  error?: string;
 }
 
 /**
@@ -19,15 +20,24 @@ export async function translateContent(
   text: string,
   targetLang: 'en' | 'id'
 ): Promise<TranslationResult> {
-  if (!GEMINI_API_KEY) {
-    console.warn("GEMINI_API_KEY is missing. Returning original text as fallback.");
-    return { translatedText: text };
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+    console.warn("GEMINI_API_KEY is missing or invalid. Returning original text.");
+    return { translatedText: text, success: false, error: 'Missing API Key' };
   }
 
-  const prompt = `Translate the following text to ${targetLang === 'en' ? 'English' : 'Indonesian'}. 
-  Maintain the original tone, formatting (if HTML/Markdown), and meaning.
+  const targetLabel = targetLang === 'en' ? 'English' : 'Indonesian';
+  const sourceLabel = targetLang === 'en' ? 'Indonesian' : 'English';
+
+  const prompt = `You are a professional translator for a school management system. 
+  Translate the following text from ${sourceLabel} to ${targetLabel}. 
   
-  Text:
+  RULES:
+  1. ONLY return the translated text. 
+  2. Do NOT include any explanations, quotes, or metadata.
+  3. Maintain the professional and educational tone.
+  4. If the text is a technical code, date, or number, return it exactly as is.
+  
+  Text to translate:
   ${text}`;
 
   try {
@@ -37,31 +47,34 @@ export async function translateContent(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.1, // Lower temperature for more consistent translation
+          topK: 1,
+          topP: 1,
+        }
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error?.message || `Gemini API error: ${response.statusText}`);
     }
 
     const data = await response.json();
-    const translatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || text;
+    const translatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!translatedText) {
+      throw new Error("Empty response from AI");
+    }
 
     return {
       translatedText: translatedText.trim(),
+      success: true
     };
-  } catch (error) {
-    console.error("AI Translation failed:", error);
-    return { translatedText: text };
+  } catch (error: any) {
+    console.error("AI Translation failed:", error.message);
+    return { translatedText: text, success: false, error: error.message };
   }
 }
 
@@ -83,15 +96,7 @@ export async function enhanceContent(text: string): Promise<string> {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
+        contents: [{ parts: [{ text: prompt }] }],
       }),
     });
 

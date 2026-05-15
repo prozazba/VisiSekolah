@@ -7,19 +7,31 @@
     "register": "Enrollment"
   },
   "hero": {
-    "title": "Welcome to VisiSekolah High School",
-    "subtitle": "Shaping the Future Generation with Technology and Noble Values. Admissions for the 2026/2027 Academic Year are now open.",
-    "cta_start": "Apply for Admission",
+    "title": "Explore VisiSekolah Academy",
+    "subtitle": "Creating a superior generation with integration of technology and noble values. Admissions for the 2026/2027 Academic Year are now open.",
+    "cta_start": "Register Online Now",
     "cta_features": "View Advantages"
   },
   "home_features": {
-    "title": "Why Choose VisiSekolah High School?",
-    "subtitle": "The competitive advantages we offer for your children's future.",
-    "white_label": { "title": "Top Accreditation", "desc": "Accredited 'A' with national education standards that exceed expectations." },
-    "lms": { "title": "Adaptive Curriculum", "desc": "Learning that focuses on developing student potential and character." },
-    "payments": { "title": "Advanced Labs", "desc": "Complete practice facilities ranging from science and languages to art studios." },
-    "parent_portal": { "title": "Digital Ecosystem", "desc": "All administration and student progress reports are digitally integrated." },
-    "view_all": "Learn More About Us"
+    "title": "What VisiSekolah Academy Offers?",
+    "subtitle": "We offer an active and positively competitive learning atmosphere",
+    "white_label": {
+      "title": "Top Accreditation",
+      "desc": "Accredited 'A' with national education standards that exceed expectations."
+    },
+    "lms": {
+      "title": "Adaptive Curriculum",
+      "desc": "Learning that focuses on developing self-potential and student character."
+    },
+    "payments": {
+      "title": "Advanced Labs",
+      "desc": "Complete practice facilities ranging from science and languages to art studios."
+    },
+    "parent_portal": {
+      "title": "Digital Ecosystem",
+      "desc": "All administration and student progress reports are digitally integrated."
+    },
+    "view_all": "More About Us"
   },
   "about_page": {
     "tag": "About Us",
@@ -30,9 +42,18 @@
       "desc": "\"To be a model educational institution that produces graduates with noble character, intelligence, creativity, and independence who can compete globally.\""
     },
     "values": {
-      "empathy": { "title": "Integrity", "desc": "Upholding honesty and ethics in every aspect of school life." },
-      "innovation": { "title": "Innovation", "desc": "Encouraging creativity and the use of technology in the learning process." },
-      "inspiration": { "title": "Excellence", "desc": "Committed to achieving the highest standards in education and character." }
+      "empathy": {
+        "title": "Integrity",
+        "desc": "Upholding honesty and ethics in every aspect of school life."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "desc": "Encouraging creativity and the use of technology in the learning process."
+      },
+      "inspiration": {
+        "title": "Excellence",
+        "desc": "Committed to achieving the highest standards in education and character."
+      }
     },
     "cta_title": "A bright future starts here.",
     "cta_btn": "View Admission Procedures"
@@ -74,7 +95,7 @@
       "terms": "Terms & Conditions"
     },
     "contact_info": {
-      "phone": "+62 21 1234 5678",
+      "phone": "+62 21 1234 5679",
       "email": "info@sma-visisekolah.sch.id",
       "address": "Digital Hub BSD, Tangerang, Banten"
     }
@@ -83,13 +104,34 @@
     "tag": "Programs & Facilities",
     "title": "The Best Learning Ecosystem for the Future.",
     "subtitle": "We provide international standard curricula supported by modern facilities to optimize student potential.",
-    "white_label": { "title": "Bilingual Program", "desc": "Application of English in science and mathematics subjects for global competitiveness." },
-    "security": { "title": "Safe School", "desc": "Integrated security system and a child-friendly school environment." },
-    "lms": { "title": "Merdeka Curriculum", "desc": "Implementation of the latest curriculum providing learning flexibility for students." },
-    "payments": { "title": "Creative Studio", "desc": "Music, podcast, and visual arts studio facilities to channel student talent." },
-    "mobile": { "title": "Extracurriculars", "desc": "More than 20 extracurricular options ranging from robotics to competitive sports." },
-    "parent_portal": { "title": "Healthy Canteen", "desc": "Canteen with nutritional monitoring and hygienic non-cash payment systems." },
-    "analytics": { "title": "College Prep", "desc": "Guidance program for entering top national and international universities from grade 10." }
+    "white_label": {
+      "title": "Bilingual Program",
+      "desc": "Application of English in science and mathematics subjects for global competitiveness."
+    },
+    "security": {
+      "title": "Safe School",
+      "desc": "Integrated security system and a child-friendly school environment."
+    },
+    "lms": {
+      "title": "Merdeka Curriculum",
+      "desc": "Implementation of the latest curriculum providing learning flexibility for students."
+    },
+    "payments": {
+      "title": "Creative Studio",
+      "desc": "Music, podcast, and visual arts studio facilities to channel student talent."
+    },
+    "mobile": {
+      "title": "Extracurriculars",
+      "desc": "More than 20 extracurricular options ranging from robotics to competitive sports."
+    },
+    "parent_portal": {
+      "title": "Healthy Canteen",
+      "desc": "Canteen with nutritional monitoring and hygienic non-cash payment systems."
+    },
+    "analytics": {
+      "title": "College Prep",
+      "desc": "Guidance program for entering top national and international universities from grade 10."
+    }
   },
   "login_page": {
     "title": "VisiSekolah HS Portal",
@@ -110,8 +152,13 @@
     "SISWA": "Student / Guardian"
   },
   "faq": [
-    { "q": "How to enroll at VisiSekolah High School?", "a": "Registration can be done online via the 'Apply for Admission' button on the main page or by coming directly to the Admissions Office." },
-    { "q": "What are the requirements for new student registration?", "a": "Main requirements include Junior High School diploma, Family Card, Birth Certificate, and recent passport photo." }
+    {
+      "q": "How to enroll at VisiSekolah High School?",
+      "a": "Registration can be done online via the 'Apply for Admission' button on the main page or by coming directly to the Admissions Office."
+    },
+    {
+      "q": "What are the requirements for new student registration?",
+      "a": "Main requirements include Junior High School diploma, Family Card, Birth Certificate, and recent passport photo."
+    }
   ]
 }
-

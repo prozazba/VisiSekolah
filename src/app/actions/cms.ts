@@ -42,13 +42,9 @@ export async function translatePostAction(postId: string, targetLocale: 'en' | '
 
     if (!post) throw new Error("Post not found");
 
-    // Translate title
     const translatedTitle = await translateContent(post.title, targetLocale);
-    
-    // Translate content
     const translatedContent = await translateContent(post.content, targetLocale);
 
-    // Save translations
     await prisma.translation.createMany({
       data: [
         {
@@ -111,37 +107,51 @@ export async function saveDictionary(lang: 'id' | 'en', data: any) {
 
 export async function autoTranslateDictionary(sourceLang: 'id' | 'en', data: any) {
   try {
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+      throw new Error("GEMINI_API_KEY is not configured in .env file.");
+    }
+
     const targetLang = sourceLang === 'id' ? 'en' : 'id';
     
-    // FIRST: Save the current state of the source language dictionary
-    // This ensures that user edits in the editor are persisted before translation
+    // 1. First, persist the source language with the current data from the screen
     const sourcePath = path.join(process.cwd(), 'src', 'dictionaries', `${sourceLang}.json`);
     await fs.writeFile(sourcePath, JSON.stringify(data, null, 2), 'utf8');
+    console.log(`Source dictionary [${sourceLang}.json] updated before sync.`);
     
-    // SECOND: Recursively translate all string values in the object to target language
+    // 2. Perform deep translation
+    console.log(`Starting AI translation from [${sourceLang}] to [${targetLang}]...`);
     const translatedData = await translateObject(data, targetLang);
     
-    // THIRD: Save to the target language file
+    // 3. Save the translated content to the target language file
     const targetPath = path.join(process.cwd(), 'src', 'dictionaries', `${targetLang}.json`);
     await fs.writeFile(targetPath, JSON.stringify(translatedData, null, 2), 'utf8');
+    console.log(`Target dictionary [${targetLang}.json] synchronized successfully.`);
     
     revalidatePath('/');
     return { success: true, targetLang };
   } catch (error: any) {
-    console.error('Auto-translate error:', error);
+    console.error('Auto-translate error:', error.message);
     return { success: false, error: error.message };
   }
 }
 
 async function translateObject(obj: any, targetLang: 'en' | 'id'): Promise<any> {
+  // If it's a string, translate it
   if (typeof obj === 'string') {
-    // Check if it's a date or a number-like string that shouldn't be translated
-    if (/^\d+([-/.]\d+)*$/.test(obj)) return obj;
+    // Skip numbers, dates, empty strings, and technical IDs
+    if (!obj.trim() || /^\d+([-/.]\d+)*$/.test(obj) || /^[0-9a-fA-F-]{36}$/.test(obj)) {
+      return obj;
+    }
     
     const result = await translateContent(obj, targetLang);
+    // If translation failed, we'll keep the original string but it's better to log it
+    if (!result.success) {
+      console.warn(`Translation failed for string: "${obj.substring(0, 20)}...", keeping original.`);
+    }
     return result.translatedText;
   }
   
+  // If it's an array, translate each element
   if (Array.isArray(obj)) {
     const translatedArray = [];
     for (const item of obj) {
@@ -150,9 +160,12 @@ async function translateObject(obj: any, targetLang: 'en' | 'id'): Promise<any> 
     return translatedArray;
   }
   
+  // If it's an object, translate each property
   if (typeof obj === 'object' && obj !== null) {
     const translatedObj: any = {};
     for (const key in obj) {
+      // Logic to avoid translating specific technical keys if needed
+      // Currently translating all values
       translatedObj[key] = await translateObject(obj[key], targetLang);
     }
     return translatedObj;
