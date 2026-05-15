@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '@/styles/dashboard-v2.module.scss';
 import { 
   BookOpen, 
@@ -12,13 +12,37 @@ import {
   MoreVertical,
   ChevronRight,
   Search,
-  Filter
+  Filter,
+  RefreshCcw,
+  AlertCircle
 } from 'lucide-react';
+import AddAcademicModal from '@/components/AddAcademicModal';
+import { getClasses, getSubjects } from '@/app/actions/academic';
 
 type AcademicTab = 'CLASSES' | 'SUBJECTS';
 
 export default function AcademicManagementPage() {
   const [activeTab, setActiveTab] = useState<AcademicTab>('CLASSES');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const fetchData = async () => {
+    setLoading(true);
+    const result = activeTab === 'CLASSES' ? await getClasses() : await getSubjects();
+    setData(result);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [activeTab]);
+
+  const filteredData = data.filter(item => 
+    item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.code && item.code.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   return (
     <div>
@@ -29,7 +53,7 @@ export default function AcademicManagementPage() {
           </h1>
           <p>Organize your school's classes, subjects, and teaching schedules.</p>
         </div>
-        <button className={styles.btnPrimary}>
+        <button className={styles.btnPrimary} onClick={() => setIsModalOpen(true)}>
           <Plus size={18} /> {activeTab === 'CLASSES' ? 'Create New Class' : 'Add New Subject'}
         </button>
       </header>
@@ -58,6 +82,8 @@ export default function AcademicManagementPage() {
               placeholder="Quick search..." 
               className={styles.inputControl} 
               style={{ paddingLeft: '44px', width: '240px' }} 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <button className={styles.btnOutline} style={{ padding: '0 1.25rem' }}>
@@ -66,35 +92,62 @@ export default function AcademicManagementPage() {
         </div>
       </div>
 
-      {activeTab === 'CLASSES' ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
-          <ClassCard name="Grade 10 - Science A" teacher="Sarah Miller" students={32} schedule="07:30 - 13:00" />
-          <ClassCard name="Grade 11 - Social B" teacher="Robert Wilson" students={28} schedule="07:30 - 13:00" />
-          <ClassCard name="Grade 12 - Science C" teacher="Emma Thompson" students={30} schedule="07:30 - 13:00" />
-          <ClassCard name="Grade 10 - Science B" teacher="David Chen" students={31} schedule="07:30 - 13:00" />
+      {loading ? (
+        <div style={{ padding: '4rem', textAlign: 'center' }}>
+          <RefreshCcw size={32} className={styles.spin} color="#6366f1" />
+          <p style={{ marginTop: '1rem', color: '#64748b' }}>Loading records...</p>
         </div>
+      ) : filteredData.length > 0 ? (
+        activeTab === 'CLASSES' ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+            {filteredData.map((cls) => (
+              <ClassCard 
+                key={cls.id}
+                name={cls.name} 
+                teacher={cls.teacher?.name || 'Unassigned'} 
+                students={cls.students?.length || 0} 
+                schedule="07:30 - 13:00" 
+              />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.card} style={{ padding: 0, overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead style={{ background: '#f8fafc' }}>
+                <tr style={{ textAlign: 'left' }}>
+                  <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Subject Name</th>
+                  <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Code</th>
+                  <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Status</th>
+                  <th style={{ padding: '1.25rem 2rem' }}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.map((sbj) => (
+                  <SubjectRow 
+                    key={sbj.id}
+                    name={sbj.name} 
+                    code={sbj.code} 
+                    status="Active" 
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
       ) : (
-        <div className={styles.card} style={{ padding: 0, overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f8fafc' }}>
-              <tr style={{ textAlign: 'left' }}>
-                <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Subject Name</th>
-                <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Code</th>
-                <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Teachers</th>
-                <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Classes</th>
-                <th style={{ padding: '1.25rem 2rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Status</th>
-                <th style={{ padding: '1.25rem 2rem' }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              <SubjectRow name="Advanced Mathematics" code="MATH401" teachers={4} classes={12} status="Active" />
-              <SubjectRow name="Quantum Physics" code="PHYS502" teachers={2} classes={6} status="Active" />
-              <SubjectRow name="Modern Literature" code="LIT201" teachers={3} classes={10} status="Active" />
-              <SubjectRow name="Computer Science" code="CS101" teachers={5} classes={15} status="Draft" />
-            </tbody>
-          </table>
+        <div style={{ padding: '4rem', textAlign: 'center', background: '#f8fafc', borderRadius: '24px', border: '2px dashed #e2e8f0' }}>
+          <AlertCircle size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
+          <h4 style={{ margin: 0, fontWeight: 800 }}>No records found</h4>
+          <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Start by adding your first {activeTab === 'CLASSES' ? 'class' : 'subject'}.</p>
         </div>
       )}
+
+      <AddAcademicModal 
+        isOpen={isModalOpen} 
+        onCloseAction={() => setIsModalOpen(false)} 
+        type={activeTab} 
+        refreshDataAction={fetchData} 
+      />
     </div>
   );
 }
@@ -132,15 +185,13 @@ function ClassCard({ name, teacher, students, schedule }: any) {
   );
 }
 
-function SubjectRow({ name, code, teachers, classes, status }: any) {
+function SubjectRow({ name, code, status }: any) {
   return (
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '1.25rem 2rem', fontWeight: 700, fontSize: '0.9375rem' }}>{name}</td>
       <td style={{ padding: '1.25rem 2rem' }}>
         <code style={{ background: '#f8fafc', padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', color: '#6366f1', fontWeight: 700 }}>{code}</code>
       </td>
-      <td style={{ padding: '1.25rem 2rem', fontWeight: 600, fontSize: '0.875rem' }}>{teachers} Assigned</td>
-      <td style={{ padding: '1.25rem 2rem', fontWeight: 600, fontSize: '0.875rem' }}>{classes} Classes</td>
       <td style={{ padding: '1.25rem 2rem' }}>
         <div className={`${styles.badge} ${status === 'Active' ? styles.success : styles.warning}`}>
           {status}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '@/styles/dashboard-v2.module.scss';
 import { 
   Calendar as CalendarIcon, 
@@ -12,11 +12,38 @@ import {
   MoreVertical,
   Flag,
   Filter,
-  CheckCircle2
+  RefreshCcw,
+  AlertCircle
 } from 'lucide-react';
+import AddEventModal from '@/components/AddEventModal';
+import { getEvents } from '@/app/actions/calendar';
 
 export default function AcademicCalendarPage() {
   const [currentMonth, setCurrentMonth] = useState('May 2026');
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchEvents = async () => {
+    setLoading(true);
+    const data = await getEvents();
+    setEvents(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  // Today's agenda filter
+  const today = new Date();
+  const todaysAgenda = events.filter(ev => {
+    const evDate = new Date(ev.startTime);
+    return evDate.toDateString() === today.toDateString();
+  });
+
+  // Upcoming deadlines (mocking the last 3 for now)
+  const upcomingEvents = events.slice(0, 5);
 
   return (
     <div>
@@ -27,7 +54,7 @@ export default function AcademicCalendarPage() {
           </h1>
           <p>Schedule holidays, exams, school events, and academic deadlines.</p>
         </div>
-        <button className={styles.btnPrimary}>
+        <button className={styles.btnPrimary} onClick={() => setIsModalOpen(true)}>
           <Plus size={18} /> Schedule New Event
         </button>
       </header>
@@ -48,47 +75,54 @@ export default function AcademicCalendarPage() {
             </div>
           </div>
 
-          {/* Academic Calendar Grid */}
+          {/* Academic Calendar Grid - Simplified representation */}
           <section className={styles.card} style={{ padding: '2.5rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1rem', textAlign: 'center', fontWeight: 800, color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '2rem' }}>
-              <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1rem' }}>
-              {[...Array(35)].map((_, i) => {
-                const day = i - 4; // Mock logic for May 2026
-                const isCurrent = day === 13;
-                const events = day === 15 ? [{ color: '#6366f1' }] : day === 22 ? [{ color: '#10b981' }] : day === 28 ? [{ color: '#f59e0b' }] : [];
-                
-                return (
-                  <div key={i} style={{ 
-                    aspectRatio: '1', 
-                    padding: '0.75rem', 
-                    borderRadius: '20px', 
-                    background: isCurrent ? '#f1f0ff' : 'white',
-                    border: isCurrent ? '1px solid #6366f1' : '1px solid #f1f5f9',
-                    position: 'relative',
-                    cursor: day > 0 && day <= 31 ? 'pointer' : 'default',
-                    opacity: day > 0 && day <= 31 ? 1 : 0.2,
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    {day > 0 && day <= 31 && (
-                      <>
-                        <span style={{ fontSize: '1rem', fontWeight: 800, color: isCurrent ? '#6366f1' : '#1a1c1e' }}>{day}</span>
-                        <div style={{ display: 'flex', gap: '4px', marginTop: '6px' }}>
-                          {events.map((ev, idx) => (
-                            <div key={idx} style={{ width: '6px', height: '6px', borderRadius: '50%', background: ev.color }}></div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            {loading ? (
+              <div style={{ padding: '4rem', textAlign: 'center' }}>
+                <RefreshCcw size={32} className={styles.spin} color="#6366f1" />
+                <p style={{ marginTop: '1rem', color: '#64748b' }}>Syncing calendar...</p>
+              </div>
+            ) : (
+              <>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1rem', textAlign: 'center', fontWeight: 800, color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '2rem' }}>
+                  <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1rem' }}>
+                  {[...Array(35)].map((_, i) => {
+                    const day = i - 4; 
+                    const isCurrent = day === today.getDate();
+                    
+                    // Simple dot indicator if an event exists on this day
+                    const hasEvent = events.some(ev => new Date(ev.startTime).getDate() === day);
+                    
+                    return (
+                      <div key={i} style={{ 
+                        aspectRatio: '1', 
+                        padding: '0.75rem', 
+                        borderRadius: '20px', 
+                        background: isCurrent ? '#f1f0ff' : 'white',
+                        border: isCurrent ? '1px solid #6366f1' : '1px solid #f1f5f9',
+                        position: 'relative',
+                        opacity: day > 0 && day <= 31 ? 1 : 0.2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        {day > 0 && day <= 31 && (
+                          <>
+                            <span style={{ fontSize: '1rem', fontWeight: 800, color: isCurrent ? '#6366f1' : '#1a1c1e' }}>{day}</span>
+                            {hasEvent && (
+                              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#6366f1', marginTop: '4px' }}></div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </section>
         </div>
 
@@ -98,48 +132,51 @@ export default function AcademicCalendarPage() {
             <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Clock size={20} color="#6366f1" /> Today's Agenda
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <div style={{ borderLeft: '4px solid #6366f1', paddingLeft: '1.25rem' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#6366f1', textTransform: 'uppercase', marginBottom: '4px' }}>09:00 AM</div>
-                <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1a1c1e' }}>Curriculum Committee Meeting</div>
+            {todaysAgenda.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {todaysAgenda.map((ev) => (
+                  <div key={ev.id} style={{ borderLeft: '4px solid #6366f1', paddingLeft: '1.25rem' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#6366f1', textTransform: 'uppercase', marginBottom: '4px' }}>
+                      {new Date(ev.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1a1c1e' }}>{ev.title}</div>
+                  </div>
+                ))}
               </div>
-              <div style={{ borderLeft: '4px solid #10b981', paddingLeft: '1.25rem' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', marginBottom: '4px' }}>02:30 PM</div>
-                <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1a1c1e' }}>Student Council Briefing</div>
-              </div>
-            </div>
+            ) : (
+              <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>No events scheduled for today.</p>
+            )}
           </div>
 
           <div className={styles.card} style={{ padding: '2rem' }}>
             <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Flag size={20} color="#f59e0b" /> Critical Deadlines
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <EventDetailItem 
-                date="May 15" 
-                title="Spring Semester Finals" 
-                time="08:00 AM - 12:00 PM" 
-                loc="Examination Hall" 
-                color="#6366f1"
-              />
-              <EventDetailItem 
-                date="May 22" 
-                title="Annual Sports Day" 
-                time="09:00 AM - 04:00 PM" 
-                loc="School Grounds" 
-                color="#10b981"
-              />
-              <EventDetailItem 
-                date="Jun 01" 
-                title="Summer Vacation" 
-                time="All Day Event" 
-                loc="N/A" 
-                color="#f59e0b"
-              />
-            </div>
+            {upcomingEvents.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {upcomingEvents.map((ev) => (
+                  <EventDetailItem 
+                    key={ev.id}
+                    date={new Date(ev.startTime).toLocaleDateString([], { month: 'short', day: 'numeric' })} 
+                    title={ev.title} 
+                    time={new Date(ev.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} 
+                    loc={ev.location || 'No Location'} 
+                    color="#6366f1"
+                  />
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>No upcoming deadlines.</p>
+            )}
           </div>
         </div>
       </div>
+
+      <AddEventModal 
+        isOpen={isModalOpen} 
+        onCloseAction={() => setIsModalOpen(false)} 
+        refreshDataAction={fetchEvents} 
+      />
     </div>
   );
 }

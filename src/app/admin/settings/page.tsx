@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '@/styles/dashboard-v2.module.scss';
 import { 
   Settings, 
@@ -22,15 +22,14 @@ export default function AdminSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [schoolName, setSchoolName] = useState('SMA VisiSekolah');
-
-  useState(() => {
+  useEffect(() => {
     async function load() {
       const { getBranding } = await import('@/app/actions/branding');
       const data = await getBranding();
       if (data) setSchoolName(data.name);
     }
     load();
-  });
+  }, []);
 
   const handleSave = () => {
     setIsSaving(true);

@@ -14,11 +14,34 @@ import {
   Filter,
   CheckCircle2,
   Calendar,
-  Send
+  Send,
+  RefreshCcw
 } from 'lucide-react';
+import AddAnnouncementModal from '@/components/AddAnnouncementModal';
+import { getAnnouncements } from '@/app/actions/announcements';
 
 export default function AnnouncementsPage() {
   const [activeTab, setActiveTab] = useState<'PUBLISHED' | 'DRAFTS' | 'SCHEDULED'>('PUBLISHED');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const fetchAnnouncements = async () => {
+    setLoading(true);
+    const data = await getAnnouncements();
+    setAnnouncements(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  const filteredAnnouncements = announcements.filter(ann => 
+    ann.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    ann.content?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -29,7 +52,7 @@ export default function AnnouncementsPage() {
           </h1>
           <p>Broadcast important updates and information to your school community.</p>
         </div>
-        <button className={styles.btnPrimary}>
+        <button className={styles.btnPrimary} onClick={() => setIsModalOpen(true)}>
           <Plus size={18} /> Create New Broadcast
         </button>
       </header>
@@ -64,6 +87,8 @@ export default function AnnouncementsPage() {
               placeholder="Search announcements..." 
               className={styles.inputControl} 
               style={{ paddingLeft: '44px', width: '280px' }} 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <button className={styles.btnOutline} style={{ padding: '0 1.25rem' }}>
@@ -72,40 +97,38 @@ export default function AnnouncementsPage() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-        <AnnouncementItem 
-          title="Upcoming Spring Semester Finals Schedule" 
-          target="All Students & Teachers" 
-          date="Today, 10:45 AM" 
-          status="Published"
-          views={1240}
-          priority="High"
-        />
-        <AnnouncementItem 
-          title="New Health and Safety Guidelines for Campus" 
-          target="Whole School Community" 
-          date="Yesterday, 02:30 PM" 
-          status="Published"
-          views={3500}
-          priority="Urgent"
-        />
-        <AnnouncementItem 
-          title="Maintenance Work: School WiFi Network" 
-          target="Staff & Teachers" 
-          date="02 May, 11:00 AM" 
-          status="Published"
-          views={420}
-          priority="Normal"
-        />
-        <AnnouncementItem 
-          title="Sports Day 2026: Registration Open" 
-          target="Students" 
-          date="28 Apr, 09:15 AM" 
-          status="Published"
-          views={2100}
-          priority="Normal"
-        />
-      </div>
+      {loading ? (
+        <div style={{ padding: '4rem', textAlign: 'center' }}>
+          <RefreshCcw size={32} className={styles.spin} color="#6366f1" />
+          <p style={{ marginTop: '1rem', color: '#64748b' }}>Refreshing board...</p>
+        </div>
+      ) : filteredAnnouncements.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {filteredAnnouncements.map((ann) => (
+            <AnnouncementItem 
+              key={ann.id}
+              title={ann.title} 
+              target="All Students & Teachers" 
+              date={new Date(ann.createdAt).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })} 
+              status="Published"
+              views={Math.floor(Math.random() * 1000)} // Mock views
+              priority="Normal"
+            />
+          ))}
+        </div>
+      ) : (
+        <div style={{ padding: '4rem', textAlign: 'center', background: '#f8fafc', borderRadius: '24px', border: '2px dashed #e2e8f0' }}>
+          <AlertCircle size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
+          <h4 style={{ margin: 0, fontWeight: 800 }}>No announcements found</h4>
+          <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Click "Create New Broadcast" to send your first update.</p>
+        </div>
+      )}
+
+      <AddAnnouncementModal 
+        isOpen={isModalOpen} 
+        onCloseAction={() => setIsModalOpen(false)} 
+        refreshDataAction={fetchAnnouncements} 
+      />
     </div>
   );
 }

@@ -113,22 +113,31 @@ export async function autoTranslateDictionary(sourceLang: 'id' | 'en', data: any
   try {
     const targetLang = sourceLang === 'id' ? 'en' : 'id';
     
-    // We need to recursively translate all string values in the object
+    // FIRST: Save the current state of the source language dictionary
+    // This ensures that user edits in the editor are persisted before translation
+    const sourcePath = path.join(process.cwd(), 'src', 'dictionaries', `${sourceLang}.json`);
+    await fs.writeFile(sourcePath, JSON.stringify(data, null, 2), 'utf8');
+    
+    // SECOND: Recursively translate all string values in the object to target language
     const translatedData = await translateObject(data, targetLang);
     
-    // Save to the other file
+    // THIRD: Save to the target language file
     const targetPath = path.join(process.cwd(), 'src', 'dictionaries', `${targetLang}.json`);
     await fs.writeFile(targetPath, JSON.stringify(translatedData, null, 2), 'utf8');
     
     revalidatePath('/');
     return { success: true, targetLang };
   } catch (error: any) {
+    console.error('Auto-translate error:', error);
     return { success: false, error: error.message };
   }
 }
 
 async function translateObject(obj: any, targetLang: 'en' | 'id'): Promise<any> {
   if (typeof obj === 'string') {
+    // Check if it's a date or a number-like string that shouldn't be translated
+    if (/^\d+([-/.]\d+)*$/.test(obj)) return obj;
+    
     const result = await translateContent(obj, targetLang);
     return result.translatedText;
   }
