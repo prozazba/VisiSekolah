@@ -12,11 +12,13 @@ import {
   Palette,
   BookOpen,
   Calendar,
-  Megaphone
+  Megaphone,
+  Languages
 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { logout } from '@/app/actions/auth';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function AdminLayout({
   children,
@@ -24,16 +26,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { language, setLanguage, dict } = useLanguage();
 
   const navItems = [
-    { icon: <LayoutDashboard size={24} />, href: '/admin', label: 'Dashboard' },
-    { icon: <Palette size={24} />, href: '/admin/branding', label: 'Branding' },
-    { icon: <Users size={24} />, href: '/admin/users', label: 'Users' },
-    { icon: <BookOpen size={24} />, href: '/admin/academic', label: 'Academic' },
-    { icon: <FileText size={24} />, href: '/admin/cms', label: 'CMS Content' },
-    { icon: <Calendar size={24} />, href: '/admin/calendar', label: 'Calendar' },
-    { icon: <Megaphone size={24} />, href: '/admin/announcements', label: 'Announcements' },
-    { icon: <Settings size={24} />, href: '/admin/settings', label: 'Settings' },
+    { icon: <LayoutDashboard size={24} />, href: '/admin', label: dict.admin.dashboard },
+    { icon: <Palette size={24} />, href: '/admin/branding', label: dict.admin.branding },
+    { icon: <Users size={24} />, href: '/admin/users', label: dict.admin.users },
+    { icon: <BookOpen size={24} />, href: '/admin/academic', label: dict.admin.academic },
+    { icon: <FileText size={24} />, href: '/admin/cms', label: dict.admin.cms },
+    { icon: <Calendar size={24} />, href: '/admin/calendar', label: dict.admin.calendar },
+    { icon: <Megaphone size={24} />, href: '/admin/announcements', label: dict.admin.announcements },
+    { icon: <Settings size={24} />, href: '/admin/settings', label: dict.admin.settings },
   ];
 
   return (
@@ -55,7 +58,19 @@ export default function AdminLayout({
         
         <div style={{ flex: 1 }}></div>
         
-        <button onClick={() => logout()} className={styles.navIcon} style={{ background: 'none', border: 'none' }}>
+        <button 
+          onClick={() => setLanguage(language === 'id' ? 'en' : 'id')} 
+          className={styles.navIcon} 
+          style={{ background: 'none', border: 'none', marginBottom: '10px' }}
+          title={language === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
+        >
+          <div style={{ fontSize: '10px', fontWeight: 'bold', position: 'absolute', top: '5px', right: '5px' }}>
+            {language.toUpperCase()}
+          </div>
+          <Languages size={24} />
+        </button>
+
+        <button onClick={() => logout()} className={styles.navIcon} style={{ background: 'none', border: 'none' }} title={dict.admin.logout}>
           <LogOut size={24} />
         </button>
       </aside>

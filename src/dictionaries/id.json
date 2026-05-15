@@ -160,5 +160,30 @@
       "q": "Apa saja syarat pendaftaran siswa baru?",
       "a": "Syarat utama meliputi Ijazah SMP/sederajat, Kartu Keluarga, Akta Kelahiran, dan pas foto terbaru."
     }
-  ]
+  ],
+  "admin": {
+    "dashboard": "Dashboard",
+    "branding": "Branding & Identitas",
+    "users": "Manajemen User",
+    "academic": "Data Akademik",
+    "cms": "Konten Website",
+    "calendar": "Kalender Sekolah",
+    "announcements": "Pengumuman",
+    "settings": "Pengaturan Sistem",
+    "logout": "Keluar"
+  },
+  "dashboard": {
+    "greetings": "Selamat Datang,",
+    "school_portal": "Portal Manajemen Sekolah",
+    "total_classes": "Total Kelas",
+    "total_students": "Total Siswa",
+    "total_subjects": "Mata Pelajaran",
+    "staff_online": "Staf Online",
+    "student_performance": "Performa Siswa",
+    "attendance_overview": "Ringkasan Absensi",
+    "academic_schedule": "Jadwal Akademik Hari Ini",
+    "upcoming_events": "Agenda Mendatang",
+    "admin_notes": "Catatan Admin",
+    "add_note": "Tambah"
+  }
 }

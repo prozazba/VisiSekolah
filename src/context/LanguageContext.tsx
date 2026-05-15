@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import id from '../dictionaries/id.json';
 import en from '../dictionaries/en.json';
 
@@ -33,8 +33,12 @@ export function LanguageProvider({
   children: React.ReactNode;
   initialBranding?: BrandingData;
 }) {
-  const [language, setLanguage] = useState<Language>('id');
-  const [dict, setDict] = useState<Dictionary>(id);
+  // Initialise language from localStorage if available
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('language') : null;
+    return saved === 'en' ? 'en' : 'id';
+  });
+  const dict: Dictionary = language === 'id' ? id : en;
   const [branding] = useState<BrandingData>(initialBranding || {
     name: 'SMA VisiSekolah',
     primaryColor: '#6366f1',
@@ -43,15 +47,8 @@ export function LanguageProvider({
     fontFamily: 'Outfit',
   });
 
+  // Persist language selection and set HTML lang attribute when it changes
   useEffect(() => {
-    const savedLang = localStorage.getItem('language') as Language;
-    if (savedLang && (savedLang === 'id' || savedLang === 'en')) {
-      setLanguage(savedLang);
-    }
-  }, []);
-
-  useEffect(() => {
-    setDict(language === 'id' ? id : en);
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
   }, [language]);

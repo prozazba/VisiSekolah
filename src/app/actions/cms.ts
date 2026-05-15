@@ -144,10 +144,16 @@ async function translateObject(obj: any, targetLang: 'en' | 'id'): Promise<any> 
     }
     
     const result = await translateContent(obj, targetLang);
-    // If translation failed, we'll keep the original string but it's better to log it
+    
     if (!result.success) {
-      console.warn(`Translation failed for string: "${obj.substring(0, 20)}...", keeping original.`);
+      throw new Error(`AI Translation failed for: "${obj.substring(0, 30)}...". Aborting to prevent dictionary corruption.`);
     }
+
+    // Safety check: if AI returns exact same text for ID -> EN, it's likely a failure
+    if (result.translatedText.toLowerCase() === obj.toLowerCase() && obj.length > 3) {
+       throw new Error(`AI returned untranslated text for: "${obj.substring(0, 30)}...". Aborting sync.`);
+    }
+
     return result.translatedText;
   }
   

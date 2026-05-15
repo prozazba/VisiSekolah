@@ -4,7 +4,7 @@
     "about": "School Profile",
     "contact": "Contact Us",
     "login": "Student/Teacher Portal",
-    "register": "Enrollment"
+    "register": "Registration"
   },
   "hero": {
     "title": "Explore VisiSekolah Academy",
@@ -88,7 +88,7 @@
     "links": {
       "features": "Advantages",
       "demo": "Facilities",
-      "register": "Enrollment",
+      "register": "Registration",
       "about": "School Profile",
       "contact": "Contact Us",
       "privacy": "Privacy Policy",
@@ -149,16 +149,41 @@
     "SUPER_ADMIN": "Principal",
     "SCHOOL_ADMIN": "Administrative Staff",
     "GURU": "Subject Teacher",
-    "SISWA": "Student / Guardian"
+    "SISWA": "Student / Parent or Guardian"
   },
   "faq": [
     {
-      "q": "How to enroll at VisiSekolah High School?",
-      "a": "Registration can be done online via the 'Apply for Admission' button on the main page or by coming directly to the Admissions Office."
+      "q": "How do I apply to VisiSekolah High School?",
+      "a": "Registration can be completed online via the 'Daftar PPDB' button on the home page or by visiting the PPDB Secretariat in person."
     },
     {
       "q": "What are the requirements for new student registration?",
       "a": "Main requirements include Junior High School diploma, Family Card, Birth Certificate, and recent passport photo."
     }
-  ]
+  ],
+  "admin": {
+    "dashboard": "Dashboard",
+    "branding": "Branding & Identity",
+    "users": "User Management",
+    "academic": "Academic Data",
+    "cms": "Website Content",
+    "calendar": "School Calendar",
+    "announcements": "Announcements",
+    "settings": "System Settings",
+    "logout": "Log Out"
+  },
+  "dashboard": {
+    "greetings": "Welcome back,",
+    "school_portal": "School Management Portal",
+    "total_classes": "Total Classes",
+    "total_students": "Total Students",
+    "total_subjects": "Total Subjects",
+    "staff_online": "Staff Online",
+    "student_performance": "Student Performance",
+    "attendance_overview": "Attendance Overview",
+    "academic_schedule": "Today's Academic Schedule",
+    "upcoming_events": "Upcoming Events",
+    "admin_notes": "Admin Notes",
+    "add_note": "Add"
+  }
 }
