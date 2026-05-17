@@ -8,6 +8,8 @@ import { Globe } from 'lucide-react';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authRole, setAuthRole] = useState<string | null>(null);
   const { language, setLanguage, dict, branding } = useLanguage();
 
   useEffect(() => {
@@ -15,13 +17,27 @@ export default function Navbar() {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    // Check auth status
+    import('@/app/actions/auth').then(({ checkAuthStatus }) => {
+      checkAuthStatus().then((session) => {
+        if (session && session.isAuth) {
+          setIsAuthenticated(true);
+          setAuthRole(session.role);
+        }
+      });
+    });
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
       <div className={`${styles.container} container`}>
-        <Link href="/" className={styles.logo}>
+        <Link href="/" className={styles.logo} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {branding.logoUrl && (
+            <img src={branding.logoUrl} alt="Logo" style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
+          )}
           {branding.name}
         </Link>
         
@@ -41,7 +57,16 @@ export default function Navbar() {
             <Globe size={14} /> {language === 'id' ? 'ID' : 'EN'}
           </button>
 
-          <Link href="/login" className={styles.btnPrimary}>{dict.navbar.login}</Link>
+          {isAuthenticated ? (
+            <Link 
+              href={authRole === 'SUPER_ADMIN' ? '/admin' : '/dashboard'} 
+              className={styles.btnPrimary}
+            >
+              {dict.admin?.dashboard || 'Dashboard'}
+            </Link>
+          ) : (
+            <Link href="/login" className={styles.btnPrimary}>{dict.navbar.login}</Link>
+          )}
         </div>
       </div>
     </nav>

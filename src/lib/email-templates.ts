@@ -612,3 +612,51 @@ export function getUrlUpdateEmail({ schoolName, loginUrl }: { schoolName: string
     </div>
   `;
 }
+
+// ─────────────────────────────────────────────
+// 5. User Welcome & Credentials (sent to newly created users)
+// ─────────────────────────────────────────────
+
+interface UserWelcomeData {
+  name: string;
+  email: string;
+  role: string;
+  loginUrl: string;
+}
+
+export function getUserWelcomeEmail(data: UserWelcomeData): string {
+  const roleName = data.role === 'GURU' ? 'Guru' 
+    : data.role === 'SISWA' ? 'Siswa / Wali Murid'
+    : data.role === 'SCHOOL_ADMIN' ? 'Admin Sekolah'
+    : 'Staf';
+
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+      <div style="padding: 20px; text-align: center; background-color: #0f172a; border-radius: 8px 8px 0 0;">
+        <h2 style="color: white; margin: 0;">Selamat Datang di VisiSekolah</h2>
+      </div>
+      <div style="padding: 30px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px;">
+        <p>Halo <strong>${data.name}</strong>,</p>
+        <p>Akun Anda telah berhasil didaftarkan di platform <strong>VisiSekolah</strong> sebagai <strong>${roleName}</strong>.</p>
+        
+        <div style="background-color: #f8fafc; padding: 20px; border-radius: 6px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #0f172a; font-size: 16px;">Kredensial Login Anda</h3>
+          <p style="margin: 5px 0;"><strong>Email:</strong> ${data.email}</p>
+          <p style="margin: 5px 0;"><strong>Kata Sandi Sementara:</strong> password123</p>
+        </div>
+
+        <p style="color: #ef4444; font-size: 14px;"><em>*Penting: Harap segera mengubah kata sandi Anda setelah berhasil login pertama kali.</em></p>
+
+        <div style="text-align: center; margin-top: 30px;">
+          <a href="${data.loginUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Login ke Portal</a>
+        </div>
+        
+        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+        <p style="font-size: 12px; color: #64748b; text-align: center;">
+          Email ini dibuat secara otomatis. Mohon jangan membalas email ini.<br>
+          &copy; 2026 VisiSekolah. All rights reserved.
+        </p>
+      </div>
+    </div>
+  `;
+}

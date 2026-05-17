@@ -24,6 +24,8 @@ export default function BrandingPage() {
     secondaryColor: '#a855f7',
     accentColor: '#10b981',
     fontFamily: 'Outfit',
+    logoUrl: null as string | null,
+    faviconUrl: null as string | null,
   });
 
   useEffect(() => {
@@ -36,12 +38,25 @@ export default function BrandingPage() {
           secondaryColor: data.secondaryColor || '#a855f7',
           accentColor: data.accentColor || '#10b981',
           fontFamily: data.fontFamily || 'Outfit',
+          logoUrl: data.logoUrl || null,
+          faviconUrl: data.faviconUrl || null,
         });
       }
       setIsLoading(false);
     }
     loadBranding();
   }, []);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'logoUrl' | 'faviconUrl') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setFormData(prev => ({ ...prev, [field]: event.target?.result as string }));
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -103,17 +118,31 @@ export default function BrandingPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
               <div className={styles.formGroup}>
                 <label>Institutional Logo</label>
-                <div style={{ border: '2px dashed #e2e8f0', borderRadius: '16px', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', background: '#f8fafc' }}>
-                  <Upload size={24} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>Upload PNG/SVG</div>
-                </div>
+                <label style={{ border: '2px dashed #e2e8f0', borderRadius: '16px', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', background: '#f8fafc', display: 'block', height: '120px', overflow: 'hidden' }}>
+                  <input type="file" accept="image/png, image/svg+xml, image/jpeg" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'logoUrl')} />
+                  {formData.logoUrl ? (
+                    <img src={formData.logoUrl} alt="Logo" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                      <Upload size={24} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>Upload PNG/SVG</div>
+                    </div>
+                  )}
+                </label>
               </div>
               <div className={styles.formGroup}>
                 <label>Browser Favicon</label>
-                <div style={{ border: '2px dashed #e2e8f0', borderRadius: '16px', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', background: '#f8fafc' }}>
-                  <Upload size={24} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>Upload ICO/PNG</div>
-                </div>
+                <label style={{ border: '2px dashed #e2e8f0', borderRadius: '16px', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', background: '#f8fafc', display: 'block', height: '120px', overflow: 'hidden' }}>
+                  <input type="file" accept="image/x-icon, image/png" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'faviconUrl')} />
+                  {formData.faviconUrl ? (
+                    <img src={formData.faviconUrl} alt="Favicon" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                      <Upload size={24} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>Upload ICO/PNG</div>
+                    </div>
+                  )}
+                </label>
               </div>
             </div>
           </section>

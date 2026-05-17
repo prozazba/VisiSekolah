@@ -392,7 +392,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -495,7 +495,6 @@
 // ---- Login Page specifics ----
 .pageSubtitleLogin {
   color: rgba(191, 219, 254, 0.6);
-  margin-bottom: 2.5rem;
   text-align: center;
   font-weight: 500;
 }
@@ -577,7 +576,6 @@
 }
 
 .footerActions {
-  margin-top: 3rem;
   padding-top: 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   width: 100%;
@@ -611,7 +609,9 @@
 }
 
 .loginCard {
-  max-width: 450px;
+  max-width: 720px;
+  max-height: 80vh;
+  overflow-y: auto;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(40px);
   border-color: rgba(255, 255, 255, 0.1);

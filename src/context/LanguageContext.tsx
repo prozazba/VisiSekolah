@@ -33,11 +33,9 @@ export function LanguageProvider({
   children: React.ReactNode;
   initialBranding?: BrandingData;
 }) {
-  // Initialise language from localStorage if available
-  const [language, setLanguage] = useState<Language>(() => {
-    const saved = typeof window !== 'undefined' ? localStorage.getItem('language') : null;
-    return saved === 'en' ? 'en' : 'id';
-  });
+  const [language, setLanguage] = useState<Language>('id');
+  const [isMounted, setIsMounted] = useState(false);
+  
   const dict: Dictionary = language === 'id' ? id : en;
   const [branding] = useState<BrandingData>(initialBranding || {
     name: 'SMA VisiSekolah',
@@ -47,11 +45,22 @@ export function LanguageProvider({
     fontFamily: 'Outfit',
   });
 
+  // Read language from localStorage on client-side only (after hydration)
+  useEffect(() => {
+    setIsMounted(true);
+    const saved = localStorage.getItem('language');
+    if (saved === 'en' || saved === 'id') {
+      setLanguage(saved);
+    }
+  }, []);
+
   // Persist language selection and set HTML lang attribute when it changes
   useEffect(() => {
-    localStorage.setItem('language', language);
-    document.documentElement.lang = language;
-  }, [language]);
+    if (isMounted) {
+      localStorage.setItem('language', language);
+      document.documentElement.lang = language;
+    }
+  }, [language, isMounted]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, dict, branding }}>

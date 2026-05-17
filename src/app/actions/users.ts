@@ -5,6 +5,9 @@ import { revalidatePath } from 'next/cache';
 import bcrypt from 'bcryptjs';
 import { verifySession } from '@/lib/session';
 
+import { sendMail } from '@/lib/mailer';
+import { getUserWelcomeEmail } from '@/lib/email-templates';
+
 export async function createUser(data: {
   name: string;
   email: string;
@@ -28,6 +31,29 @@ export async function createUser(data: {
         schoolId: data.schoolId || session.schoolId || 'default-school',
       }
     });
+
+    // Send Welcome Email
+    try {
+      const loginUrl = process.env.NEXT_PUBLIC_APP_URL 
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/login` 
+        : 'http://localhost:3099/login';
+
+      const emailHtml = getUserWelcomeEmail({
+        name: user.name || data.name,
+        email: user.email || data.email,
+        role: user.role,
+        loginUrl: loginUrl
+      });
+
+      await sendMail({
+        to: user.email || data.email,
+        subject: 'Selamat Datang di VisiSekolah - Informasi Akun Anda',
+        html: emailHtml
+      });
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // We don't return error here because the user was already created successfully
+    }
 
     revalidatePath('/admin/users');
     return { success: true, user };

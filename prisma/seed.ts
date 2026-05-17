@@ -50,6 +50,18 @@ async function main() {
     },
   });
 
+  const admin = await prisma.user.upsert({
+    where: { email: 'admin@visisekolah.id' },
+    update: {},
+    create: {
+      email: 'admin@visisekolah.id',
+      name: 'Super Admin',
+      password: await bcrypt.hash('admin123', 10),
+      role: 'SUPER_ADMIN',
+      schoolId: school.id,
+    },
+  });
+
   // Finance (School Admin)
   const finance = await prisma.user.upsert({
     where: { email: 'finance@visisekolah.id' },
@@ -90,6 +102,7 @@ async function main() {
   });
 
   console.log('Institutional accounts seeded:');
+  console.log('- Admin:', admin.email);
   console.log('- Principal:', principal.email);
   console.log('- Finance:', finance.email);
   console.log('- Teacher:', teacher.email);

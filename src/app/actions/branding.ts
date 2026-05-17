@@ -71,6 +71,8 @@ export async function updateBranding(data: {
   secondaryColor: string;
   accentColor: string;
   fontFamily: string;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
 }) {
   const session = await verifySession();
   
@@ -92,6 +94,8 @@ export async function updateBranding(data: {
         secondaryColor: data.secondaryColor,
         accentColor: data.accentColor,
         fontFamily: data.fontFamily,
+        logoUrl: data.logoUrl,
+        faviconUrl: data.faviconUrl,
       }
     });
 

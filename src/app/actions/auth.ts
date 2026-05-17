@@ -83,3 +83,9 @@ export async function logout() {
   await deleteSession();
   redirect('/login');
 }
+
+export async function checkAuthStatus() {
+  const { verifySession } = await import('@/lib/session');
+  const session = await verifySession();
+  return session;
+}
