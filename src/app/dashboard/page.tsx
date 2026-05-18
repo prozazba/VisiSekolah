@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import styles from '@/styles/dashboard-v2.module.scss';
 import { 
   LayoutDashboard, 
@@ -13,46 +14,47 @@ import {
   BookOpen,
   Clock,
   Calendar,
-  Plus
+  Plus,
+  Palette,
+  QrCode,
+  HelpCircle
 } from 'lucide-react';
+import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
-import { logout } from '@/app/actions/auth';
+import { logout, checkAuthStatus } from '@/app/actions/auth';
 
 export default function DashboardPage() {
-  const { dict } = useLanguage();
+  const { dict, language } = useLanguage();
+  const [session, setSession] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchSession() {
+      const sess = await checkAuthStatus();
+      setSession(sess);
+    }
+    fetchSession();
+  }, []);
+
+  const getRoleLabel = () => {
+    if (!session) return language === 'en' ? 'User' : 'Pengguna';
+    if (session.role === 'GURU') return language === 'en' ? 'Teacher' : 'Guru';
+    if (session.role === 'SISWA') return language === 'en' ? 'Student' : 'Siswa';
+    return session.role;
+  };
 
   return (
-    <div className={styles.dashboardWrapper}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <div className={styles.logo}>V</div>
-        <div className={styles.navIcon + ' ' + styles.active}><LayoutDashboard size={24} /></div>
-        <div className={styles.navIcon}><MessageSquare size={24} /></div>
-        <div className={styles.navIcon}><FileText size={24} /></div>
-        <div className={styles.navIcon}><Users size={24} /></div>
-        <div className={styles.navIcon}><Settings size={24} /></div>
-        <div className={styles.navIcon}><Bell size={24} /></div>
-        
-        <div style={{ flex: 1 }}></div>
-        
-        <button onClick={() => logout()} className={styles.navIcon} style={{ background: 'none', border: 'none' }}>
-          <LogOut size={24} />
-        </button>
-      </aside>
+    <div className={styles.twoColumnLayout}>
+          <div>
+            <header className={styles.greeting}>
+              <h1>{dict.dashboard.greetings || 'Welcome back,'} {getRoleLabel()}!</h1>
+              <p>{new Date().toLocaleDateString(language === 'id' ? 'id-ID' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} • {dict.dashboard.school_portal || 'School Management Portal'}</p>
+            </header>
 
-      {/* Main Content Area */}
-      <main className={styles.mainContent}>
-        <div>
-          <header className={styles.greeting}>
-            <h1>Greatings, Admin!</h1>
-            <p>Friday, 08 May 2026</p>
-          </header>
-
-          <section className={styles.statsGrid}>
-            <StatCard icon={<FileText size={20} color="#6366f1" />} label="Total classes" value="02/08" />
-            <StatCard icon={<Users size={20} color="#a855f7" />} label="Total Students" value="02/08" />
-            <StatCard icon={<BookOpen size={20} color="#22c55e" />} label="Total Lessons" value="40/50" />
-            <StatCard icon={<Clock size={20} color="#06b6d4" />} label="Total Hours" value="12/20" />
+            <section className={styles.statsGrid}>
+              <StatCard icon={<FileText size={20} color="#6366f1" />} label={dict.dashboard.total_classes || 'Total classes'} value="02/08" />
+              <StatCard icon={<Users size={20} color="#a855f7" />} label={dict.dashboard.total_students || 'Total Students'} value="02/08" />
+              <StatCard icon={<BookOpen size={20} color="#22c55e" />} label={dict.dashboard.total_subjects || 'Total Lessons'} value="40/50" />
+              <StatCard icon={<Clock size={20} color="#06b6d4" />} label={dict.dashboard.staff_online || 'Total Hours'} value="12/20" />
           </section>
 
           <div className={styles.contentGrid}>
@@ -151,8 +153,7 @@ export default function DashboardPage() {
             </div>
           </section>
         </aside>
-      </main>
-    </div>
+      </div>
   );
 }
 
@@ -197,7 +198,21 @@ function LessonCard({ time, title, sub, subject }: { time: string; title: string
         <div className={styles.sub}>{sub}</div>
       </div>
       <div className={styles.subject}>{subject}</div>
-      <div className={styles.reminder}>Reminder</div>
+      <Link 
+        href="/admin/attendance" 
+        className={styles.btnPrimary} 
+        style={{ 
+          padding: '8px 16px', 
+          borderRadius: '10px', 
+          fontSize: '0.8125rem', 
+          textDecoration: 'none', 
+          minWidth: '130px', 
+          textAlign: 'center',
+          boxShadow: 'none'
+        }}
+      >
+        Mulai Absensi QR
+      </Link>
     </div>
   );
 }

@@ -44,6 +44,8 @@ export default async function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <head>
         {branding?.faviconUrl && <link rel="icon" href={branding.faviconUrl} />}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content={branding?.primaryColor || '#6366f1'} />
       </head>
       <body className={`${inter.variable} ${outfit.variable} ${roboto.variable} ${poppins.variable}`} style={brandingStyles}>
         <LanguageProvider initialBranding={branding || {

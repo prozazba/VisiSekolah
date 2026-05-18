@@ -3,26 +3,22 @@
 import styles from '@/styles/dashboard-v2.module.scss';
 import { 
   LayoutDashboard, 
-  MessageSquare, 
-  FileText, 
-  Users, 
-  Settings, 
-  Bell, 
-  LogOut,
   Palette,
+  Users, 
   BookOpen,
   Calendar,
-  Megaphone,
-  Languages,
+  Settings, 
   HelpCircle,
-  QrCode
+  QrCode,
+  Languages,
+  LogOut
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { logout } from '@/app/actions/auth';
 import { useLanguage } from '@/context/LanguageContext';
 
-export default function AdminLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -31,13 +27,11 @@ export default function AdminLayout({
   const { language, setLanguage, dict } = useLanguage();
 
   const navItems = [
-    { icon: <LayoutDashboard size={24} />, href: '/admin', label: dict.admin.dashboard },
-    { icon: <Palette size={24} />, href: '/admin/branding', label: dict.admin.branding },
+    { icon: <LayoutDashboard size={24} />, href: '/dashboard', label: dict.admin.dashboard },
+    { icon: <Palette size={24} />, href: '/dashboard/branding', label: dict.admin.branding },
     { icon: <Users size={24} />, href: '/admin/users', label: dict.admin.users },
     { icon: <BookOpen size={24} />, href: '/admin/academic', label: dict.admin.academic },
-    { icon: <FileText size={24} />, href: '/admin/cms', label: dict.admin.cms },
     { icon: <Calendar size={24} />, href: '/admin/calendar', label: dict.admin.calendar },
-    { icon: <Megaphone size={24} />, href: '/admin/announcements', label: dict.admin.announcements },
     { icon: <QrCode size={24} />, href: '/admin/attendance', label: dict.admin.attendance || 'Absensi QR' },
     { icon: <Settings size={24} />, href: '/admin/settings', label: dict.admin.settings },
     { icon: <HelpCircle size={24} />, href: '/admin/guide', label: dict.admin.guide },

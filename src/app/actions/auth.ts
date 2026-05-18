@@ -89,3 +89,36 @@ export async function checkAuthStatus() {
   const session = await verifySession();
   return session;
 }
+
+export async function loginStudentForScan(formData: FormData) {
+  try {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    if (!email || !password) {
+      return { message: 'Email dan password wajib diisi.' };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return { message: 'Email atau kata sandi salah.' };
+    }
+
+    const passwordsMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordsMatch) {
+      return { message: 'Email atau kata sandi salah.' };
+    }
+
+    const { createSession } = await import('@/lib/session');
+    await createSession(user.id, user.role, user.schoolId);
+
+    return { success: true, role: user.role };
+  } catch (error: any) {
+    console.error('Mobile scanner login error:', error);
+    return { message: error.message || 'Terjadi kesalahan sistem.' };
+  }
+}
