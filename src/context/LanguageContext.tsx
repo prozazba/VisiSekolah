@@ -48,17 +48,17 @@ export function LanguageProvider({
   // Read language from localStorage on client-side only (after hydration)
   useEffect(() => {
     setIsMounted(true);
-    const saved = localStorage.getItem('language');
-    if (saved === 'en' || saved === 'id') {
-      setLanguage(saved);
+    const savedLanguage = localStorage.getItem('language') as Language;
+    if (savedLanguage && (savedLanguage === 'id' || savedLanguage === 'en')) {
+      setLanguage(savedLanguage);
     }
   }, []);
 
   // Persist language selection and set HTML lang attribute when it changes
   useEffect(() => {
     if (isMounted) {
-      localStorage.setItem('language', language);
       document.documentElement.lang = language;
+      localStorage.setItem('language', language);
     }
   }, [language, isMounted]);
 

@@ -13,26 +13,26 @@ generator client {
 // -----------------------------------------
 
 model School {
-  id            String   @id @default(cuid())
-  name          String
-  address       String?
-  phone         String?
-  email         String?
+  id      String  @id @default(cuid())
+  name    String
+  address String?
+  phone   String?
+  email   String?
 
   // Branding & Theme
-  logoUrl       String?
-  faviconUrl    String?
-  primaryColor  String   @default("#0f172a")
+  logoUrl        String?
+  faviconUrl     String?
+  primaryColor   String  @default("#0f172a")
   secondaryColor String  @default("#334155")
-  accentColor   String   @default("#3b82f6")
-  fontFamily    String   @default("Inter")
-  
+  accentColor    String  @default("#3b82f6")
+  fontFamily     String  @default("Inter")
+
   // CMS Content
-  posts         Post[]
-  pages         Page[]
-  categories    Category[]
-  tags          Tag[]
-  backups       Backup[]
+  posts      Post[]
+  pages      Page[]
+  categories Category[]
+  tags       Tag[]
+  backups    Backup[]
 
   // Relations
   users         User[]
@@ -43,19 +43,19 @@ model School {
   events        Event[]
   payments      Payment[]
   settings      SchoolSettings?
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model SchoolSettings {
-  id               String @id @default(cuid())
-  schoolId         String @unique
-  school           School @relation(fields: [schoolId], references: [id])
+  id                String  @id @default(cuid())
+  schoolId          String  @unique
+  school            School  @relation(fields: [schoolId], references: [id])
   allowRegistration Boolean @default(false)
-  timezone         String @default("Asia/Jakarta")
-  attendanceType   String @default("QR_CODE")
-  defaultLocale    String @default("id")
+  timezone          String  @default("Asia/Jakarta")
+  attendanceType    String  @default("QR_CODE")
+  defaultLocale     String  @default("id")
 }
 
 // -----------------------------------------
@@ -71,29 +71,30 @@ enum Role {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String?   @unique
-  phone         String?   @unique
-  password      String
-  name          String
-  role          Role
-  schoolId      String?   // Null for Super Admin
-  school        School?   @relation(fields: [schoolId], references: [id])
-  
+  id       String  @id @default(cuid())
+  email    String? @unique
+  phone    String? @unique
+  address  String? @db.Text
+  password String
+  name     String
+  role     Role
+  schoolId String? // Null for Super Admin
+  school   School? @relation(fields: [schoolId], references: [id])
+
   // Profiles
   guruProfile   GuruProfile?
   siswaProfile  SiswaProfile?
   parentProfile ParentProfile?
-  
+
   // CMS
-  posts         Post[]
+  posts Post[]
 
   // Interactions
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // ... existing GuruProfile, SiswaProfile, ParentProfile models ...
@@ -103,29 +104,29 @@ model User {
 // -----------------------------------------
 
 model Post {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String
-  content     String   @db.Text
-  excerpt     String?  @db.Text
-  status      PostStatus @default(DRAFT)
-  
-  schoolId    String
-  school      School   @relation(fields: [schoolId], references: [id])
-  
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id])
-  
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-  
-  tags        Tag[]
-  
+  id      String     @id @default(cuid())
+  title   String
+  slug    String
+  content String     @db.Text
+  excerpt String?    @db.Text
+  status  PostStatus @default(DRAFT)
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  tags Tag[]
+
   featuredImageUrl String?
-  translations Translation[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  translations     Translation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([schoolId, slug])
 }
@@ -137,63 +138,63 @@ enum PostStatus {
 }
 
 model Page {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String
-  content     String   @db.Text
-  status      PostStatus @default(DRAFT)
-  
-  schoolId    String
-  school      School   @relation(fields: [schoolId], references: [id])
-  
+  id      String     @id @default(cuid())
+  title   String
+  slug    String
+  content String     @db.Text
+  status  PostStatus @default(DRAFT)
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
   translations Translation[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([schoolId, slug])
 }
 
 model Category {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String
-  
-  schoolId    String
-  school      School   @relation(fields: [schoolId], references: [id])
-  
-  posts       Post[]
-  
+  id   String @id @default(cuid())
+  name String
+  slug String
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  posts Post[]
+
   @@unique([schoolId, slug])
 }
 
 model Tag {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String
-  
-  schoolId    String
-  school      School   @relation(fields: [schoolId], references: [id])
-  
-  posts       Post[]
+  id   String @id @default(cuid())
+  name String
+  slug String
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  posts Post[]
 
   @@unique([schoolId, slug])
 }
 
 model Translation {
-  id          String   @id @default(cuid())
-  locale      String   // 'id', 'en', etc.
-  field       String   // 'title', 'content', 'excerpt'
-  content     String   @db.Text
-  
-  postId      String?
-  post        Post?    @relation(fields: [postId], references: [id])
-  
-  pageId      String?
-  page        Page?    @relation(fields: [pageId], references: [id])
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id      String @id @default(cuid())
+  locale  String // 'id', 'en', etc.
+  field   String // 'title', 'content', 'excerpt'
+  content String @db.Text
+
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id])
+
+  pageId String?
+  page   Page?   @relation(fields: [pageId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // -----------------------------------------
@@ -201,16 +202,16 @@ model Translation {
 // -----------------------------------------
 
 model Backup {
-  id          String   @id @default(cuid())
-  schoolId    String
-  school      School   @relation(fields: [schoolId], references: [id])
-  
-  fileUrl     String
-  fileName    String
-  fileSize    Int
-  type        BackupType @default(MANUAL)
-  
-  createdAt   DateTime @default(now())
+  id       String @id @default(cuid())
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  fileUrl  String
+  fileName String
+  fileSize Int
+  type     BackupType @default(MANUAL)
+
+  createdAt DateTime @default(now())
 }
 
 enum BackupType {
@@ -222,28 +223,39 @@ enum BackupType {
 // ... existing models (AcademicTerm, Class, Subject, etc.) ...
 
 model GuruProfile {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id])
-  nip         String?  @unique
-  subjects    Subject[]
-  classes     Class[]  @relation("ClassTeacher")
-  attendance  GuruAttendance[]
+  id         String           @id @default(cuid())
+  userId     String           @unique
+  user       User             @relation(fields: [userId], references: [id])
+  nip        String?          @unique
+  position   String?
+  subjects   Subject[]
+  classes    Class[]          @relation("ClassTeacher")
+  attendance GuruAttendance[]
+  lessonPlans  LessonPlan[]
+  teachingLogs TeachingLog[]
 }
 
 model SiswaProfile {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id])
-  nisn        String?  @unique
-  classId     String?
-  class       Class?   @relation(fields: [classId], references: [id])
-  parentId    String?
-  parent      ParentProfile? @relation(fields: [parentId], references: [id])
-  
-  attendance  Attendance[]
-  grades      Grade[]
-  submissions TaskSubmission[]
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id])
+  nis         String?   @unique
+  nisn        String?   @unique
+  birthPlace  String?
+  birthDate   DateTime?
+  gender      String? // 'L' atau 'P'
+  religion    String?
+  citizenship String?   @default("WNI")
+
+  classId  String?
+  class    Class?         @relation(fields: [classId], references: [id])
+  parentId String?
+  parent   ParentProfile? @relation(fields: [parentId], references: [id])
+
+  attendance      Attendance[]
+  grades          Grade[]
+  submissions     TaskSubmission[]
+  academicRecords AcademicRecord[]
 }
 
 model ParentProfile {
@@ -258,48 +270,54 @@ model ParentProfile {
 // -----------------------------------------
 
 model AcademicTerm {
-  id        String   @id @default(cuid())
-  name      String   // e.g. "Ganjil 2023/2024"
+  id        String           @id @default(cuid())
+  name      String // e.g. "Ganjil 2023/2024"
   startDate DateTime
   endDate   DateTime
-  isCurrent Boolean  @default(false)
+  isCurrent Boolean          @default(false)
   schoolId  String
-  school    School   @relation(fields: [schoolId], references: [id])
+  school    School           @relation(fields: [schoolId], references: [id])
+  records   AcademicRecord[]
 }
 
 model Class {
-  id        String   @id @default(cuid())
-  name      String
-  schoolId  String
-  school    School   @relation(fields: [schoolId], references: [id])
-  teacherId String?
-  teacher   GuruProfile? @relation("ClassTeacher", fields: [teacherId], references: [id])
-  students  SiswaProfile[]
-  schedule  Schedule[]
-  tasks     Task[]
-  forums    Forum[]
+  id              String           @id @default(cuid())
+  name            String
+  schoolId        String
+  school          School           @relation(fields: [schoolId], references: [id])
+  teacherId       String?
+  teacher         GuruProfile?     @relation("ClassTeacher", fields: [teacherId], references: [id])
+  students        SiswaProfile[]
+  schedule        Schedule[]
+  tasks           Task[]
+  forums          Forum[]
+  academicRecords AcademicRecord[]
+  teachingLogs    TeachingLog[]
 }
 
 model Subject {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   name      String
   code      String?
   schoolId  String
-  school    School   @relation(fields: [schoolId], references: [id])
+  school    School        @relation(fields: [schoolId], references: [id])
   teachers  GuruProfile[]
   schedules Schedule[]
   tasks     Task[]
+  grades    Grade[]
+  lessonPlans  LessonPlan[]
+  teachingLogs TeachingLog[]
 }
 
 model Schedule {
-  id        String   @id @default(cuid())
-  day       Int      // 0-6 (Sunday-Saturday)
-  startTime String   // "08:00"
-  endTime   String   // "09:30"
+  id        String  @id @default(cuid())
+  day       Int // 0-6 (Sunday-Saturday)
+  startTime String // "08:00"
+  endTime   String // "09:30"
   classId   String
-  class     Class    @relation(fields: [classId], references: [id])
+  class     Class   @relation(fields: [classId], references: [id])
   subjectId String
-  subject   Subject  @relation(fields: [subjectId], references: [id])
+  subject   Subject @relation(fields: [subjectId], references: [id])
 }
 
 // -----------------------------------------
@@ -307,41 +325,62 @@ model Schedule {
 // -----------------------------------------
 
 model Task {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   title       String
   description String?
   dueDate     DateTime?
   fileUrl     String?
   classId     String
-  class       Class    @relation(fields: [classId], references: [id])
+  class       Class            @relation(fields: [classId], references: [id])
   subjectId   String
-  subject     Subject  @relation(fields: [subjectId], references: [id])
+  subject     Subject          @relation(fields: [subjectId], references: [id])
   submissions TaskSubmission[]
-  createdAt   DateTime @default(now())
+  createdAt   DateTime         @default(now())
 }
 
 model TaskSubmission {
-  id          String   @id @default(cuid())
+  id          String       @id @default(cuid())
   taskId      String
-  task        Task     @relation(fields: [taskId], references: [id])
+  task        Task         @relation(fields: [taskId], references: [id])
   studentId   String
   student     SiswaProfile @relation(fields: [studentId], references: [id])
   fileUrl     String?
   comment     String?
   grade       Float?
   feedback    String?
-  submittedAt DateTime @default(now())
+  submittedAt DateTime     @default(now())
 }
 
 model Grade {
-  id        String   @id @default(cuid())
+  id        String       @id @default(cuid())
   studentId String
   student   SiswaProfile @relation(fields: [studentId], references: [id])
-  type      String   // UTS, UAS, Tugas, Kuis
+  type      String // UTS, UAS, Tugas, Kuis
   score     Float
   subjectId String
+  subject   Subject?     @relation(fields: [subjectId], references: [id])
   term      String
+  createdAt DateTime     @default(now())
+}
+
+model AcademicRecord {
+  id        String       @id @default(cuid())
+  studentId String
+  student   SiswaProfile @relation(fields: [studentId], references: [id])
+  termId    String
+  term      AcademicTerm @relation(fields: [termId], references: [id])
+  classId   String
+  class     Class        @relation(fields: [classId], references: [id])
+
+  promotionStatus String? // Naik Kelas, Tinggal Kelas, Lulus
+  averageScore    Float?
+  ranking         Int?
+  teacherNotes    String? @db.Text
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, termId])
 }
 
 // -----------------------------------------
@@ -349,25 +388,25 @@ model Grade {
 // -----------------------------------------
 
 model Attendance {
-  id          String   @id @default(cuid())
-  studentId   String
-  student     SiswaProfile @relation(fields: [studentId], references: [id])
-  status      AttendanceStatus
-  date        DateTime @default(now())
-  latitude    Float?
-  longitude   Float?
-  photoUrl    String?
-  note        String?
+  id        String           @id @default(cuid())
+  studentId String
+  student   SiswaProfile     @relation(fields: [studentId], references: [id])
+  status    AttendanceStatus
+  date      DateTime         @default(now())
+  latitude  Float?
+  longitude Float?
+  photoUrl  String?
+  note      String?
 }
 
 model GuruAttendance {
-  id          String   @id @default(cuid())
-  guruId      String
-  guru        GuruProfile @relation(fields: [guruId], references: [id])
-  status      AttendanceStatus
-  date        DateTime @default(now())
-  checkIn     DateTime?
-  checkOut    DateTime?
+  id       String           @id @default(cuid())
+  guruId   String
+  guru     GuruProfile      @relation(fields: [guruId], references: [id])
+  status   AttendanceStatus
+  date     DateTime         @default(now())
+  checkIn  DateTime?
+  checkOut DateTime?
 }
 
 enum AttendanceStatus {
@@ -387,28 +426,28 @@ model Announcement {
   content   String
   schoolId  String
   school    School   @relation(fields: [schoolId], references: [id])
-  target    Role[]   // Who can see this
+  target    Role[] // Who can see this
   createdAt DateTime @default(now())
 }
 
 model Message {
-  id          String   @id @default(cuid())
-  content     String
-  senderId    String
-  sender      User     @relation("SentMessages", fields: [senderId], references: [id])
-  receiverId  String
-  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  content    String
+  senderId   String
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
 }
 
 model Forum {
-  id        String   @id @default(cuid())
+  id        String      @id @default(cuid())
   title     String
   classId   String
-  class     Class    @relation(fields: [classId], references: [id])
+  class     Class       @relation(fields: [classId], references: [id])
   posts     ForumPost[]
-  createdAt DateTime @default(now())
+  createdAt DateTime    @default(now())
 }
 
 model ForumPost {
@@ -425,16 +464,16 @@ model ForumPost {
 // -----------------------------------------
 
 model Payment {
-  id            String   @id @default(cuid())
-  amount        Float
-  description   String
-  status        PaymentStatus @default(PENDING)
-  externalId    String?  @unique // Midtrans Order ID
-  checkoutUrl   String?
-  schoolId      String
-  school        School   @relation(fields: [schoolId], references: [id])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String        @id @default(cuid())
+  amount      Float
+  description String
+  status      PaymentStatus @default(PENDING)
+  externalId  String?       @unique // Midtrans Order ID
+  checkoutUrl String?
+  schoolId    String
+  school      School        @relation(fields: [schoolId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 enum PaymentStatus {
@@ -443,6 +482,7 @@ enum PaymentStatus {
   EXPIRED
   FAILED
 }
+
 model Event {
   id          String   @id @default(cuid())
   title       String
@@ -454,4 +494,36 @@ model Event {
   school      School   @relation(fields: [schoolId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------------------
+// Teaching Logs & Lesson Plans (RPP)
+// -----------------------------------------
+
+model LessonPlan {
+  id          String      @id @default(cuid())
+  title       String
+  description String?     @db.Text
+  fileUrl     String // Path to RPP/Modul document
+  subjectId   String
+  subject     Subject     @relation(fields: [subjectId], references: [id])
+  teacherId   String
+  teacher     GuruProfile @relation(fields: [teacherId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model TeachingLog {
+  id          String      @id @default(cuid())
+  date        DateTime    @default(now())
+  topic       String // Topik Bahasan / Bab Pelajaran
+  notes       String?     @db.Text // Catatan kegiatan kelas
+  classId     String
+  class       Class       @relation(fields: [classId], references: [id])
+  subjectId   String
+  subject     Subject     @relation(fields: [subjectId], references: [id])
+  teacherId   String
+  teacher     GuruProfile @relation(fields: [teacherId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }

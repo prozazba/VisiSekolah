@@ -1,0 +1,8 @@
+[
+  { "id": "1", "name": "Kurikulum & Akademik", "code": "CURR", "desc": "Departemen yang mengatur perencanaan kurikulum dan modul ajar." },
+  { "id": "2", "name": "Kesiswaan", "code": "STUD", "desc": "Departemen yang mengurusi aktivitas kesiswaan dan ekstrakurikuler." },
+  { "id": "3", "name": "Sains & Matematika (STEM)", "code": "STEM", "desc": "Departemen pengampu bidang studi Sains, Fisika, Kimia, Biologi, dan Matematika." },
+  { "id": "4", "name": "Bahasa & Literasi", "code": "LANG", "desc": "Departemen pengampu mata pelajaran Bahasa Indonesia, Bahasa Inggris, dan Sastra." },
+  { "id": "5", "name": "Sarana & Prasarana", "code": "FACI", "desc": "Departemen pengelola fasilitas sekolah dan prasarana belajar." },
+  { "id": "6", "name": "Hubungan Masyarakat", "code": "PR", "desc": "Departemen humas sekolah dan kemitraan eksternal." }
+]

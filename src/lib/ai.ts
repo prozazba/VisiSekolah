@@ -83,9 +83,10 @@ ${text}`;
 export async function enhanceContent(text: string): Promise<string> {
   if (!GEMINI_API_KEY) return text;
 
-  const prompt = `Enhance the following text to make it more professional and engaging for a school community.
+  const prompt = `Perbaiki dan buat teks berikut menjadi lebih profesional, menarik, dan sesuai untuk komunitas sekolah (guru, staf, orang tua, dan siswa).
+Harap berikan respons menggunakan Bahasa Indonesia yang baik dan benar.
 
-Text:
+Teks:
 ${text}`;
 
   try {
@@ -104,5 +105,64 @@ ${text}`;
   } catch {
     // Return original text on any failure
     return text;
+  }
+}
+
+/**
+ * AI Assistant for Teachers and Staff.
+ */
+export async function askAssistant(prompt: string, context: string = ""): Promise<string> {
+  if (!GEMINI_API_KEY) return "AI Assistant tidak tersedia karena API key belum diatur.";
+
+  const fullPrompt = `Anda adalah Asisten Cerdas untuk sistem manajemen sekolah (VisiSekolah). Tugas Anda adalah membantu guru dan staf administrasi dengan pertanyaan atau tugas operasional sekolah.
+Harap berikan respons menggunakan Bahasa Indonesia yang profesional, jelas, dan solutif.
+
+Konteks Sistem/Data (Jika ada):
+${context}
+
+Pertanyaan/Tugas:
+${prompt}`;
+
+  try {
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }] }),
+    });
+
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak dapat memproses permintaan Anda saat ini.";
+  } catch {
+    return "Terjadi kesalahan saat menghubungi layanan AI Assistant.";
+  }
+}
+
+/**
+ * Generate Report Phrasing using AI.
+ */
+export async function generateReport(data: any, reportType: string): Promise<string> {
+  if (!GEMINI_API_KEY) return "AI Generator tidak tersedia karena API key belum diatur.";
+
+  const prompt = `Anda adalah Asisten Cerdas di sistem sekolah yang bertugas menyusun laporan atau redaksi tulisan secara otomatis berdasarkan data mentah.
+Harap berikan respons menggunakan Bahasa Indonesia yang formal, terstruktur, dan cocok untuk pelaporan resmi.
+
+Jenis Laporan: ${reportType}
+
+Data:
+${JSON.stringify(data, null, 2)}
+
+Susunlah redaksi laporan yang mudah dipahami dan profesional berdasarkan data di atas.`;
+
+  try {
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+    });
+
+    const dataResp = await response.json();
+    return dataResp.candidates?.[0]?.content?.parts?.[0]?.text || "Gagal menghasilkan laporan.";
+  } catch {
+    return "Terjadi kesalahan saat menghasilkan laporan.";
   }
 }

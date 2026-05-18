@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { useState, useEffect } from 'react';
 import styles from '@/styles/dashboard-v2.module.scss';
 import { 
@@ -14,10 +16,16 @@ import {
   ShieldCheck,
   UserCheck,
   RefreshCcw,
-  AlertCircle
+  AlertCircle,
+  Edit2,
+  Trash2,
+  Ban,
+  UserCog
 } from 'lucide-react';
 import AddUserModal from '@/components/AddUserModal';
-import { getUsersByRole } from '@/app/actions/users';
+import EditUserModal from '@/components/EditUserModal';
+import { getUsersByRole, deleteUser, updateUser } from '@/app/actions/users';
+import { checkAuthStatus } from '@/app/actions/auth';
 
 type UserRole = 'GURU' | 'SISWA' | 'ORANG_TUA' | 'SCHOOL_ADMIN';
 
@@ -27,6 +35,14 @@ export default function UserManagementPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [editingUser, setEditingUser] = useState<any>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    checkAuthStatus().then(session => setCurrentUser(session));
+  }, []);
 
   const tabs = [
     { id: 'SISWA', label: 'Students', icon: <GraduationCap size={18} /> },
@@ -119,10 +135,12 @@ export default function UserManagementPage() {
               {filteredUsers.map((user) => (
                 <UserRow 
                   key={user.id}
-                  name={user.name} 
-                  email={user.email} 
-                  date={new Date(user.createdAt).toLocaleDateString()} 
-                  status="Active" 
+                  user={user}
+                  currentUser={currentUser}
+                  onRefresh={fetchUsers}
+                  onViewAction={(userId: string) => {
+                    router.push(`/admin/users/${userId}`);
+                  }}
                 />
               ))}
             </tbody>
@@ -141,41 +159,125 @@ export default function UserManagementPage() {
         onCloseAction={() => setIsModalOpen(false)} 
         refreshDataAction={fetchUsers} 
       />
+
+      <EditUserModal 
+        isOpen={isEditModalOpen} 
+        user={editingUser}
+        onCloseAction={() => setIsEditModalOpen(false)} 
+        refreshDataAction={fetchUsers} 
+      />
     </div>
   );
 }
 
-function UserRow({ name, email, date, status }: any) {
+function UserRow({ user, currentUser, onRefresh, onViewAction }: any) {
+  const [showMenu, setShowMenu] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const isSuperAdmin = currentUser?.role === 'SUPER_ADMIN';
+  const isSelf = currentUser?.userId === user.id;
+
+  const roleLabels: any = {
+    'SUPER_ADMIN': 'Super Admin',
+    'SCHOOL_ADMIN': 'Admin / Staff',
+    'GURU': 'Guru / Teacher',
+    'SISWA': 'Siswa / Student',
+    'ORANG_TUA': 'Orang Tua / Parent',
+  };
+
+  const canShowMenu = isSuperAdmin || isSelf;
+
+  const handleDelete = async () => {
+    if (confirm(`Anda yakin ingin menghapus akun ${user.name}? Data tidak dapat dikembalikan.`)) {
+      setIsDeleting(true);
+      await deleteUser(user.id);
+      setIsDeleting(false);
+      onRefresh();
+    }
+  };
+
+  const handleViewDetail = () => {
+    onViewAction(user.id);
+    setShowMenu(false);
+  };
+
+  const handleSuspend = () => {
+    alert("Fitur Suspend membutuhkan penambahan kolom status pada skema database.");
+  };
+
   return (
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '1.25rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{ width: '44px', height: '44px', borderRadius: '14px', background: '#f1f0ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#6366f1' }}>
-            {name?.charAt(0)}
+            {user.name?.charAt(0)}
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '0.9375rem' }}>{name}</div>
-            <div style={{ fontSize: '0.75rem', color: '#8c8e91' }}>Registered Member</div>
+            <div style={{ fontWeight: 700, fontSize: '0.9375rem' }}>{user.name}</div>
+            <div style={{ fontSize: '0.75rem', color: '#8c8e91' }}>{roleLabels[user.role] || 'Registered Member'}</div>
           </div>
         </div>
       </td>
       <td style={{ padding: '1.25rem 2rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8125rem', color: '#64748b' }}>
-            <Mail size={14} /> {email}
+            <Mail size={14} /> {user.email}
           </div>
+          {user.phone && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8125rem', color: '#64748b' }}>
+              <Phone size={14} /> {user.phone}
+            </div>
+          )}
+          {user.role === 'SISWA' && user.siswaProfile?.nisn && (
+            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>NISN: {user.siswaProfile.nisn}</div>
+          )}
+          {user.role === 'GURU' && user.guruProfile?.nip && (
+            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>NIP: {user.guruProfile.nip}</div>
+          )}
+          {user.role === 'GURU' && user.guruProfile?.position && (
+            <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>{user.guruProfile.position}</div>
+          )}
         </div>
       </td>
-      <td style={{ padding: '1.25rem 2rem', fontWeight: 600, fontSize: '0.875rem' }}>{date}</td>
+      <td style={{ padding: '1.25rem 2rem', fontWeight: 600, fontSize: '0.875rem' }}>{new Date(user.createdAt).toLocaleDateString()}</td>
       <td style={{ padding: '1.25rem 2rem' }}>
-        <div className={`${styles.badge} ${status === 'Active' ? styles.success : styles.error}`}>
-          {status}
+        <div className={`${styles.badge} ${styles.success}`}>
+          Active
         </div>
       </td>
-      <td style={{ padding: '1.25rem 2rem', textAlign: 'right' }}>
-        <button style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
-          <MoreVertical size={18} />
-        </button>
+      <td style={{ padding: '1.25rem 2rem', textAlign: 'right', position: 'relative' }}>
+        {canShowMenu && (
+          <>
+            <button onClick={() => setShowMenu(!showMenu)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+              <MoreVertical size={18} />
+            </button>
+            
+            {showMenu && (
+              <div style={{ position: 'absolute', right: '3rem', top: '1.25rem', background: 'white', borderRadius: '12px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', zIndex: 10, width: '180px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {isSuperAdmin && !isSelf && (
+                    <>
+                      <button onClick={handleViewDetail} className={styles.menuItem} style={{ padding: '12px 16px', border: 'none', background: 'white', textAlign: 'left', fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#475569' }}>
+                        <UserCog size={16} /> Lihat Detail
+                      </button>
+                      <button onClick={handleSuspend} className={styles.menuItem} style={{ padding: '12px 16px', border: 'none', background: 'white', textAlign: 'left', fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#f59e0b' }}>
+                        <Ban size={16} /> Suspend
+                      </button>
+                      <button onClick={handleDelete} disabled={isDeleting} className={styles.menuItem} style={{ padding: '12px 16px', border: 'none', background: 'white', textAlign: 'left', fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#ef4444' }}>
+                        {isDeleting ? <RefreshCcw size={16} className={styles.spin} /> : <Trash2 size={16} />} 
+                        {isDeleting ? 'Deleting...' : 'Delete'}
+                      </button>
+                    </>
+                  )}
+                  {isSelf && (
+                    <button onClick={handleViewDetail} className={styles.menuItem} style={{ padding: '12px 16px', border: 'none', background: 'white', textAlign: 'left', fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#10b981' }}>
+                      <UserCog size={16} /> Update Profile
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </td>
     </tr>
   );

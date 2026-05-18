@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Academic Lifecycle Workflow Review - VisiSekolah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      font-size: 14px;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 0;
+      margin-bottom: 8px;
+      border-bottom: 2px solid #6366f1;
+      padding-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #475569;
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid #e2e8f0;
+      margin: 20px 0;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+    pre code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+      font-size: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    th {
+      background-color: #f8fafc;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    tr:hover {
+      background-color: #f8fafc;
+    }
+    ul {
+      margin-top: 0;
+      margin-bottom: 16px;
+      padding-left: 20px;
+      color: #475569;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    
+    /* Alert / Blockquote styling */
+    .alert {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      border-left: 4px solid;
+    }
+    .alert-note {
+      background-color: #eff6ff;
+      border-color: #3b82f6;
+      color: #1e3a8a;
+    }
+    .alert-tip {
+      background-color: #ecfdf5;
+      border-color: #10b981;
+      color: #064e3b;
+    }
+    .alert-important {
+      background-color: #fef2f2;
+      border-color: #ef4444;
+      color: #7f1d1d;
+    }
+    .alert-icon {
+      font-weight: bold;
+      display: inline-block;
+    }
+    .alert-note .alert-icon::before { content: "ℹ️"; }
+    .alert-tip .alert-icon::before { content: "💡"; }
+    .alert-important .alert-icon::before { content: "🚨"; }
+    .alert-content {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* Mermaid diagrams custom render in PDF print */
+    .mermaid {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      border: 1px solid #e2e8f0;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ 
+      startOnLoad: true, 
+      theme: 'default',
+      flowchart: { useMaxWidth: true, htmlLabels: true }
+    });
+  </script>
+</head>
+<body>
+  <div style="margin-bottom: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; font-weight: 700;">
+    Laporan Tinjauan Teknis & Realisasi Sistem
+  </div>
+  <h1>Academic Lifecycle Workflow Review & Alignment</h1>
+<ul>
+<li><em>VisiSekolah Enterprise School Management System</em>*</li>
+</ul>
+<p>This artifact provides a comprehensive review of the academic lifecycle workflow requested by the <strong>ADMIN</strong> and <strong>TEACHER</strong> roles, highlighting how the current database models, server actions, and endpoints fully align with the requested business steps.</p>
+<hr>
+<h2>1. Lifecycle Step Mapping & Alignment</h2>
+<p>The table below maps the 9 requested business steps to their respective technical implementation in the VisiSekolah platform, detailing the database entities, APIs/Server Actions, and current status.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Business Action</th>
+<th>Role</th>
+<th>Technical Implementation (VisiSekolah Platform)</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[1]</strong></td>
+<td>Create Curriculum</td>
+<td><strong>ADMIN</strong></td>
+<td><code>POST /api/curriculum</code> & <code>getAcademicTerms</code> / <code>upsertAcademicRecord</code> <br/> <em>Database Model:</em> <code>AcademicTerm</code></td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[2a]</strong></td>
+<td>Register Teacher</td>
+<td><strong>ADMIN</strong></td>
+<td><code>POST /api/teachers</code> & <code>createUser</code> (with role <code>GURU</code>) <br/> <em>Database Model:</em> <code>GuruProfile</code></td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[2b]</strong></td>
+<td>Register Student</td>
+<td><strong>ADMIN</strong></td>
+<td><code>POST /api/students</code> & <code>createUser</code> (with role <code>SISWA</code>) <br/> <em>Database Model:</em> <code>SiswaProfile</code></td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[3a]</strong></td>
+<td>Assign Teacher to Class</td>
+<td><strong>ADMIN</strong></td>
+<td><code>assignHomeroomToGuru</code> & <code>Class.teacherId</code></td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[3b]</strong></td>
+<td>Assign Teacher to Subject</td>
+<td><strong>ADMIN</strong></td>
+<td><code>assignSubjectToGuru</code> & <code>GuruProfile</code> ↔ <code>Subject</code> (M-to-M relation)</td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[3c]</strong></td>
+<td>Assign Student to Class</td>
+<td><strong>ADMIN</strong></td>
+<td><code>PATCH /api/students/:id/class</code> & <code>updateUser</code> (persists <code>SiswaProfile.classId</code>)</td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[4]</strong></td>
+<td>Upload Lesson Plan (RPP)</td>
+<td><strong>TEACHER</strong></td>
+<td><code>POST /api/lesson-plans</code> <br/> <em>Database Model:</em> <code>LessonPlan</code> (New model created!)</td>
+<td><strong>REALIGNED & ENHANCED</strong></td>
+</tr>
+<tr>
+<td><strong>[5]</strong></td>
+<td>Conduct Teaching & Log</td>
+<td><strong>TEACHER</strong></td>
+<td><code>POST /api/teaching-log</code> <br/> <em>Database Model:</em> <code>TeachingLog</code> (New model created!)</td>
+<td><strong>REALIGNED & ENHANCED</strong></td>
+</tr>
+<tr>
+<td><strong>[6]</strong></td>
+<td>Create Assessment & Score</td>
+<td><strong>TEACHER</strong></td>
+<td><code>POST /api/scores</code> & <code>upsertGrade</code> server action <br/> <em>Database Model:</em> <code>Grade</code> (Types: UTS, UAS, Tugas, Kuis)</td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[7]</strong></td>
+<td>Calculate Final Score</td>
+<td><strong>SYSTEM</strong></td>
+<td>Aggregates and calculates <code>averageScore</code> and <code>ranking</code> inside <code>AcademicRecord</code></td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[8]</strong></td>
+<td>Publish Report Card</td>
+<td><strong>SYSTEM</strong></td>
+<td>Generates Buku Rapor via <code>AcademicRecord</code> list and grades overview</td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+<tr>
+<td><strong>[9]</strong></td>
+<td>View Report Card</td>
+<td><strong>STUDENT/PARENT</strong></td>
+<td>Student and Linked Parent dashboards display the performance logs</td>
+<td><strong>FULLY ALIGNED</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>2. Realignment & Schema Enhancements</h2>
+<p>To fully support the requested flow, we have successfully expanded the Prisma Database schema to add two critical models that represent the teacher's lesson planning and class activity logs:</p>
+<h3>2.1 LessonPlan Model (RPP / Modul Ajar)</h3>
+<p>Allows teachers to upload, organize, and map their Lesson Plans to specific subjects.</p>
+<pre><code class="language-prisma">model LessonPlan {
+  id          String      @id @default(cuid())
+  title       String
+  description String?     @db.Text
+  fileUrl     String      // URL/Path to uploaded document
+  subjectId   String
+  subject     Subject     @relation(fields: [subjectId], references: [id])
+  teacherId   String
+  teacher     GuruProfile @relation(fields: [teacherId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+</code></pre>
+<h3>2.2 TeachingLog Model (Jurnal Kegiatan Kelas)</h3>
+<p>Allows teachers to log concrete teaching logs, including date, topic discussed, and class observations/notes.</p>
+<pre><code class="language-prisma">model TeachingLog {
+  id          String      @id @default(cuid())
+  date        DateTime    @default(now())
+  topic       String      // Topik Bahasan / Bab Pelajaran
+  notes       String?     @db.Text // Catatan kegiatan kelas
+  classId     String
+  class       Class       @relation(fields: [classId], references: [id])
+  subjectId   String
+  subject     Subject     @relation(fields: [subjectId], references: [id])
+  teacherId   String
+  teacher     GuruProfile @relation(fields: [teacherId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+</code></pre>
+<hr>
+<h2>3. Concrete Action Plan & Endpoints Mapping</h2>
+<p>To ensure developers and system APIs integrate perfectly, the following standard endpoint mapping has been aligned with VisiSekolah's Server Actions:</p>
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    actor Admin
+    actor Teacher
+    actor StudentParent as Student / Parent
+    participant DB as Prisma Database
+
+    %% Admin Setup
+    Note over Admin, DB: Phase 1: Setup & Registration
+    Admin->>DB: POST /api/curriculum (Create Academic Term)
+    Admin->>DB: POST /api/teachers (Create User & GuruProfile)
+    Admin->>DB: POST /api/students (Create User & SiswaProfile)
+    Admin->>DB: POST /api/classes (Create Class Room)
+    Admin->>DB: PATCH /api/students/:id/class (Assign Student to Class)
+    Admin->>DB: POST /api/teacher-assignments (Link subject/class to Guru)
+
+    %% Teacher Planning & Activity
+    Note over Teacher, DB: Phase 2: Instruction & Logs
+    Teacher->>DB: GET /api/assigned-subjects (Fetch Taught subjects)
+    Teacher->>DB: POST /api/lesson-plans (Upload RPP / Syllabus)
+    Teacher->>DB: POST /api/teaching-log (Log teaching topic & notes)
+    Teacher->>DB: GET /api/class-students (List class member students)
+
+    %% Grading & Reporting
+    Note over Teacher, DB: Phase 3: Assessments & Reports
+    Teacher->>DB: POST /api/scores (Input UTS/UAS/Tugas scores)
+    DB->>DB: SYSTEM: Aggregate average score & rank on AcademicRecord
+    StudentParent->>DB: GET /api/reports/:student_id (View report card)
+</pre>
+<h3>3.1 Server Action & Route Alignments</h3>
+<ul>
+<li><strong>ADMIN registering teacher</strong>: Handled by the <code>createUser</code> server action in <a href="file:///c:/Users/guest1/Documents/__KOMITE__/VisiSekolah/src/app/actions/users.ts">users.ts</a> which automatically maps and spawns a <code>GuruProfile</code>.</li>
+<li><strong>ADMIN assigning teacher</strong>: Supported by <code>assignSubjectToGuru</code> and <code>assignHomeroomToGuru</code> actions.</li>
+<li><strong>TEACHER inputting score</strong>: Supported by the <code>upsertGrade</code> action, which handles score entries by type (UTS, UAS, Tugas, Kuis) and aggregates values directly.</li>
+</ul>
+<hr>
+<h2>4. Panduan Interaktif Langkah demi Langkah (Walkthrough)</h2>
+<p>Berikut adalah panduan operasional langkah-demi-langkah bagi seluruh aktor pengguna sistem, dirinci mulai dari masuk sistem, melengkapi form komponen, hingga peninjauan hasil akhir.</p>
+<h3>Langkah 1: Autentikasi & Login (Masuk Sistem)</h3>
+<ul>
+<li><strong>Aktor</strong>: Semua Pengguna (Admin, Guru, Siswa, Orang Tua)</li>
+<li><strong>Mengisi & Melengkapi Form / Komponen</strong>:</li>
+<li><em>Portal Kredensial</em>: Masuk melalui halaman <code>/login</code> utama.</li>
+<li><em>Email</em>: Gunakan alamat email resmi terdaftar (misal: <code>admin@visisekolah.sch.id</code>).</li>
+<li><em>Kata Sandi</em>: Masukkan kata sandi rahasia akun Anda secara presisi.</li>
+<li><strong>Aksi Submit</strong>: Tekan tombol <strong>"Masuk Sekarang"</strong>. Sistem melakukan autentikasi sesi JWT terenkripsi secara aman.</li>
+<li><strong>Meninjau Hasil Proses</strong>: Anda dialihkan otomatis ke dashboard khusus. Kategori menu sebelah kiri akan menyesuaikan dengan peran Anda (Kepala Sekolah, Admin, Guru, atau Siswa).</li>
+</ul>
+<h3>Langkah 2: Setup Kurikulum & Tahun Ajaran (Admin)</h3>
+<ul>
+<li><strong>Aktor</strong>: Staf Administrator / Kepala Sekolah</li>
+<li><strong>Mengisi & Melengkapi Form / Komponen</strong>:</li>
+<li><em>Menu Akses</em>: Akses menu <strong>Data Akademik</strong> di panel sebelah kiri.</li>
+<li><em>Form Tahun Ajaran</em>: Isi Tahun Pelajaran (misal: <code>2026/2027</code>), Nama Semester (<code>Ganjil</code>/<code>Genap</code>), serta tanggal tenggat.</li>
+<li><em>Komponen Mapel</em>: Klik sub-tab <strong>Mata Pelajaran</strong> untuk mendaftarkan nama dan kode pelajaran baru.</li>
+<li><strong>Aksi Submit</strong>: Klik tombol <strong>"Simpan Tahun Ajaran"</strong> atau <strong>"Tambah Mapel"</strong> pada form.</li>
+<li><strong>Meninjau Hasil Proses</strong>: Status tahun ajaran akan berganti menjadi <strong>"AKTIF"</strong>. Seluruh data ini menjadi basis pengisian jadwal dan penilaian oleh guru pengampu.</li>
+</ul>
+<h3>Langkah 3: Registrasi Pengguna & Pembagian Kelas (Admin)</h3>
+<ul>
+<li><strong>Aktor</strong>: Staf Administrator</li>
+<li><strong>Mengisi & Melengkapi Form / Komponen</strong>:</li>
+<li><em>Pembuatan Akun</em>: Akses <strong>Manajemen User</strong> > Klik <strong>"Tambah User Baru"</strong>. Pilih peran (<code>GURU</code>/<code>SISWA</code>/<code>ORANG TUA</code>).</li>
+<li><em>Melengkapi Detail Guru</em>: Edit profil Guru. Isi NIP, Jabatan, Bidang Studi yang diajarkan, dan status Kelas Binaan (Wali Kelas).</li>
+<li><em>Melengkapi Detail Siswa</em>: Edit profil Siswa. Isi NIS, NISN, pilih Kelas Binaan, dan tautkan ke akun Orang Tua pendamping.</li>
+<li><strong>Aksi Submit</strong>: Tekan tombol <strong>"Simpan Perubahan"</strong> di bagian atas halaman detail profil.</li>
+<li><strong>Meninjau Hasil Proses</strong>: Hubungan relasional otomatis terjalin. Wali Kelas dapat memantau siswanya, Orang Tua dapat memantau rapor anaknya, dan Guru dapat mengajar mata pelajaran terdaftar.</li>
+</ul>
+<h3>Langkah 4: Upload RPP & Log Mengajar Kelas (Guru)</h3>
+<ul>
+<li><strong>Aktor</strong>: Guru Pengampu</li>
+<li><strong>Mengisi & Melengkapi Form / Komponen</strong>:</li>
+<li><em>Form Modul Ajar (RPP)</em>: Pilih mata pelajaran pengampu, isi judul modul ajar, deskripsi bahasan, dan tautkan file PDF perencanaan.</li>
+<li><em>Form Jurnal Harian (Logs)</em>: Pilih kelas, masukkan tanggal mengajar harian, ketik topik pembahasan (bab pelajaran), serta catatan khusus perilaku belajar di kelas.</li>
+<li><strong>Aksi Submit</strong>: Tekan tombol <strong>"Upload RPP"</strong> atau <strong>"Submit Jurnal"</strong>.</li>
+<li><strong>Meninjau Hasil Proses</strong>: Dokumentasi mengajar tersimpan di database. Kepala Sekolah dapat meninjau log keaktifan mengajar secara transparan langsung dari dashboard utama.</li>
+</ul>
+<h3>Langkah 5: Input Nilai Siswa & Evaluasi Rapor (Guru / Wali Kelas)</h3>
+<ul>
+<li><strong>Aktor</strong>: Guru Mata Pelajaran & Wali Kelas</li>
+<li><strong>Mengisi & Melengkapi Form / Komponen</strong>:</li>
+<li><em>Form Nilai Harian</em>: Klik <strong>"Buka Form Nilai"</strong>. Pilih jenis nilai (<code>UTS</code>, <code>UAS</code>, <code>Tugas</code>, <code>Kuis</code>), pilih mata pelajaran, dan isi skor angka (0 - 100).</li>
+<li><em>Form Evaluasi Rapor</em>: Wali Kelas mengisi Form Catatan Wali Kelas (rekomendasi kepribadian, kelakuan, kerajinan) serta status kenaikan kelas.</li>
+<li><strong>Aksi Submit</strong>: Klik tombol <strong>"Simpan Nilai"</strong> atau <strong>"Kirim Evaluasi Rapor"</strong>.</li>
+<li><strong>Meninjau Hasil Proses</strong>: Sistem memverifikasi integritas input nilai. Seluruh nilai langsung terakumulasi pada kartu rekaman akademik siswa tersebut secara terpadu.</li>
+</ul>
+<h3>Langkah 6: Meninjau Hasil Akhir & Cetak Buku Rapor (Siswa / Orang Tua)</h3>
+<ul>
+<li><strong>Aktor</strong>: Siswa, Orang Tua, dan System</li>
+<li><strong>Mengisi & Melengkapi Form / Komponen</strong>:</li>
+<li><em>Proses Otomatis Sistem</em>: Sistem secara otomatis menghitung nilai rata-rata kelas, merangkum rata-rata terbobot mata pelajaran, serta menentukan ranking semester.</li>
+<li><em>Akses Portal Siswa/Wali</em>: Siswa atau Orang Tua masuk ke portal mereka masing-masing dan memilih tab <strong>"Buku Rapor"</strong>.</li>
+<li><strong>Aksi Submit</strong>: Klik tombol <strong>"Cetak Rapor PDF"</strong> untuk menyimpan salinan digital resmi.</li>
+<li><strong>Meninjau Hasil Proses</strong>: Buku Rapor Digital terbit lengkap dengan detail nilai per mata pelajaran, nilai rata-rata, ranking, kehadiran siswa (Sakit, Izin, Alfa), catatan wali kelas, dan validasi Kepala Sekolah.</li>
+</ul>
+<hr>
+<div class="alert alert-tip"><span class="alert-icon"></span><div class="alert-content">Database migrations telah disinkronkan sepenuhnya menggunakan Prisma dengan Neon PostgreSQL adapter. Seluruh data transaksi di atas terisolasi aman per tahun ajaran.</div></div>
+
+</body>
+</html>

@@ -13,7 +13,8 @@ import {
   BookOpen,
   Calendar,
   Megaphone,
-  Languages
+  Languages,
+  HelpCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -37,13 +38,17 @@ export default function AdminLayout({
     { icon: <Calendar size={24} />, href: '/admin/calendar', label: dict.admin.calendar },
     { icon: <Megaphone size={24} />, href: '/admin/announcements', label: dict.admin.announcements },
     { icon: <Settings size={24} />, href: '/admin/settings', label: dict.admin.settings },
+    { icon: <HelpCircle size={24} />, href: '/admin/guide', label: dict.admin.guide },
   ];
 
   return (
     <div className={styles.dashboardWrapper}>
       {/* Shared Sidebar */}
       <aside className={styles.sidebar}>
-        <Link href="/" className={styles.logo} style={{ textDecoration: 'none' }}>V</Link>
+        <Link href="/" className={styles.logo} style={{ textDecoration: 'none' }}>
+          <div style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))', borderRadius: '16px' }}>V</div>
+          <span className={styles.logoText}>VisiSekolah</span>
+        </Link>
         
         {navItems.map((item) => (
           <Link 
@@ -53,6 +58,7 @@ export default function AdminLayout({
             title={item.label}
           >
             {item.icon}
+            <span className={styles.navLabel}>{item.label}</span>
           </Link>
         ))}
         
@@ -64,14 +70,18 @@ export default function AdminLayout({
           style={{ background: 'none', border: 'none', marginBottom: '10px' }}
           title={language === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
         >
-          <div style={{ fontSize: '10px', fontWeight: 'bold', position: 'absolute', top: '5px', right: '5px' }}>
-            {language.toUpperCase()}
+          <div style={{ position: 'relative' }}>
+            <Languages size={24} />
+            <div style={{ fontSize: '10px', fontWeight: 'bold', position: 'absolute', top: '-5px', right: '-8px' }}>
+              {language.toUpperCase()}
+            </div>
           </div>
-          <Languages size={24} />
+          <span className={styles.navLabel}>{language === 'id' ? 'Bahasa (ID)' : 'Language (EN)'}</span>
         </button>
 
         <button onClick={() => logout()} className={styles.navIcon} style={{ background: 'none', border: 'none' }} title={dict.admin.logout}>
           <LogOut size={24} />
+          <span className={styles.navLabel}>{dict.admin.logout}</span>
         </button>
       </aside>
 
