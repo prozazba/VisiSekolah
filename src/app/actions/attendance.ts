@@ -8,6 +8,10 @@ export async function recordAttendance(data: {
   token: string; 
   latitude?: number; 
   longitude?: number;
+  subject?: string;
+  className?: string;
+  teacher?: string;
+  timeStr?: string;
 }) {
   try {
     const session = await verifySession();
@@ -25,7 +29,15 @@ export async function recordAttendance(data: {
       return { error: 'Profil siswa tidak ditemukan.' };
     }
 
-    // Check if attendance already recorded today for this token / class
+    const activeClassName = data.className || 'Unknown Class';
+    const activeSubjectName = data.subject || 'Unknown Subject';
+    const activeTeacherName = data.teacher || 'Unknown Teacher';
+    const activeTimeRange = data.timeStr || 'Unknown Time';
+
+    // Format the note for the database
+    const noteContent = `${activeClassName} | ${activeSubjectName} | ${activeTeacherName} | ${activeTimeRange}`;
+
+    // Check if attendance already recorded today for this student and this specific subject
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
@@ -35,12 +47,14 @@ export async function recordAttendance(data: {
         date: {
           gte: todayStart
         },
-        note: data.token
+        note: {
+          contains: activeSubjectName
+        }
       }
     });
 
     if (existing) {
-      return { success: true, message: 'Kehadiran Anda sudah tercatat sebelumnya.' };
+      return { success: true, message: 'Kehadiran Anda sudah tercatat sebelumnya untuk kelas ini.' };
     }
 
     // Create attendance record
@@ -50,7 +64,7 @@ export async function recordAttendance(data: {
         status: 'HADIR',
         latitude: data.latitude || null,
         longitude: data.longitude || null,
-        note: data.token,
+        note: noteContent,
       }
     });
 
@@ -88,7 +102,8 @@ export async function getTodayAttendance() {
       name: r.student.user.name,
       nisn: r.student.nisn || r.student.nis || 'N/A',
       time: r.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-      status: r.status
+      status: r.status,
+      note: r.note
     }));
   } catch (error) {
     console.error('Failed to fetch today attendance:', error);

@@ -31,9 +31,9 @@ export default function StudentMobileScannerPage() {
     gps_checking: "Detecting your GPS location...",
     gps_verified: "GPS Verified (Within School Radius)",
     gps_error: "Please enable GPS to verify attendance location.",
-    success_title: "Attendance Recorded!",
-    success_desc: "Congratulations! Your attendance has been successfully recorded in the server.",
-    scan_btn: "Start Scanning",
+    success_title: "Kehadiran Berhasil!",
+    success_desc: "Selamat! Kehadiran Anda telah dicatat di database server sekolah.",
+    scan_btn: "Mulai Pemindaian",
     simulate_btn: "Simulate Camera & Scan",
     mock_gps: "Detected Coordinates",
     change_subject: "Back to Home"
@@ -60,8 +60,47 @@ export default function StudentMobileScannerPage() {
   const [recordingPending, setRecordingPending] = useState(false);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
 
+  // Dynamic Class details parsed from URL/QR params
+  const [activeClassName, setActiveClassName] = useState<string>('Kelas 10 - A');
+  const [activeSubjectName, setActiveSubjectName] = useState<string>('Mathematics - Advanced Calculus');
+  const [activeTeacherName, setActiveTeacherName] = useState<string>('Budi Santoso, M.Pd.');
+  const [activeTimeRange, setActiveTimeRange] = useState<string>('09:30 AM - 11:00 AM');
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+
+  // Parse query parameters from scanned QR code data
+  const parseScannedData = (data: string) => {
+    try {
+      let searchStr = '';
+      if (data.startsWith('http://') || data.startsWith('https://')) {
+        const url = new URL(data);
+        searchStr = url.search;
+      } else if (data.includes('?')) {
+        searchStr = data.substring(data.indexOf('?'));
+      } else if (data.includes('&') || data.includes('=')) {
+        searchStr = '?' + data;
+      }
+
+      if (searchStr) {
+        const params = new URLSearchParams(searchStr);
+        const urlClass = params.get('class');
+        const urlSubject = params.get('subject');
+        const urlTeacher = params.get('teacher');
+        const urlTime = params.get('time');
+
+        return {
+          className: urlClass || undefined,
+          subject: urlSubject || undefined,
+          teacher: urlTeacher || undefined,
+          timeStr: urlTime || undefined
+        };
+      }
+    } catch (e) {
+      console.warn("Failed to parse scanned QR data:", e);
+    }
+    return null;
+  };
 
   // Initialize and check active session
   useEffect(() => {
@@ -72,11 +111,26 @@ export default function StudentMobileScannerPage() {
       if (sess) {
         getGpsCoordinates();
         
-        // Auto check for URL token parameter
+        // Auto check for URL parameters on mount
         const params = new URLSearchParams(window.location.search);
         const urlToken = params.get('token');
+        const urlClass = params.get('class');
+        const urlSubject = params.get('subject');
+        const urlTeacher = params.get('teacher');
+        const urlTime = params.get('time');
+
+        if (urlClass) setActiveClassName(urlClass);
+        if (urlSubject) setActiveSubjectName(urlSubject);
+        if (urlTeacher) setActiveTeacherName(urlTeacher);
+        if (urlTime) setActiveTimeRange(urlTime);
+
         if (urlToken) {
-          handleAutoRecordAttendance(urlToken);
+          handleAutoRecordAttendance(urlToken, {
+            className: urlClass || undefined,
+            subject: urlSubject || undefined,
+            teacher: urlTeacher || undefined,
+            timeStr: urlTime || undefined
+          });
         }
       }
     }
@@ -113,11 +167,15 @@ export default function StudentMobileScannerPage() {
   };
 
   // Handle auto attendance when a token is passed via URL query
-  const handleAutoRecordAttendance = async (token: string) => {
+  const handleAutoRecordAttendance = async (token: string, metadata?: {
+    className?: string;
+    subject?: string;
+    teacher?: string;
+    timeStr?: string;
+  }) => {
     setRecordingPending(true);
     setAttendanceError(null);
     try {
-      // Get current GPS coords if available
       let lat = -6.2088;
       let lng = 106.8456;
       
@@ -126,8 +184,21 @@ export default function StudentMobileScannerPage() {
         lng = gpsCoords.lng;
       }
 
+      const finalClass = metadata?.className || activeClassName;
+      const finalSubject = metadata?.subject || activeSubjectName;
+      const finalTeacher = metadata?.teacher || activeTeacherName;
+      const finalTime = metadata?.timeStr || activeTimeRange;
+
       const { recordAttendance } = await import('@/app/actions/attendance');
-      const res = await recordAttendance({ token, latitude: lat, longitude: lng });
+      const res = await recordAttendance({ 
+        token, 
+        latitude: lat, 
+        longitude: lng,
+        className: finalClass,
+        subject: finalSubject,
+        teacher: finalTeacher,
+        timeStr: finalTime
+      });
       if (res.success) {
         setScannedData(token);
         setScanSuccess(true);
@@ -162,8 +233,23 @@ export default function StudentMobileScannerPage() {
         // Check if there is an active QR token in the URL after login
         const params = new URLSearchParams(window.location.search);
         const urlToken = params.get('token');
+        const urlClass = params.get('class');
+        const urlSubject = params.get('subject');
+        const urlTeacher = params.get('teacher');
+        const urlTime = params.get('time');
+
+        if (urlClass) setActiveClassName(urlClass);
+        if (urlSubject) setActiveSubjectName(urlSubject);
+        if (urlTeacher) setActiveTeacherName(urlTeacher);
+        if (urlTime) setActiveTimeRange(urlTime);
+
         if (urlToken) {
-          handleAutoRecordAttendance(urlToken);
+          handleAutoRecordAttendance(urlToken, {
+            className: urlClass || undefined,
+            subject: urlSubject || undefined,
+            teacher: urlTeacher || undefined,
+            timeStr: urlTime || undefined
+          });
         }
       } else {
         setLoginError(res.message || 'Login gagal.');
@@ -197,13 +283,21 @@ export default function StudentMobileScannerPage() {
         
         // Auto resolve scan after 3 seconds for gorgeous flow simulation
         setTimeout(() => {
-          handleSuccessScan("visisekolah-token-10-A-Mathematics-Calculus");
+          // If we have URL parameters currently, we pass the active URL token to simulation,
+          // otherwise we fall back to a beautifully formatted token query param!
+          const activeParams = new URLSearchParams(window.location.search);
+          const currentToken = activeParams.get('token');
+          if (currentToken) {
+            handleSuccessScan(window.location.href);
+          } else {
+            handleSuccessScan("visisekolah-token&class=Kelas%2010%20-%20A&subject=Physics%20-%20Quantum%20Mechanics&teacher=Dr.%20Sarah%20Wijaya&time=09%3A30%20AM%20-%2011%3A00%20AM");
+          }
         }, 3000);
       } else {
         setHasCameraPermission(false);
         // Fallback simulated camera automatically starts
         setTimeout(() => {
-          handleSuccessScan("visisekolah-token-10-A-Mathematics-Calculus");
+          handleSuccessScan("visisekolah-token&class=Kelas%2010%20-%20A&subject=Physics%20-%20Quantum%20Mechanics&teacher=Dr.%20Sarah%20Wijaya&time=09%3A30%20AM%20-%2011%3A00%20AM");
         }, 3000);
       }
     } catch (err) {
@@ -211,7 +305,7 @@ export default function StudentMobileScannerPage() {
       setHasCameraPermission(false);
       // Fallback simulated camera automatically starts
       setTimeout(() => {
-        handleSuccessScan("visisekolah-token-10-A-Mathematics-Calculus");
+        handleSuccessScan("visisekolah-token&class=Kelas%2010%20-%20A&subject=Physics%20-%20Quantum%20Mechanics&teacher=Dr.%20Sarah%20Wijaya&time=09%3A30%20AM%20-%2011%3A00%20AM");
       }, 3000);
     }
   };
@@ -246,12 +340,29 @@ export default function StudentMobileScannerPage() {
       console.log("Audio feedback not supported or blocked");
     }
 
+    // Try parsing the scanned QR string
+    const parsedMeta = parseScannedData(data);
+    const finalClass = parsedMeta?.className || activeClassName;
+    const finalSubject = parsedMeta?.subject || activeSubjectName;
+    const finalTeacher = parsedMeta?.teacher || activeTeacherName;
+    const finalTime = parsedMeta?.timeStr || activeTimeRange;
+
+    // Save values to state so they render correctly in the success card
+    if (parsedMeta?.className) setActiveClassName(parsedMeta.className);
+    if (parsedMeta?.subject) setActiveSubjectName(parsedMeta.subject);
+    if (parsedMeta?.teacher) setActiveTeacherName(parsedMeta.teacher);
+    if (parsedMeta?.timeStr) setActiveTimeRange(parsedMeta.timeStr);
+
     try {
       const { recordAttendance } = await import('@/app/actions/attendance');
       const res = await recordAttendance({
         token: data,
         latitude: gpsCoords?.lat || undefined,
-        longitude: gpsCoords?.lng || undefined
+        longitude: gpsCoords?.lng || undefined,
+        className: finalClass,
+        subject: finalSubject,
+        teacher: finalTeacher,
+        timeStr: finalTime
       });
       if (res.success) {
         setScanSuccess(true);
@@ -543,18 +654,37 @@ export default function StudentMobileScannerPage() {
                 
                 <div style={{
                   background: '#1e293b',
-                  padding: '12px 16px',
+                  padding: '16px',
                   borderRadius: '16px',
                   width: '100%',
                   fontSize: '0.8125rem',
                   color: '#cbd5e1',
                   border: '1px solid #334155',
-                  textAlign: 'left'
+                  textAlign: 'left',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
                 }}>
-                  <div style={{ fontWeight: 700, color: '#3b82f6', marginBottom: '4px' }}>Mata Pelajaran:</div>
-                  <div>Mathematics - Advanced Calculus (Kelas 10-A)</div>
-                  <div style={{ fontWeight: 700, color: '#3b82f6', margin: '8px 0 4px' }}>Waktu Presensi:</div>
-                  <div>{new Date().toLocaleTimeString()}</div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: '#3b82f6', marginBottom: '2px' }}>Mata Pelajaran:</div>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{activeSubjectName}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: '#3b82f6', marginBottom: '2px' }}>Nama Kelas:</div>
+                    <div>Kelas {activeClassName}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: '#3b82f6', marginBottom: '2px' }}>Guru Pengampu:</div>
+                    <div>{activeTeacherName}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: '#3b82f6', marginBottom: '2px' }}>Jadwal / Jam Kelas:</div>
+                    <div>{activeTimeRange}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: '#3b82f6', marginBottom: '2px' }}>Waktu Presensi:</div>
+                    <div style={{ color: '#22c55e', fontWeight: 700 }}>{new Date().toLocaleTimeString()}</div>
+                  </div>
                 </div>
 
                 <button
@@ -564,7 +694,7 @@ export default function StudentMobileScannerPage() {
                     setAttendanceError(null);
                   }}
                   style={{
-                    marginTop: '2.5rem',
+                    marginTop: '2rem',
                     padding: '12px 24px',
                     borderRadius: '12px',
                     background: 'none',

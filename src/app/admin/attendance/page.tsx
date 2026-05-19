@@ -81,22 +81,43 @@ export default function QrAttendancePage() {
       const realAttendees = await getTodayAttendance();
       
       setAttendees(prev => {
+        // Construct standard high-fidelity mock data corresponding to the selected class/subject
         const mockData = [
-          { id: '1', name: 'Oliver James', nisn: '00982312', time: '10:31 AM', status: 'HADIR' },
-          { id: '2', name: 'Sophia Garcia', nisn: '00982544', time: '10:33 AM', status: 'HADIR' }
+          { id: 'mock-1', name: 'Oliver James', nisn: '00982312', time: '10:31 AM', status: 'HADIR', note: `${selectedClass} | ${selectedSubject}` },
+          { id: 'mock-2', name: 'Sophia Garcia', nisn: '00982544', time: '10:33 AM', status: 'HADIR', note: `${selectedClass} | ${selectedSubject}` }
         ];
 
-        // Filter out any mock attendees if the real attendee NISN matches
-        const uniqueReal = realAttendees.map(r => ({
+        // Format and map real database attendees
+        const formattedReal = realAttendees.map(r => ({
           id: r.id,
           name: r.name,
           nisn: r.nisn,
           time: r.time,
-          status: r.status
+          status: r.status,
+          note: r.note || ''
         }));
 
-        const filteredMock = mockData.filter(m => !uniqueReal.some(r => r.nisn === m.nisn));
-        return [...uniqueReal, ...filteredMock];
+        // Filter: Show only attendees that match the currently selected Class and Subject!
+        const allData = [...formattedReal, ...mockData];
+        
+        const filteredData = allData.filter(item => {
+          if (!item.note) return false;
+          // Check if item's note contains BOTH the selected class name and the selected subject name
+          const matchClass = item.note.toLowerCase().includes(selectedClass.toLowerCase());
+          const matchSubject = item.note.toLowerCase().includes(selectedSubject.toLowerCase()) || 
+                               item.note.toLowerCase().includes(selectedSubject.split(' - ')[0].toLowerCase());
+          return matchClass && matchSubject;
+        });
+
+        // Ensure unique NISN list to prevent duplicates
+        const uniqueList: typeof filteredData = [];
+        filteredData.forEach(item => {
+          if (!uniqueList.some(u => u.nisn === item.nisn)) {
+            uniqueList.push(item);
+          }
+        });
+
+        return uniqueList;
       });
     } catch (err) {
       console.error("Failed to fetch database attendees:", err);
@@ -112,7 +133,7 @@ export default function QrAttendancePage() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedClass, selectedSubject]);
 
   // Student scanning state
   const [gpsLoading, setGpsLoading] = useState(false);
@@ -120,18 +141,29 @@ export default function QrAttendancePage() {
   const [scanSuccess, setScanSuccess] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
 
+  // Helper function to build dynamic token with full active class metadata
+  const buildQrToken = () => {
+    const teacherName = selectedSubject.includes('Quantum') 
+      ? 'Dr. Sarah Wijaya' 
+      : (selectedSubject.includes('Calculus') ? 'Budi Santoso, M.Pd.' : 'Dra. Endang Sri');
+    const timeStr = '09:30 AM - 11:00 AM';
+    
+    // Build query-param structured token
+    return `visisekolah-token&class=${encodeURIComponent(selectedClass)}&subject=${encodeURIComponent(selectedSubject)}&teacher=${encodeURIComponent(teacherName)}&time=${encodeURIComponent(timeStr)}&ts=${Date.now()}`;
+  };
+
   // Auto-generate unique token and cycle QR Code every 10 seconds to simulate anti-fraud features
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isSessionActive) {
       // Set initial token
-      setQrToken(`visisekolah-token-${selectedClass.replace(/\s+/g, '')}-${Date.now()}`);
+      setQrToken(buildQrToken());
       
       interval = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
             // Regenerate QR Code
-            setQrToken(`visisekolah-token-${selectedClass.replace(/\s+/g, '')}-${Date.now()}`);
+            setQrToken(buildQrToken());
             return 10;
           }
           return prev - 1;
@@ -142,7 +174,7 @@ export default function QrAttendancePage() {
     }
 
     return () => clearInterval(interval);
-  }, [isSessionActive, selectedClass]);
+  }, [isSessionActive, selectedClass, selectedSubject]);
 
   // Get real or simulated GPS coordinates
   const triggerGpsLookup = () => {
