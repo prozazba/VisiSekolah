@@ -5,8 +5,7 @@ import { revalidatePath } from 'next/cache';
 import bcrypt from 'bcryptjs';
 import { verifySession } from '@/lib/session';
 
-import { sendMail } from '@/lib/mailer';
-import { getUserWelcomeEmail } from '@/lib/email-templates';
+import { getUserWelcomeEmail, getStudentPwaScannerWelcomeEmail } from '@/lib/email-templates';
 
 export async function createUser(data: {
   name: string;
@@ -63,22 +62,38 @@ export async function createUser(data: {
 
     // Send Welcome Email
     try {
-      const loginUrl = process.env.NEXT_PUBLIC_APP_URL 
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/login` 
-        : 'http://localhost:3099/login';
+      const { sendMail } = await import('@/lib/mailer');
+      if (user.role === 'SISWA') {
+        const scannerUrl = 'https://visi-sekolah.vercel.app/scan';
+        const emailHtml = getStudentPwaScannerWelcomeEmail({
+          name: user.name || data.name,
+          email: user.email || data.email,
+          scannerUrl
+        });
 
-      const emailHtml = getUserWelcomeEmail({
-        name: user.name || data.name,
-        email: user.email || data.email,
-        role: user.role,
-        loginUrl: loginUrl
-      });
+        await sendMail({
+          to: user.email || data.email,
+          subject: '🚀 Buka & Pasang Aplikasi Standalone Presensi QR Code VisiSekolah',
+          html: emailHtml
+        });
+      } else {
+        const loginUrl = process.env.NEXT_PUBLIC_APP_URL 
+          ? `${process.env.NEXT_PUBLIC_APP_URL}/login` 
+          : 'http://localhost:3099/login';
 
-      await sendMail({
-        to: user.email || data.email,
-        subject: 'Selamat Datang di VisiSekolah - Informasi Akun Anda',
-        html: emailHtml
-      });
+        const emailHtml = getUserWelcomeEmail({
+          name: user.name || data.name,
+          email: user.email || data.email,
+          role: user.role,
+          loginUrl: loginUrl
+        });
+
+        await sendMail({
+          to: user.email || data.email,
+          subject: 'Selamat Datang di VisiSekolah - Informasi Akun Anda',
+          html: emailHtml
+        });
+      }
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);
       // We don't return error here because the user was already created successfully

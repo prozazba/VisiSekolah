@@ -74,6 +74,46 @@ export default function QrAttendancePage() {
     { id: '2', name: 'Sophia Garcia', nisn: '00982544', time: '10:33 AM', status: 'HADIR' }
   ]);
 
+  // Real database attendees polling
+  const fetchRealAttendees = async () => {
+    try {
+      const { getTodayAttendance } = await import('@/app/actions/attendance');
+      const realAttendees = await getTodayAttendance();
+      
+      setAttendees(prev => {
+        const mockData = [
+          { id: '1', name: 'Oliver James', nisn: '00982312', time: '10:31 AM', status: 'HADIR' },
+          { id: '2', name: 'Sophia Garcia', nisn: '00982544', time: '10:33 AM', status: 'HADIR' }
+        ];
+
+        // Filter out any mock attendees if the real attendee NISN matches
+        const uniqueReal = realAttendees.map(r => ({
+          id: r.id,
+          name: r.name,
+          nisn: r.nisn,
+          time: r.time,
+          status: r.status
+        }));
+
+        const filteredMock = mockData.filter(m => !uniqueReal.some(r => r.nisn === m.nisn));
+        return [...uniqueReal, ...filteredMock];
+      });
+    } catch (err) {
+      console.error("Failed to fetch database attendees:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchRealAttendees();
+    
+    // Set up polling interval every 3 seconds
+    const interval = setInterval(() => {
+      fetchRealAttendees();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Student scanning state
   const [gpsLoading, setGpsLoading] = useState(false);
   const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -332,7 +372,11 @@ export default function QrAttendancePage() {
 
                     {/* Dynamic QR API Source */}
                     <img 
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrToken)}`}
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
+                        typeof window !== 'undefined' 
+                          ? `${window.location.origin}/scan?token=${qrToken}` 
+                          : `https://visi-sekolah.vercel.app/scan?token=${qrToken}`
+                      )}`}
                       alt="Attendance QR Code"
                       style={{ width: '220px', height: '220px', display: 'block', borderRadius: '12px' }}
                     />

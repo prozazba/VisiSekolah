@@ -57,6 +57,9 @@ export default function StudentMobileScannerPage() {
   const [scanSuccess, setScanSuccess] = useState(false);
   const [scannedData, setScannedData] = useState<string | null>(null);
 
+  const [recordingPending, setRecordingPending] = useState(false);
+  const [attendanceError, setAttendanceError] = useState<string | null>(null);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -68,6 +71,13 @@ export default function StudentMobileScannerPage() {
       setAuthChecked(true);
       if (sess) {
         getGpsCoordinates();
+        
+        // Auto check for URL token parameter
+        const params = new URLSearchParams(window.location.search);
+        const urlToken = params.get('token');
+        if (urlToken) {
+          handleAutoRecordAttendance(urlToken);
+        }
       }
     }
     initAuth();
@@ -102,6 +112,35 @@ export default function StudentMobileScannerPage() {
     }
   };
 
+  // Handle auto attendance when a token is passed via URL query
+  const handleAutoRecordAttendance = async (token: string) => {
+    setRecordingPending(true);
+    setAttendanceError(null);
+    try {
+      // Get current GPS coords if available
+      let lat = -6.2088;
+      let lng = 106.8456;
+      
+      if (gpsCoords) {
+        lat = gpsCoords.lat;
+        lng = gpsCoords.lng;
+      }
+
+      const { recordAttendance } = await import('@/app/actions/attendance');
+      const res = await recordAttendance({ token, latitude: lat, longitude: lng });
+      if (res.success) {
+        setScannedData(token);
+        setScanSuccess(true);
+      } else {
+        setAttendanceError(res.error || 'Gagal merekam kehadiran.');
+      }
+    } catch (err: any) {
+      setAttendanceError(err.message || 'Gagal mengirim data kehadiran.');
+    } finally {
+      setRecordingPending(false);
+    }
+  };
+
   // Handle Mobile Login
   const handleMobileLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,6 +158,13 @@ export default function StudentMobileScannerPage() {
         const sess = await checkAuthStatus();
         setSession(sess);
         getGpsCoordinates();
+
+        // Check if there is an active QR token in the URL after login
+        const params = new URLSearchParams(window.location.search);
+        const urlToken = params.get('token');
+        if (urlToken) {
+          handleAutoRecordAttendance(urlToken);
+        }
       } else {
         setLoginError(res.message || 'Login gagal.');
       }
@@ -133,16 +179,21 @@ export default function StudentMobileScannerPage() {
   const startCamera = async () => {
     setIsScanning(true);
     setHasCameraPermission(null);
+    setAttendanceError(null);
     try {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' } // Rear camera on mobile
         });
         streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
         setHasCameraPermission(true);
+        
+        // Use a short timeout to ensure the <video> element is fully rendered in the DOM
+        setTimeout(() => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        }, 80);
         
         // Auto resolve scan after 3 seconds for gorgeous flow simulation
         setTimeout(() => {
@@ -174,10 +225,10 @@ export default function StudentMobileScannerPage() {
     setIsScanning(false);
   };
 
-  const handleSuccessScan = (data: string) => {
+  const handleSuccessScan = async (data: string) => {
     stopCamera();
     setScannedData(data);
-    setScanSuccess(true);
+    setRecordingPending(true);
     
     // Play subtle native-like scan beep audio
     try {
@@ -193,6 +244,24 @@ export default function StudentMobileScannerPage() {
       oscillator.stop(audioCtx.currentTime + 0.15);
     } catch (e) {
       console.log("Audio feedback not supported or blocked");
+    }
+
+    try {
+      const { recordAttendance } = await import('@/app/actions/attendance');
+      const res = await recordAttendance({
+        token: data,
+        latitude: gpsCoords?.lat || undefined,
+        longitude: gpsCoords?.lng || undefined
+      });
+      if (res.success) {
+        setScanSuccess(true);
+      } else {
+        setAttendanceError(res.error || 'Gagal merekam kehadiran.');
+      }
+    } catch (err: any) {
+      setAttendanceError(err.message || 'Gagal mengirim data kehadiran.');
+    } finally {
+      setRecordingPending(false);
     }
   };
 
@@ -342,21 +411,21 @@ export default function StudentMobileScannerPage() {
                 <div style={{ position: 'relative' }}>
                   <Mail size={16} color="#64748b" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input
-                    type="email"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    placeholder="nama@sekolah.sch.id"
-                    required
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px 12px 42px',
-                      background: '#1e293b',
-                      border: '1px solid #334155',
-                      borderRadius: '12px',
-                      color: 'white',
-                      fontSize: '0.875rem',
-                      outline: 'none'
-                    }}
+                     type="email"
+                     value={loginEmail}
+                     onChange={(e) => setLoginEmail(e.target.value)}
+                     placeholder="nama@sekolah.sch.id"
+                     required
+                     style={{
+                       width: '100%',
+                       padding: '12px 14px 12px 42px',
+                       background: '#1e293b',
+                       border: '1px solid #334155',
+                       borderRadius: '12px',
+                       color: 'white',
+                       fontSize: '0.875rem',
+                       outline: 'none'
+                     }}
                   />
                 </div>
               </div>
@@ -435,7 +504,12 @@ export default function StudentMobileScannerPage() {
             justifyContent: 'center',
             padding: '24px'
           }}>
-            {scanSuccess ? (
+            {recordingPending ? (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', color: '#cbd5e1' }}>
+                <RefreshCw size={40} className="spin" style={{ color: '#3b82f6' }} />
+                <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Menyimpan kehadiran Anda...</span>
+              </div>
+            ) : scanSuccess ? (
               /* SUCCESS OVERLAY */
               <div style={{
                 textAlign: 'center',
@@ -487,6 +561,7 @@ export default function StudentMobileScannerPage() {
                   onClick={() => {
                     setScanSuccess(false);
                     setScannedData(null);
+                    setAttendanceError(null);
                   }}
                   style={{
                     marginTop: '2.5rem',
@@ -506,6 +581,25 @@ export default function StudentMobileScannerPage() {
             ) : (
               /* CAMERA VIEWPORT */
               <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {attendanceError && (
+                  <div style={{
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    color: '#f87171',
+                    padding: '12px',
+                    borderRadius: '12px',
+                    fontSize: '0.75rem',
+                    marginBottom: '1rem',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    width: '100%'
+                  }}>
+                    <AlertTriangle size={16} />
+                    <span>{attendanceError}</span>
+                  </div>
+                )}
+
                 <div style={{
                   width: '270px',
                   height: '270px',
@@ -537,16 +631,21 @@ export default function StudentMobileScannerPage() {
                         animation: 'scan-laser-mobile 2s infinite ease-in-out'
                       }}></div>
 
-                      {/* Real Video Element if allowed, fallback to simulated teacher qr frame */}
-                      {hasCameraPermission ? (
-                        <video
-                          ref={videoRef}
-                          autoPlay
-                          playsInline
-                          muted
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      ) : (
+                      {/* Real Video Element (always mounted if isScanning to prevent ref errors) */}
+                      <video
+                        ref={videoRef}
+                        autoPlay
+                        playsInline
+                        muted
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover',
+                          display: hasCameraPermission ? 'block' : 'none'
+                        }}
+                      />
+                      
+                      {!hasCameraPermission && (
                         /* SIMULATED HIGH-FIDELITY VIEWFINDER FALLBACK */
                         <div style={{
                           position: 'absolute',
